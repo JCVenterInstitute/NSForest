@@ -1,5 +1,3 @@
-# Project Title
-
 Necessary and Sufficient Forest (NS-Forest) for Cell Type Marker Determination from cell type clusters
 
 ## Getting Started
