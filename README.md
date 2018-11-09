@@ -31,7 +31,7 @@ See code for detailed comments.
 
 ## Versioning
 
-The initial release is version 2. Version 1.0 was described in: 
+This is version 2.0 The initial release was version 1.3. Version 1.0 was described in: 
 
 Aevermann BD, Novotny M, Bakken T, Miller JA, Diehl AD, Osumi-Sutherland D, Lasken RS, Lein ES, Scheuermann RH.
 Cell type discovery using single-cell transcriptomics: implications for ontological representation. 
