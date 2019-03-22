@@ -45,7 +45,7 @@ Hum Mol Genet. 2018 May 1;27(R1):R40-R47. doi: 10.1093/hmg/ddy100.
 
 ## License
 
-This project is licensed under the MIT License - see the https://opensource.org/licenses/MIT file for details
+This project is licensed under the MIT License - see the https://opensource.org/licenses/MIT for details
 
 ## Acknowledgments
 
