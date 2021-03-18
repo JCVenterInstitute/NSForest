@@ -37,8 +37,7 @@ Aevermann BD, Novotny M, Bakken T, Miller JA, Diehl AD, Osumi-Sutherland D, Lask
 Cell type discovery using single-cell transcriptomics: implications for ontological representation. 
 Hum Mol Genet. 2018 May 1;27(R1):R40-R47. doi: 10.1093/hmg/ddy100.
 
-Aevermann BD, Zhang Y, Novotny M, Bakken TE, Miller JA, Hodge R, Lelieveldt B, Lein ES, Scheuermann RH. “NS-Forest: A machine learning method for the objective identification of minimum marker gene combinations for cell type determination from single cell RNA sequencing” bioRxiv 2020.09.23.308932; doi: https://doi.org/10.1101/2020.09.23.308932 ![image](https://user-images.githubusercontent.com/32077222/111711329-a9834380-8808-11eb-9530-d261b0a2aa9f.png)
-
+Aevermann BD, Zhang Y, Novotny M, Bakken TE, Miller JA, Hodge R, Lelieveldt B, Lein ES, Scheuermann RH. “NS-Forest: A machine learning method for the objective identification of minimum marker gene combinations for cell type determination from single cell RNA sequencing” bioRxiv 2020.09.23.308932; doi: https://doi.org/10.1101/2020.09.23.308932
 
 
 ## Authors
