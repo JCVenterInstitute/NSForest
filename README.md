@@ -22,12 +22,12 @@ Binary_Markers = list(itertools.chain.from_iterable(adata_markers['Binary_Genes'
 ### NS-Forest v3.0 parameters
 
 NS_Forest(adata, clusterLabelcolumnHeader = "louvain", rfTrees = 1000, Median_Expression_Level = 0, Genes_to_testing = 6, betaValue = 0.5)
-    #adata = scanpy object
-    #rfTrees = Number of trees
-    #clusterLabelcolumnHeader = column header in adata.obs['header_here!'] where cluster assignments reside. Typically 'louvain' if louvain clustering was used.
-    #Median_Expression_Level = median expression level for removing negative markers
-    #Genes_to_testing = How many ranked genes by binary score will be evaluated in permutations by fbeta-score 
-    #betaValue = Set values for fbeta weighting. 1 is default f-measure. close to zero is Precision, greater than 1 weights toward Recall
+    *adata = scanpy object
+    *rfTrees = Number of trees
+    *clusterLabelcolumnHeader = column header in adata.obs['header_here!'] where cluster assignments reside. Typically 'louvain' if louvain clustering was used.
+    *Median_Expression_Level = median expression level for removing negative markers
+    *Genes_to_testing = How many ranked genes by binary score will be evaluated in permutations by fbeta-score 
+    *betaValue = Set values for fbeta weighting. 1 is default f-measure. close to zero is Precision, greater than 1 weights toward Recall
 
 
 ### Description
