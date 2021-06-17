@@ -2,14 +2,22 @@
 
 ## Getting Started
 
-Install python 3.6 or above
-Download NSForest_v3.py file
+Install python 3.6 or above. Download NSForest_v3.py file
 
 
 ### Prerequisites
 
 * The  is a python script written in python 3.6. Required libraries: Numpy, Pandas, Sklearn, graphviz, numexpr, scanpy
 * scanpy object (adata) with at least one column containing the cluster assignments. Default slot set to adata.obs["louvain"]; however parameter is tunable in function call.
+
+### Using NS-Forest v3.0
+
+from NSForest_v3 import *
+import itertools
+
+adata_markers = NS_Forest(adata) #Runs NS_Forest on scanpy object
+Markers = list(itertools.chain.from_iterable(adata_markers['NSForest_Markers'])) #gets list of minimal markers from dataframe for display in scanpy plotting functions
+Binary_Markers = list(itertools.chain.from_iterable(adata_markers['Binary_Genes'])) #gets list of binary markers from dataframe for display in scanpy plotting functions
 
 
 ### Description
