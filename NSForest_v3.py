@@ -1,4 +1,4 @@
-def NS_Forest(adata, clusterLabelcolumnHeader = "Clusters", rfTrees = 5000, Median_Expression_Level = 0, Genes_to_testing = 6, betaValue = 0.5):
+def NS_Forest(adata, clusterLabelcolumnHeader = "louvain", rfTrees = 1000, Median_Expression_Level = 0, Genes_to_testing = 6, betaValue = 0.5):
     #adata = scanpy object
     #rfTrees = Number of trees
     #Median_Expression_Level = median expression level for removing negative markers
