@@ -30,7 +30,7 @@ See code for detailed comments.
 
 ## Versioning
 
-This is version 3.0 The initial releases were described in the below publications was  
+This is version 3.0 The earlier releases were described in the below publications.  
 
 Version 2
 
