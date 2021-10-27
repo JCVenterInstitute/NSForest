@@ -12,12 +12,12 @@ Install python 3.6 or above. Download NSForest_v3.py file
 
 ### Using NS-Forest v3.0
 
-from NSForest_v3 import *
-import itertools
+from NSForest_v3 import * <br />
+import itertools<br />
 
-adata_markers = NS_Forest(adata) #Runs NS_Forest on scanpy object
-Markers = list(itertools.chain.from_iterable(adata_markers['NSForest_Markers'])) #gets list of minimal markers from dataframe for display in scanpy plotting functions
-Binary_Markers = list(itertools.chain.from_iterable(adata_markers['Binary_Genes'])) #gets list of binary markers from dataframe for display in scanpy plotting functions
+adata_markers = NS_Forest(adata) #Runs NS_Forest on scanpy object <br />
+Markers = list(itertools.chain.from_iterable(adata_markers['NSForest_Markers'])) #gets list of minimal markers from dataframe for display in scanpy plotting functions <br />
+Binary_Markers = list(itertools.chain.from_iterable(adata_markers['Binary_Genes'])) #gets list of binary markers from dataframe for display in scanpy plotting functions <br />
 
 ### NS-Forest v3.0 parameters
 
