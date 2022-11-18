@@ -13,7 +13,7 @@ Download NSForest_v3dot9_1.py.
 
 ### Tutorial
 
-Follow the [tutorial](https://github.com/JCVenterInstitute/NSForest/NS-Forest_tutorial.html) to get started.
+Follow the [tutorial](https://jcventerinstitute.github.io/celligrate/NS-Forest_tutorial.html) to get started.
 
 ## Versioning and citations
 
