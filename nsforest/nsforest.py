@@ -15,13 +15,17 @@ from sklearn.metrics import precision_score
 from sklearn.metrics import confusion_matrix
 import itertools
 import time
+from tqdm import tqdm
 import os
+
+########################################################################################################
 
 ### My functions ###
 
 ## run Random Forest on the binary dummy variables ==> outputs all genes ranked by Gini impurit
 def myRandomForest(adata, df_dummies, cl, n_trees, n_jobs, n_top_genes):
-    x_train = adata.X
+#     x_train = adata.X
+    x_train = adata.to_df()
     y_train = df_dummies[cl]
     rf_clf = RandomForestClassifier(n_estimators=n_trees, n_jobs=n_jobs, random_state=123456) #<===== criterion=“gini”, by default
     rf_clf.fit(x_train, y_train)
@@ -33,7 +37,8 @@ def myRandomForest(adata, df_dummies, cl, n_trees, n_jobs, n_top_genes):
 def myDecisionTreeEvaluation(adata, df_dummies, cl, genes_eval, beta):
     dict_pred = {}
     for i in genes_eval:
-        x_train = adata[:,i].X
+#         x_train = adata[:,i].X
+        x_train = adata[:,i].to_df()
         y_train = df_dummies[cl]
         tree_clf = DecisionTreeClassifier(max_leaf_nodes=2)
         tree_clf = tree_clf.fit(x_train, y_train) 
@@ -170,6 +175,7 @@ def NSForest(adata, cluster_header, cluster_list=None, medians_header=None,
 
         ## return final results as dataframe
         dict_results_cl = {'clusterName': cl,
+                           'clusterSize': int(scores[4]+scores[5]),
                            'f_score': scores[0],
                            'PPV': scores[1],
                            'TN': int(scores[2]),
@@ -184,6 +190,35 @@ def NSForest(adata, cluster_header, cluster_list=None, medians_header=None,
         df_results = pd.concat([df_results,df_results_cl]).reset_index(drop=True)
     print("--- %s seconds ---" % (time.time() - start_time))
     ### END iterations ###
-
+    
     return(df_results)
+
+########################################################################################################
+
+### Other useful functions ###
+
+def get_medians(adata, cluster_header):
+    cluster_medians = pd.DataFrame()
+    for cl in tqdm(sorted(set(adata.obs[cluster_header])), desc="Calculating medians per cluster"):
+        adata_cl = adata[adata.obs[cluster_header]==cl,]
+        medians_cl = adata_cl.to_df().median()
+        cluster_medians = pd.concat([cluster_medians, pd.DataFrame({cl: medians_cl})], axis=1) #gene-by-cluster
+    return cluster_medians
+
+def preprocessing_medians(adata, cluster_header, positive_genes_only=True):
+    
+#     print("Calculating medians... (progress bar speed depending on cluster sizes)")
+    ## get medians
+    cluster_medians = get_medians(adata, cluster_header)
+    ## attach pre-calculated medians to adata
+    adata.varm['medians_' + cluster_header] = cluster_medians
+    
+    if positive_genes_only:
+        print("Only positive genes are selected.")
+        ## select only genes with median > 0
+        genes_selected = cluster_medians.index[cluster_medians.sum(axis=1)>0].to_list()
+        ## subset data with only positive genes
+        adata = adata[:,genes_selected].copy()
+        
+    return adata
 
