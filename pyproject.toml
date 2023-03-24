@@ -1,0 +1,21 @@
+[tool.poetry]
+name = "nsforest"
+version = "3.9.2.3"
+description =  "A machine learning method for the discovery of minimum marker gene combinations for cell type identification from single-cell RNA sequencing"
+license = "MIT"
+authors = [
+    "Renee Zhang <zhangy@jcvi.org>",
+    "Richard Scheuermann <RScheuermann@jcvi.org>",
+    "Brian Aevermann <baevermann@chanzuckerberg.com>"
+]
+maintainers = [
+    "Tian Liu <ttl074@ucsd.edu>"
+]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+scanpy = "^1.9.3"
+python = "^3.8"
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api" 
