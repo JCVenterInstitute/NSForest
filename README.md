@@ -1,18 +1,23 @@
 # NS-Forest
-A machine learning method for the discovery of minimum marker gene combinations for cell type identification from single-cell RNA sequencing
 <img src="NS-Forest-sticker.png" width="110" height="125">
 
 ## Download and installation
 
-Download NSForest_v3dot9_2.py and follow the tutorial.
+Direct download 'NSForest_v3dot9_2.py' and follow the tutorial.
 
-NSForest can be installed using `pip`:
+---
+
+NS-Forest can be installed using `pip`:
 `sudo pip install nsforest`
-If you are using a machine on which you lack administrative access, NSForest can be installed locally using `pip`:
+
+If you are using a machine on which you lack administrative access, NS-Forest can be installed locally using `pip`:
 `pip install --user nsforest`
-NSForest can also be installed using `conda`:
+
+NS-Forest can also be installed using `conda`:
 `conda install -c ttl074 nsforest`
-Will be uploaded to official conda channel soon
+
+Will be uploaded to official conda channel soon.
+
 **Prerequisites:**
 * This is a python script written and tested in python 3.8, scanpy 1.8.2, anndata 0.8.0.
 * Other required libraries: numpy, pandas, sklearn, itertools, time, tqdm.
