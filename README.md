@@ -2,22 +2,23 @@
 
 <img src="NS-Forest-sticker.png" width="110" height="125">
 
-## Getting Started
+## Download and installation
 
-Download NSForest_v3dot9_1.py.
+Download NSForest_v3dot9_2.py and follow the tutorial.
 
-### Prerequisites
+Available via `pip` and `conda`. (Installation instructions coming soon.)
 
+**Prerequisites:**
 * This is a python script written and tested in python 3.8, scanpy 1.8.2, anndata 0.8.0.
 * Other required libraries: numpy, pandas, sklearn, itertools, time, tqdm.
 
-### Tutorial
+## Tutorial
 
 Follow the [tutorial](https://jcventerinstitute.github.io/celligrate/tutorials/NS-Forest_tutorial.html) to get started.
 
-## Versioning and citations
+## Versions and citations
 
-This is version 3.9.1. Earlier releases are managed in [Releases](https://github.com/JCVenterInstitute/NSForest/releases).  
+Earlier versions are managed in [Releases](https://github.com/JCVenterInstitute/NSForest/releases).  
 
 Version 2 and beyond:
 
@@ -32,7 +33,6 @@ Aevermann BD, Novotny M, Bakken T, Miller JA, Diehl AD, Osumi-Sutherland D, Lask
 * Yun (Renee) Zhang zhangy@jcvi.org
 * Richard Scheuermann RScheuermann@jcvi.org
 * Brian Aevermann baevermann@chanzuckerberg.com
-
 
 ## License
 
