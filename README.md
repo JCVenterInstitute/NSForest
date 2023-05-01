@@ -20,8 +20,16 @@ Will be uploaded to official conda channel soon.
 
 ## Tutorial
 
-Download 'NSForest_v3dot9_2.py' and follow the tutorial.
 Follow the [tutorial](https://jcventerinstitute.github.io/celligrate/tutorials/NS-Forest_tutorial.html) to get started.
+
+If you download 'NSForest_v3dot9_2.py' directly, replace the version to the most updated one in the tutorial.
+
+If you download the `pip` or `conda` package, use the following in the tutorial.
+
+```
+import nsforest as ns
+ns.NSForest()
+```
 
 ## Versions and citations
 
