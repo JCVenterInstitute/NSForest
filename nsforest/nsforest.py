@@ -109,20 +109,19 @@ def NSForest(adata, cluster_header, cluster_list=None,
         print("Calculating medians...")
         start_time = time.time()
         # TODO: saved cluster_medians to save time
-        # if os.path.exists(output_folder + outputfilename + "_cluster_medians.csv"): 
-        #     cluster_medians = pd.read_csv(output_folder + outputfilename + "_cluster_medians.csv", index_col = 0) 
-        # else: 
-        ## get dataframes for X and cluster in a column
-        df_X = pd.DataFrame(adata.X, index=adata.obs_names, columns=adata.var_names) #cell-by-gene
-        clusters = adata.obs[cluster_header]
-        df_X_clusters = pd.concat([df_X, clusters], axis=1)
-        ## get cluster medians
-        cluster_medians = df_X_clusters.groupby([cluster_header], observed = True).median() #cluster-by-gene
-        ## delete to free up memories
-        del df_X, clusters, df_X_clusters
-            # cluster_medians.to_csv(output_folder + outputfilename + "_cluster_medians.csv")
-            # print(cluster_medians)
-            # print("saving file as " + output_folder + outputfilename + "_cluster_medians.csv")
+        if os.path.exists(output_folder + outputfilename + "_cluster_medians.csv"): 
+            cluster_medians = pd.read_csv(output_folder + outputfilename + "_cluster_medians.csv", index_col = 0) 
+        else: 
+            ## get dataframes for X and cluster in a column
+            df_X = pd.DataFrame(adata.X, index=adata.obs_names, columns=adata.var_names) #cell-by-gene
+            clusters = adata.obs[cluster_header]
+            df_X_clusters = pd.concat([df_X, clusters], axis=1)
+            ## get cluster medians
+            cluster_medians = df_X_clusters.groupby([cluster_header], observed = True).median() #cluster-by-gene
+            ## delete to free up memories
+            del df_X, clusters, df_X_clusters
+            cluster_medians.to_csv(output_folder + outputfilename + "_cluster_medians.csv")
+            print("saving file as " + output_folder + outputfilename + "_cluster_medians.csv")
         print("--- %s seconds ---" % (time.time() - start_time))
     else:
         print("Getting pre-calculated medians...")

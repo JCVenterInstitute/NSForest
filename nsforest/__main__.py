@@ -3,31 +3,38 @@ _epilog = ""
 
 import sys
 import os
+import pandas as pd
 import scanpy as sc
-from . import utils
-from . import nsforest
+import utils
+import nsforest
 
 def main():
 
     # Reading in arguments
-    args = utils._parse_args(sys.argv[1:],
-                            epilog=_epilog,
-                            description=__doc__)
-    
-    args_1 = sys.argv[1] # filename
-    args_2 = sys.argv[2] # cluster
-    print(args_1, args_2)
+    args = utils._parse_args(sys.argv[1:], epilog=_epilog, description=__doc__)
 
-    if os.path.isfile(args_1): 
-        file = args_1
+    if args.a: 
+        arguments = pd.read_csv(args.a).astype(str)
+        arguments = arguments[arguments["val"] != "nan"]
+        kwargs = dict(zip(arguments["argument"], arguments["val"]))
+        file = kwargs["filename"]
+        cluster_header = kwargs["cluster_header"]
+        del kwargs["filename"]
+        del kwargs["cluster_header"]
+        # https://www.geeksforgeeks.org/python-remove-empty-value-types-in-dictionaries-list/
+        kwargs = [ele for ele in ({key: val for key, val in sub.items() if val} for sub in [kwargs]) if ele][0]
     else: 
-        print("filepath not found")
-    cluster_header = args_2
+        kwargs = {}
+        if args.f: file = args.f
+        if args.c: cluster_header = args.c
+    
+    # python3 nsforest -f demo_data/adata_layer1.h5ad -c cluster
+    # python3 nsforest -a arguments.csv
+            
+    print(file, cluster_header, kwargs)
 
     adata = sc.read_h5ad(file)
 
-    nsforest.NSForest(adata, cluster_header = cluster_header, gene_selection = "BinaryFirst_high", n_trees=10)
-
-    # python3 nsforest.py demo_data/adata_layer1.h5ad
+    nsforest.NSForest(adata, cluster_header, **kwargs)
 
 main()
