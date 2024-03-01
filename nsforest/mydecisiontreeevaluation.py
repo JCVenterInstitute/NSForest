@@ -7,7 +7,28 @@ from sklearn.metrics import confusion_matrix
 import itertools
 
 ## construct decision tree for each gene and evaluate the fbeta score in all combinations ==> outputs markers with max fbeta, and all scores
-def myDecisionTreeEvaluation(adata, df_dummies, cl, genes_eval, beta):
+def myDecisionTreeEvaluation(adata, df_dummies, cl, genes_eval, beta = 0.5, exact_genes_eval = False):
+    
+    """\
+    Calculating sklearn.metrics's fbeta_score, sklearn.metrics's prevision_score, sklearn.metrics's confusion_matrix for each `genes_eval` combination. 
+    Returning set of genes and scores with highest score sum. 
+
+    Parameters
+    ----------
+    adata: AnnData
+        Annotated data matrix.
+    df_dummies: pd.DataFrame
+        Dummy dataframe for one vs all model. 
+    cl: str
+        Specified cell annotation. 
+    genes_eval: list
+        List of genes to find best combination for sklearn.tree's DecisionTreeClassifier. 
+    beta: float (default: 0.5)
+        Beta value in sklearn.metrics's fbeta_score. 
+    exact_genes_eval: bool (default: False)
+        Whether to use myDecisionTreeEvaluation on various combinations of `genes_eval`. 
+    
+    """
 
     # Training decision tree based on single gene split
     dict_pred = {}
@@ -20,11 +41,16 @@ def myDecisionTreeEvaluation(adata, df_dummies, cl, genes_eval, beta):
         dict_pred[i] = tree_clf.apply(x_train)-1
     df_pred = pd.DataFrame(dict_pred) #cell-by-gene
     
-    # Getting every possible subset of genes_eval
     combs = []
-    for L in range(1, len(genes_eval)+1):
-        els = [list(x) for x in itertools.combinations(genes_eval, L)]
-        combs.extend(els)
+    # Getting every possible subset of genes_eval
+    if not exact_genes_eval: 
+        for L in range(1, len(genes_eval)+1):
+            els = [list(x) for x in itertools.combinations(genes_eval, L)]
+            combs.extend(els)
+    # Using all available marker genes
+    else: 
+        combs = [genes_eval]
+    print("COMBINATIONS:", combs)
     
     # Checking if every possible subset of genes_eval leads to correct prediction
     dict_scores = {} 
