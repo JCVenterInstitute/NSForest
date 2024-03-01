@@ -1,6 +1,27 @@
 # NS-Forest
 <img src="NS-Forest-sticker.png" width="110" height="125">
 
+## Dev version of NS-Forest v4.0
+
+Follow the [tutorial](https://jcventerinstitute.github.io/celligrate/tutorials/NS-Forest_tutorial.html) to get started.
+
+Download 'NSForest_v4dot0_dev.py' and replace the version in the tutorial. Sample code below.
+
+```
+adata_median = preprocessing_medians(adata, cluster_header)
+adata_median.varm["medians_" + cluster_header].stack().plot.hist(bins=30, title = 'cluster medians')
+
+adata_median_binary = preprocessing_binary(adata_filt, cluster_header, "medians_" + cluster_header)
+adata_median_binary.varm["binary_scores_" + cluster_header].stack().plot.hist(bins=30, title='binary scores')
+
+## make a copy of prepared adata
+adata_prep = adata_median_binary.copy()
+
+NSForest(adata_prep, cluster_header=cluster_header, n_trees=1000, n_genes_eval=6,
+          medians_header = "medians_" + cluster_header, binary_scores_header = "binary_scores_" + cluster_header,
+          gene_selection = "BinaryFirst_high", outputfilename="BinaryFirst_high")
+```
+
 ## Download and installation
 
 NS-Forest can be installed using `pip`:
