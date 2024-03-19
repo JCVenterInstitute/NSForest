@@ -11,7 +11,7 @@ Download 'NSForest_v4dot0_dev.py' and replace the version in the tutorial. Sampl
 adata_median = preprocessing_medians(adata, cluster_header)
 adata_median.varm["medians_" + cluster_header].stack().plot.hist(bins=30, title = 'cluster medians')
 
-adata_median_binary = preprocessing_binary(adata_filt, cluster_header, "medians_" + cluster_header)
+adata_median_binary = preprocessing_binary(adata_median, cluster_header, "medians_" + cluster_header)
 adata_median_binary.varm["binary_scores_" + cluster_header].stack().plot.hist(bins=30, title='binary scores')
 
 ## make a copy of prepared adata
