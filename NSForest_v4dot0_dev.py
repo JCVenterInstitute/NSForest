@@ -13,6 +13,7 @@ from sklearn.tree import DecisionTreeClassifier
 from sklearn.metrics import fbeta_score
 from sklearn.metrics import precision_score
 from sklearn.metrics import confusion_matrix
+import statistics
 import itertools
 import time
 from tqdm import tqdm
@@ -40,7 +41,7 @@ def myRandomForest(adata, df_dummies, cl, n_trees, n_jobs, n_top_genes, binary_d
     return top_rf_genes  
 
 ## construct decision tree for each gene and evaluate the fbeta score in all combinations ==> outputs markers with max fbeta, and all scores
-def myDecisionTreeEvaluation(adata, df_dummies, cl, genes_eval, beta):
+def myDecisionTreeEvaluation(adata, df_dummies, cl, genes_eval, beta, combinatorial): #<== added parameter: combinatorial = True/False
     dict_pred = {}
     for i in genes_eval:
         x_train = adata[:,i].to_df()
@@ -50,10 +51,12 @@ def myDecisionTreeEvaluation(adata, df_dummies, cl, genes_eval, beta):
         dict_pred[i] = tree_clf.apply(x_train)-1
     df_pred = pd.DataFrame(dict_pred)
     
-    combs = []
-    for L in range(1, len(genes_eval)+1):
-        els = [list(x) for x in itertools.combinations(genes_eval, L)]
-        combs.extend(els)
+    if combinatorial:
+        combs = []
+        for L in range(1, len(genes_eval)+1):
+            els = [list(x) for x in itertools.combinations(genes_eval, L)]
+            combs.extend(els)
+    else: combs = [genes_eval]
     
     dict_scores = {} 
     for ii in combs:
@@ -272,13 +275,118 @@ def NSForest(adata, cluster_header, cluster_list=None,
 
 ########################################################################################################
 
+### Evaluation functions ###
+
+## calculating classification accuracy measures
+def markers_classification(adata, markers_to_eval, #<== markers_to_eval is a dictionary: key=cl, value=markers
+                           cluster_header, cluster_list=None, beta=0.5, combinatorial=False, #<==!!!
+                           output_folder="evaluation_outputs/", filename_prefix=""):
+    
+    ## set up output folder
+    if not os.path.exists(output_folder):
+        os.makedirs(output_folder)    
+    
+    ##-----
+    ## prepare adata
+    ##-----
+    print("Preparing data...")
+    first_start_time = time.time()
+    ## densify X from sparse matrix format
+    adata.X = adata.to_df()
+    ## categorial cluster labels
+    adata.obs[cluster_header] = adata.obs[cluster_header].astype('category')
+    ## dummy/indicator for one vs. all Random Forest model
+    df_dummies = pd.get_dummies(adata.obs[cluster_header]) #cell-by-cluster
+    ## get number of clusters
+    n_total_clusters = len(df_dummies.columns)
+    print("--- %s seconds ---" % (time.time() - first_start_time))
+    
+    ############################## START iterations ######################################
+    if cluster_list == None:
+        cluster_list = df_dummies.columns
+    n_clusters = len(cluster_list)
+    
+    print ("Number of clusters to evaluate: " + str(n_clusters))
+    ct = 0
+    df_supp = df_markers = df_results = pd.DataFrame()
+    start_time = time.time()
+    
+    for cl in cluster_list:
+        ct+=1
+        print(str(ct) + " out of " + str(n_clusters) + ":")
+
+        ## cluster in iteration
+        print("\t" + str(cl))
+        
+        ## Evaluation step: calculate F-beta score for gene combinations
+        genes_eval = markers_to_eval.get(cl) #<==
+        markers, scores, score_max = myDecisionTreeEvaluation(adata, df_dummies, cl, genes_eval, beta, combinatorial)
+        print("\t" + str(markers))
+        print("\t" + str(score_max))
+
+        ## return final results as dataframe
+        dict_results_cl = {'clusterName': cl,
+                           'clusterSize': int(scores[4]+scores[5]),
+                           'f_score': scores[0],
+                           'PPV': scores[1],
+                           'TN': int(scores[2]),
+                           'FP': int(scores[3]),
+                           'FN': int(scores[4]),
+                           'TP': int(scores[5]),
+                           'marker_count': len(genes_eval),
+                           'markers': [genes_eval],
+                           }
+        df_results_cl = pd.DataFrame(dict_results_cl)
+        df_results = pd.concat([df_results,df_results_cl]).reset_index(drop=True)
+        df_results.to_csv(output_folder + filename_prefix + "_markers_classification_results.csv", index=False)
+        
+    print("--- %s seconds ---" % (time.time() - first_start_time))
+    ### END iterations ###
+    
+    return(df_results)
+
+## calculate On-Target Fraction (for gene expression specificity) using median or mean
+def markers_onTarget(adata, markers_to_eval, cluster_header, use_mean=False,
+                     output_folder="evaluation_outputs/", filename_prefix=""):
+    all_markers = list(set(itertools.chain.from_iterable(markers_to_eval.values())))
+    adata_eval = adata[:,all_markers]
+    cluster_medians = get_medians(adata_eval, cluster_header, use_mean=use_mean) #gene-by-cluster
+    cluster_medians_genesum = cluster_medians.sum(axis=1) #i.e. rowsum 
+
+    df_ontarget_supp = pd.DataFrame()
+    for cl in markers_to_eval.keys():
+        ontarget_per_gene = []
+        markers = markers_to_eval[cl]
+        for gg in markers:
+            if cluster_medians_genesum[gg] != 0: #<== make sure that the denominator is not zero!!!
+                ontarget_gg = cluster_medians.loc[gg,cl] / cluster_medians.loc[gg,].sum()
+            else: ontarget_gg = 0
+            ontarget_per_gene.append(ontarget_gg)
+        if use_mean:
+            ontarget = statistics.mean(ontarget_per_gene)
+        else: ontarget = statistics.median(ontarget_per_gene) #slighly in favors good markers
+
+        ## return ontarget table as csv
+        df_ontarget_cl = pd.DataFrame({'clusterName': cl, 'markerGene': markers, 
+                                       'onTarget_per_gene': ontarget_per_gene, 'onTarget': ontarget})
+        df_ontarget_supp = pd.concat([df_ontarget_supp, df_ontarget_cl]).reset_index(drop=True) 
+        df_ontarget_supp.to_csv(output_folder + filename_prefix + "_markers_onTarget_supp.csv", index=False)
+    
+    df_ontarget = df_ontarget_supp[['clusterName', 'onTarget']].drop_duplicates().reset_index(drop=True)
+    df_ontarget.to_csv(output_folder + filename_prefix + "_markers_onTarget.csv", index=False)
+    return df_ontarget
+
+########################################################################################################
+
 ### Other useful functions ###
 
-def get_medians(adata, cluster_header):
+def get_medians(adata, cluster_header, use_mean=False): #<==added new parameter: use_mean
     cluster_medians = pd.DataFrame()
-    for cl in tqdm(sorted(set(adata.obs[cluster_header])), desc="Calculating medians per cluster"):
+    for cl in tqdm(sorted(set(adata.obs[cluster_header])), desc="Calculating medians (means) per cluster"):
         adata_cl = adata[adata.obs[cluster_header]==cl,]
-        medians_cl = adata_cl.to_df().median()
+        if use_mean:
+            medians_cl = adata_cl.to_df().mean()
+        else: medians_cl = adata_cl.to_df().median()
         cluster_medians = pd.concat([cluster_medians, pd.DataFrame({cl: medians_cl})], axis=1) #gene-by-cluster
     return cluster_medians
 
