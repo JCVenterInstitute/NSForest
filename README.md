@@ -21,7 +21,7 @@ NSForest(adata_prep, cluster_header=cluster_header, n_trees=1000, n_genes_eval=6
           medians_header = "medians_" + cluster_header, binary_scores_header = "binary_scores_" + cluster_header,
           gene_selection = "BinaryFirst_high", outputfilename="BinaryFirst_high")
 ```
-
+# NS-Forest v3.9
 ## Download and installation
 
 NS-Forest can be installed using `pip`:
