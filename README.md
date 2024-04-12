@@ -1,6 +1,10 @@
 # NS-Forest
 <img src="NS-Forest-sticker.png" width="110" height="125">
 
+Follow the tutorial/tutorial.ipynb. 
+
+Out of Date: DON"T READ ON
+
 ## Dev version of NS-Forest v4.0
 
 Follow the [tutorial](https://jcventerinstitute.github.io/celligrate/tutorials/NS-Forest_tutorial.html) to get started.
