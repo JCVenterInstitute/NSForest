@@ -1,7 +1,7 @@
 # NS-Forest
 <img src="NS-Forest-sticker.png" width="110" height="125">
 
-Follow the tutorial/tutorial.ipynb. 
+Follow the tutorials/tutorial.ipynb. 
 
 Out of Date: DON"T READ ON
 
