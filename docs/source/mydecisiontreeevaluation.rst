@@ -1,4 +1,0 @@
-mydecisiontreeevaluation
-========================
-
-.. autofunction:: mydecisiontreeevaluation.myDecisionTreeEvaluation

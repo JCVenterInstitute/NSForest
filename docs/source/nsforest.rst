@@ -1,4 +1,0 @@
-NSForest
-========
-
-.. autofunction:: nsforest.NSForest
