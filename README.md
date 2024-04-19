@@ -7,7 +7,7 @@
 # NS-Forest v4.0
 ## Download and installation
 
-### In terminal: 
+In terminal: 
 
 git clone https://github.com/JCVenterInstitute/NSForest.git
 
@@ -19,12 +19,12 @@ conda activate nsforest
 
 cd tutorials
 
-### How to run: 
+## Tutorial
 
 Follow the tutorials/tutorial.ipynb. 
 
 
-## Dev version of NS-Forest v4.0
+# Dev version of NS-Forest v4.0
 
 Follow the [tutorial](https://jcventerinstitute.github.io/celligrate/tutorials/NS-Forest_tutorial.html) to get started.
 
