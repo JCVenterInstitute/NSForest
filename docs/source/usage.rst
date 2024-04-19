@@ -20,17 +20,12 @@ To install NSForest via Github:
    $ cd NSForest
    $ conda env create -f nsforest.yml
    $ conda activate nsforest
+   # cd tutorial
 
 .. _running:
 
 Running
 -------
-
-Set up metadata
-
-.. code-block:: console
-
-   (nsforest) $ python3 saving_metadata.py
 
 Running NSForest
 
@@ -38,8 +33,3 @@ Running NSForest
 
    (nsforest) $ python3 nsforest -a ${input_folder}/arguments_${prefix}.csv 
 
-Parallelizing NSForest
-
-.. code-block:: console
-
-   (nsforest) $ python3 nsforest -a ${input_folder}/arguments_${prefix}.csv -c "${cluster}"
