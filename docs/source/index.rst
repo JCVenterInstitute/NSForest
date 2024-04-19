@@ -21,5 +21,5 @@ Contents
 .. toctree::
 
    installation
-   usage
+   preprocessing
    tutorials
