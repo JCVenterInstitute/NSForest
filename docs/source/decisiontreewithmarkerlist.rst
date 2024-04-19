@@ -1,0 +1,4 @@
+decisiontreewithmarkerlist
+==========================
+
+.. autofunction:: decisiontreewithmarkerlist.DecisionTree

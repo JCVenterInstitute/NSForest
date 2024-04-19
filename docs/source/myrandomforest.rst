@@ -1,0 +1,4 @@
+myrandomforest
+==============
+
+.. autofunction:: myrandomforest.myRandomForest
