@@ -22,8 +22,3 @@ Contents
 
    usage
    api
-   nsforest
-   myrandomforest
-   mydecisiontreeevaluation
-   decisiontreewithmarkerlist
-   calculate_diagonals
