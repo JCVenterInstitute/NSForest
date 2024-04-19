@@ -1,9 +1,25 @@
 # NS-Forest
 <img src="NS-Forest-sticker.png" width="110" height="125">
 
+# NS-Forest v4.0
+## Download and installation
+
+### In terminal: 
+
+git clone https://github.com/JCVenterInstitute/NSForest.git
+
+cd NSForest
+
+conda env create -f nsforest.yml
+
+conda activate nsforest
+
+cd tutorials
+
+### How to run: 
+
 Follow the tutorials/tutorial.ipynb. 
 
-Out of Date: DON"T READ ON
 
 ## Dev version of NS-Forest v4.0
 
@@ -73,6 +89,8 @@ Aevermann BD, Novotny M, Bakken T, Miller JA, Diehl AD, Osumi-Sutherland D, Lask
 * Yun (Renee) Zhang zhangy@jcvi.org
 * Richard Scheuermann RScheuermann@jcvi.org
 * Brian Aevermann baevermann@chanzuckerberg.com
+* Angela Liu aliu@jcvi.org
+* Beverly Peng bpeng@jcvi.org
 
 ## License
 
