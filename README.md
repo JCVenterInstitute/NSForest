@@ -1,6 +1,8 @@
-# NS-Forest
 <img src="NS-Forest-sticker.png" width="110" height="125">
-<img src="pipeline.PNG" width="500" height="200">
+
+# NS-Forest
+
+<img src="pipeline.PNG">
 
 # NS-Forest v4.0
 ## Download and installation
