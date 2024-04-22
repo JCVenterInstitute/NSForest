@@ -17,5 +17,5 @@ Add words here
    :nosignatures:
    :toctree: ../generated/
 
-   pp.get_medians
+   preprocessing.get_medians
 ```
