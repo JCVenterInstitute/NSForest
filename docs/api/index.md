@@ -1,6 +1,6 @@
 # API
 
-Import Scanpy as:
+Import NSForest as:
 
 ```
 import nsforest as ns
