@@ -1,6 +1,10 @@
 ## Preprocessing: `pp`
 
 ```{eval-rst}
+.. module:: nsforest.pp
+```
+
+```{eval-rst}
 .. currentmodule:: nsforest
 ```
 
