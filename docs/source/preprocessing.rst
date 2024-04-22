@@ -1,6 +1,14 @@
 Preprocessing
 =============
 
+.. autofunction:: _add_ann.get_medians
+
+.. autofunction:: _add_ann.prep_medians
+
+.. autofunction:: _add_ann.prep_binary_scores
+
+.. autofunction:: _add_ann.dendrogram
+
 .. _preprocessing:
 
 To install NSForest via Github: 
