@@ -13,7 +13,7 @@ python:
       path: .
 
 sphinx:
-  configuration: docs/source/conf.py
+  configuration: docs/conf.py
   fail_on_warning: true
 
 formats:
