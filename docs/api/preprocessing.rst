@@ -14,8 +14,8 @@ Add words here
 
 ```{eval-rst}
 .. autosummary::
-   :nosignatures:
-   :toctree: ../generated/
+:nosignatures:
+:toctree: ../generated/
 
-   preprocessing.get_medians
+preprocessing.get_medians
 ```
