@@ -7,9 +7,9 @@ NSForest Documentation
 Contents
 --------
 
-.. toctree::
+```{toctree}
+:hidden: true
+:maxdepth: 1
 
-   installation
-   preprocessing
-   tutorials
-   nsforesting
+api/index
+```
