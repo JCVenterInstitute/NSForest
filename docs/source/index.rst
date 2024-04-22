@@ -12,3 +12,4 @@ Contents
    installation
    preprocessing
    tutorials
+   nsforesting
