@@ -20,6 +20,7 @@ To install NSForest via Github:
    $ cd NSForest
    $ conda env create -f nsforest.yml
    $ conda activate nsforest
+   $ cd tutorials
 
 .. _running:
 
@@ -28,14 +29,17 @@ Preprocessing
 
 .. autofunction:: preprocessing.get_medians
 
-Running NSForest
+NSForest
+--------
 
-.. code-block:: console
+.. autofunction:: nsforesting.NSForest
 
-   (nsforest) $ python3 nsforest -a ${input_folder}/arguments_${prefix}.csv 
+Evaluating
+----------
 
-Parallelizing NSForest
+.. autofunction:: evaluating.DecisionTree
 
-.. code-block:: console
+Plotting
+--------
 
-   (nsforest) $ python3 nsforest -a ${input_folder}/arguments_${prefix}.csv -c "${cluster}"
+.. autofunction:: plotting.dotplot
