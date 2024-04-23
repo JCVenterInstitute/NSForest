@@ -6,12 +6,6 @@ Usage
 Installation
 ------------
 
-To install NSForest with pip: 
-
-.. code-block:: console
-
-   $ pip install nsforest
-
 To install NSForest via Github: 
 
 .. code-block:: console
@@ -22,12 +16,24 @@ To install NSForest via Github:
    $ conda activate nsforest
    $ cd tutorials
 
+To install NSForest with pip: 
+
+.. code-block:: console
+
+   $ pip install nsforest
+
 .. _running:
 
 Preprocessing
 -------------
 
 .. autofunction:: preprocessing.get_medians
+
+.. autofunction:: preprocessing.prep_medians
+
+.. autofunction:: preprocessing.prep_binary_scores
+
+.. autofunction:: preprocessing.dendrogram
 
 NSForest
 --------
@@ -39,7 +45,25 @@ Evaluating
 
 .. autofunction:: evaluating.DecisionTree
 
+.. autofunction:: evaluating.add_fraction
+
 Plotting
 --------
 
 .. autofunction:: plotting.dotplot
+
+.. autofunction:: plotting.stackedviolin
+
+.. autofunction:: plotting.matrixplot
+
+.. autofunction:: plotting.boxplot_fscore
+
+.. autofunction:: plotting.boxplot_ppv
+
+.. autofunction:: plotting.boxplot_ontarget
+
+.. autofunction:: plotting.scatter_w_clusterSize_fscore
+
+.. autofunction:: plotting.scatter_w_clusterSize_ppv
+
+.. autofunction:: plotting.scatter_w_clusterSize_ontarget
