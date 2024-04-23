@@ -4,6 +4,8 @@
 
 Documentation: https://nsforest.readthedocs.io/en/latest/
 
+BioArchive Link: TBD
+
 ## Download and installation
 
 In terminal: 
