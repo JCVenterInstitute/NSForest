@@ -1,5 +1,5 @@
-Plotting
-========
+Plotting with plotly
+====================
 
 .. autofunction:: plotting.boxplot_fscore
 

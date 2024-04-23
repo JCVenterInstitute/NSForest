@@ -1,5 +1,5 @@
-Plotting
-========
+Plotting with scanpy
+====================
 
 .. autofunction:: plotting.dotplot
 
