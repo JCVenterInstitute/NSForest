@@ -10,9 +10,3 @@ To install NSForest via Github:
    $ conda env create -f nsforest.yml
    $ conda activate nsforest
    $ cd tutorials
-
-To install NSForest with pip: 
-
-.. code-block:: console
-
-   $ pip install nsforest
