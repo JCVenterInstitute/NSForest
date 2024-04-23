@@ -6,11 +6,11 @@ import sys
 # sys.path.insert(0, os.path.abspath("../../.."))
 # sys.path.insert(0, os.path.abspath(".."))
 # sys.path.insert(0, os.path.abspath("../.."))
-sys.path.insert(0, os.path.abspath("../nsforest"))
-sys.path.insert(0, os.path.abspath("../nsforest/preprocessing"))
-sys.path.insert(0, os.path.abspath("../nsforest/nsforesting"))
-sys.path.insert(0, os.path.abspath("../nsforest/evaluating"))
-sys.path.insert(0, os.path.abspath("../nsforest/plotting"))
+sys.path.insert(0, os.path.abspath("../../nsforest"))
+sys.path.insert(0, os.path.abspath("../../nsforest/preprocessing"))
+sys.path.insert(0, os.path.abspath("../../nsforest/nsforesting"))
+sys.path.insert(0, os.path.abspath("../../nsforest/evaluating"))
+sys.path.insert(0, os.path.abspath("../../nsforest/plotting"))
 
 # -- Project information
 
