@@ -27,6 +27,11 @@ def DecisionTree(adata, cluster_header, medians_header,
         Output folder. 
     outputfilename_prefix
         Prefix for all output files. 
+    
+    Returns
+    -------
+    df_results: pd.DataFrame
+        dataframe of results including... TODO
     """
     ##-----
     ## prepare adata
@@ -98,6 +103,9 @@ def DecisionTree(adata, cluster_header, medians_header,
     return df_results
 
 def add_fraction(adata, df_results, cluster_header, medians_header, use_mean = False, output_folder = "", outputfilename_prefix = ""): 
+    """\
+    TODO: add this
+    """
     markers_dict = dict(zip(df_results["clusterName"], df_results["markers"]))
     # markers_onTarget(adata, markers_dict, cluster_header, medians_header, use_mean = False, output_folder = "", outputfilename_prefix = "")
     on_target_ratio = calculate_fraction.markers_onTarget(adata, markers_dict, cluster_header, medians_header, use_mean, output_folder, outputfilename_prefix)

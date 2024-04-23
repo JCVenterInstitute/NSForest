@@ -3,3 +3,4 @@
 *.swp
 ~**
 .NSForest_outputs*
+.nsforest/__pycache*

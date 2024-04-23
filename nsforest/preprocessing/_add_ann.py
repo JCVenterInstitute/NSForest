@@ -19,7 +19,7 @@ def get_medians(adata, cluster_header, use_mean = False): #<==added new paramete
     
     Returns
     -------
-    cluster_medians: gene-by-cluster dataframe
+        cluster_medians: gene-by-cluster dataframe
     """
     cluster_medians = pd.DataFrame()
     for cl in tqdm(sorted(set(adata.obs[cluster_header])), desc="Calculating medians (means) per cluster"):
@@ -44,7 +44,7 @@ def prep_medians(adata, cluster_header, use_mean = False, positive_genes_only = 
     
     Returns
     -------
-    adata: anndata with cluster_medians in adata.varm and subset by genes_selected
+        adata: anndata with cluster_medians in adata.varm and subset by genes_selected
     """
     print("Calculating medians...")
     start_time = time.time()
@@ -80,7 +80,7 @@ def prep_binary_scores(adata, cluster_header, medians_header):
     
     Returns
     -------
-    adata: anndata with binary_scores in adata.varm
+        adata: anndata with binary_scores in adata.varm
     """
     print("Calculating binary scores...")
     start_time = time.time()
@@ -108,6 +108,9 @@ def prep_binary_scores(adata, cluster_header, medians_header):
     return adata
 
 def dendrogram(adata, cluster_header, save = ".png"): 
+    """\
+    TODO: add this
+    """
     with plt.rc_context({"figure.figsize": (12, 1)}):
         sc.pl.dendrogram(adata, cluster_header, orientation = "top", save = save)
     return adata

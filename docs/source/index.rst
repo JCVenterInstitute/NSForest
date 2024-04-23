@@ -14,4 +14,5 @@ Contents
     preprocessing
     nsforesting
     evaluating
-    plotting
+    plotting_scanpy
+    plotting_plotly

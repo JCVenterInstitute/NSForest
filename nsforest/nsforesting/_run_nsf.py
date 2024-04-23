@@ -43,6 +43,11 @@ def NSForest(adata, cluster_header, medians_header, binary_scores_header,
         Output folder. Created if doesn't exist. 
     outputfilename_prefix: str
         Prefix for all output files. 
+    
+    Returns
+    -------
+    df_results: pd.DataFrame
+        dataframe of results including... TODO
     """
     ##-----
     ## prepare adata
