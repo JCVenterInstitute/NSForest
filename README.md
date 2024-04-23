@@ -1,9 +1,5 @@
 <img src="NS-Forest-sticker.png" width="110" height="125">
 
-# NS-Forest
-
-<img src="pipeline.PNG">
-
 # NS-Forest v4.0
 
 Documentation: https://nsforest.readthedocs.io/en/latest/
@@ -26,6 +22,7 @@ cd tutorials
 
 Follow the tutorials/tutorial.ipynb. 
 
+<img src="pipeline.PNG">
 
 # Dev version of NS-Forest v4.0
 
