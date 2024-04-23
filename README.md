@@ -24,6 +24,8 @@ cd tutorials
 
 Follow the tutorials/tutorial.ipynb. 
 
+## Pipeline
+
 <img src="pipeline.PNG">
 
 # Dev version of NS-Forest v4.0
