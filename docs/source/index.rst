@@ -10,5 +10,8 @@ Contents
 
 .. toctree::
 
-    usage
     installation
+    preprocessing
+    nsforesting
+    evaluating
+    plotting
