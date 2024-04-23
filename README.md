@@ -5,6 +5,9 @@
 <img src="pipeline.PNG">
 
 # NS-Forest v4.0
+
+Documentation: https://nsforest.readthedocs.io/en/latest/
+
 ## Download and installation
 
 In terminal: 
