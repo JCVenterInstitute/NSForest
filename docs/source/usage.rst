@@ -23,14 +23,10 @@ To install NSForest via Github:
 
 .. _running:
 
-Running
--------
+Preprocessing
+-------------
 
-Set up metadata
-
-.. code-block:: console
-
-   (nsforest) $ python3 saving_metadata.py
+.. autofunction:: preprocessing.get_medians
 
 Running NSForest
 
