@@ -1,4 +1,5 @@
 NSForest Documentation
+======================
 
 .. note::
 
@@ -9,4 +10,4 @@ Contents
 
 .. toctree::
 
-    api/index
+    usage
