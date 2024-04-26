@@ -11,7 +11,7 @@ def NSForest(adata, cluster_header, medians_header, binary_scores_header,
              n_trees = 1000, n_jobs = -1, beta = 0.5, n_top_genes = 15, n_binary_genes = 10, n_genes_eval = 6,
              output_folder = "", outputfilename_prefix = ""):
     """\
-    Performs main NSForest algorithm to find an optimal list of markers. 
+    Performs main NSForest algorithm to find a list of markers for each cluster. 
 
     Parameters
     ----------
@@ -46,8 +46,7 @@ def NSForest(adata, cluster_header, medians_header, binary_scores_header,
     
     Returns
     -------
-    df_results: pd.DataFrame
-        dataframe of results including... TODO
+    df_results: pd.DataFrame of the NS-Forest results. Contains classification metrics (f_score, PPV, recall, onTarget). 
     """
     ##-----
     ## prepare adata
@@ -169,6 +168,7 @@ def NSForest(adata, cluster_header, medians_header, binary_scores_header,
                            'clusterSize': int(scores[4]+scores[5]),
                            'f_score': scores[0],
                            'PPV': scores[1],
+                           'recall': int(scores[5]) / (int(scores[5]) + int(scores[4])),
                            'TN': int(scores[2]),
                            'FP': int(scores[3]),
                            'FN': int(scores[4]),

@@ -21,8 +21,10 @@ def DecisionTree(adata, cluster_header, medians_header,
         Dictionary containing marker genes for cell annotations (clusterName: list of markers)
     beta
         Beta value in sklearn.metrics's fbeta_score. 
-    exact_genes_eval
+    combinations
         Whether to use myDecisionTreeEvaluation on various combinations of `genes_eval`. 
+    use_mean
+        Whether to use the mean or median for minimum gene expression threshold. 
     output_folder
         Output folder. 
     outputfilename_prefix
@@ -30,8 +32,7 @@ def DecisionTree(adata, cluster_header, medians_header,
     
     Returns
     -------
-    df_results: pd.DataFrame
-        dataframe of results including... TODO
+    df_results: pd.DataFrame of the NS-Forest results. Contains classification metrics (f_score, PPV, recall, onTarget). 
     """
     ##-----
     ## prepare adata
@@ -80,6 +81,7 @@ def DecisionTree(adata, cluster_header, medians_header,
         dict_results_cl = {'clusterName': cl,
                            'clusterSize': int(scores[4]+scores[5]),
                            'f_score': scores[0],
+                           'recall': int(scores[5]) / (int(scores[5]) + int(scores[4])),
                            'PPV': scores[1],
                            'TN': int(scores[2]),
                            'FP': int(scores[3]),
@@ -104,7 +106,29 @@ def DecisionTree(adata, cluster_header, medians_header,
 
 def add_fraction(adata, df_results, cluster_header, medians_header, use_mean = False, output_folder = "", outputfilename_prefix = ""): 
     """\
-    TODO: add this
+    Calculating sklearn.metrics's fbeta_score, sklearn.metrics's prevision_score, sklearn.metrics's confusion_matrix for each `genes_eval` combination. 
+    Returning set of genes and scores with highest score sum. 
+
+    Parameters
+    ----------
+    adata: AnnData
+        Annotated data matrix.
+    df_results: pd.DataFrame
+        NS-Forest results. Contains classification metrics (f_score, PPV, recall, onTarget). 
+    cluster_header
+        Column in `adata`'s `.obs` representing cell annotation.
+    medians_header: str
+        Key in `adata`'s `.varm` storing median expression matrix. 
+    use_mean
+        Whether to use the mean or median for minimum gene expression threshold.
+    output_folder
+        Output folder. 
+    outputfilename_prefix
+        Prefix for all output files. 
+    
+    Returns
+    -------
+    df_results: pd.DataFrame of the NS-Forest results. Contains classification metrics (f_score, PPV, recall, onTarget). 
     """
     markers_dict = dict(zip(df_results["clusterName"], df_results["markers"]))
     # markers_onTarget(adata, markers_dict, cluster_header, medians_header, use_mean = False, output_folder = "", outputfilename_prefix = "")

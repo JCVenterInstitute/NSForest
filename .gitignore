@@ -3,4 +3,4 @@
 .DS_Store
 *.swp
 ~**
-.nsforest/__pycache*
+*__pycache*

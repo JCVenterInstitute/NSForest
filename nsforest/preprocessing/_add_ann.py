@@ -6,7 +6,7 @@ from tqdm import tqdm # may have to play with "import tqdm" vs "from tqdm import
 import matplotlib.pyplot as plt
 import scanpy as sc
 
-def get_medians(adata, cluster_header, use_mean = False): #<==added new parameter: use_mean):
+def get_medians(adata, cluster_header, use_mean = False): 
     """\
     Calculating the median expression per gene for each cluster
 
@@ -16,10 +16,12 @@ def get_medians(adata, cluster_header, use_mean = False): #<==added new paramete
         AnnData. Annotated data matrix.
     cluster_header
         Column in `adata`'s `.obs` storing cell annotation.
+    use_mean
+        Whether to use the mean or median for minimum gene expression threshold. 
     
     Returns
     -------
-        cluster_medians: gene-by-cluster dataframe
+    cluster_medians: gene-by-cluster dataframe
     """
     cluster_medians = pd.DataFrame()
     for cl in tqdm(sorted(set(adata.obs[cluster_header])), desc="Calculating medians (means) per cluster"):
@@ -41,10 +43,14 @@ def prep_medians(adata, cluster_header, use_mean = False, positive_genes_only = 
         AnnData. Annotated data matrix.
     cluster_header
         Column in `adata`'s `.obs` storing cell annotation.
+    use_mean
+        Whether to use the mean or median for minimum gene expression threshold. 
+    positive_genes_only
+        Whether to subset AnnData to only have genes with median/mean expression greater than 0. 
     
     Returns
     -------
-        adata: anndata with cluster_medians in adata.varm and subset by genes_selected
+    adata: anndata with cluster_medians in adata.varm
     """
     print("Calculating medians...")
     start_time = time.time()
@@ -80,7 +86,7 @@ def prep_binary_scores(adata, cluster_header, medians_header):
     
     Returns
     -------
-        adata: anndata with binary_scores in adata.varm
+    adata: anndata with binary_scores in adata.varm
     """
     print("Calculating binary scores...")
     start_time = time.time()
@@ -109,7 +115,20 @@ def prep_binary_scores(adata, cluster_header, medians_header):
 
 def dendrogram(adata, cluster_header, save = ".png"): 
     """\
-    TODO: add this
+    Generating a dendrogram with the unfiltered anndata. 
+
+    Parameters
+    ----------
+    adata
+        AnnData. Annotated data matrix.
+    cluster_header
+        Column in `adata`'s `.obs` storing cell annotation.
+    save
+        Dendrogram file name suffix
+    
+    Returns
+    -------
+    adata: anndata with dendrogram in adata.uns
     """
     with plt.rc_context({"figure.figsize": (12, 1)}):
         sc.pl.dendrogram(adata, cluster_header, orientation = "top", save = save)
