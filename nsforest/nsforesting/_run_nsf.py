@@ -113,7 +113,7 @@ def NSForest(adata, cluster_header, medians_header, binary_scores_header,
     df_supp = df_markers = df_results = pd.DataFrame()
     start_time = time.time()
     
-    for cl in tqdm(cluster_list, desc = "running NSForest on all clusters"): 
+    for cl in cluster_list: 
         ct = list(cluster_list).index(cl) + 1
         print(f"{ct} out of {n_clusters}:")
         print(f"\t{cl}")
