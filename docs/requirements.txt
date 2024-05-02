@@ -7,3 +7,4 @@ pandas==2.1.4
 tqdm==4.66.1
 plotly==5.19.0
 nbsphinx
+ipython 
