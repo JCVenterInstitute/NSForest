@@ -1,4 +1,4 @@
 Utility Functions
 =================
 
-.. autofunction:: str_to_list
+.. autofunction:: utils.str_to_list

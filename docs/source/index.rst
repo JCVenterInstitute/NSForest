@@ -17,3 +17,4 @@ Contents
     evaluating
     plotting_scanpy
     plotting_plotly
+    utils
