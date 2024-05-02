@@ -7,8 +7,30 @@ import scanpy as sc
 import nsforest as ns
 import nsforest.preprocessing as pp
 
-# Calculate ratio of diagonal/total expression
-def markers_onTarget(adata, markers_dict, cluster_header, medians_header, use_mean = False, output_folder = "", outputfilename_prefix = ""):
+def markers_onTarget(adata, markers_dict, cluster_header, use_mean = False, output_folder = "", outputfilename_prefix = ""):
+    """\
+    Calculating onTarget fraction. 
+
+    Parameters:
+    -----------
+        adata: AnnData
+            Annotated data matrix.
+        markers_dict: dict (clusterName: list of markers)
+            List of markers per cell type to run decision tree. 
+        cluster_header: str
+            Key in `adata.obs` storing cell type.
+        use_mean: bool (default: False)
+            Whether to use the mean or median for minimum gene expression threshold. 
+        output_folder: str (default: "")
+            Output folder for output files. 
+        outputfilename_prefix: str (default: "")
+            Prefix for all output files. 
+    
+    Returns:
+    ========
+        df_results: pd.DataFrame
+            onTarget fraction values per `clusterName`. 
+    """
     all_markers = list(set(itertools.chain.from_iterable(markers_dict.values())))
     adata_eval = adata[:,all_markers]
     # cluster_medians = adata.varm[medians_header].T
@@ -45,22 +67,27 @@ def markers_onTarget(adata, markers_dict, cluster_header, medians_header, use_me
 # Calculate ratio of diagonal/total expression
 def on_target_fraction_angela(adata, markers_dict, cluster_header, medians_header, output_folder, outputfilename_prefix): 
     """\
-    Calculating the on-target fraction. 
+    Calculating onTarget fraction. 
 
-    Parameters
-    ----------
-    adata
-        Annotated data matrix.
-    nsf_results_df
-        Output dataframe of NSForest. 
-    cluster_header
-        Column in `adata`'s `.obs` representing cell annotation.
-    medians_header
-        Column in `adata`'s `.varm` storing median expression matrix. 
-    output_folder
-        Output folder. 
-    outputfilename_prefix
-        Prefix for all output files. 
+    Parameters:
+    -----------
+        adata: AnnData
+            Annotated data matrix.
+        markers_dict: dict (clusterName: list of markers)
+            List of markers per cell type to run decision tree. 
+        cluster_header: str
+            Key in `adata.obs` storing cell type.
+        medians_header: str
+            Key in `adata.varm` storing median expression matrix. 
+        output_folder: str (default: "")
+            Output folder for output files. 
+        outputfilename_prefix: str (default: "")
+            Prefix for all output files. 
+    
+    Returns:
+    ========
+        df_results: pd.DataFrame
+            onTarget fraction values per `clusterName`. 
     """
     cluster_medians = adata.varm[medians_header].transpose()
     

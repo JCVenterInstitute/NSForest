@@ -6,24 +6,24 @@ from sklearn.ensemble import RandomForestClassifier
 ## run Random Forest on the binary dummy variables ==> outputs all genes ranked by Gini impurity
 def myRandomForest(adata, df_dummies, cl, n_trees, n_jobs, n_top_genes, binary_dummies):
     """\
-    Returning top genes sorted by gini index from sklearn.ensemble's RandomForestClassifier. 
+    Returning `n_top_genes` sorted by gini index from sklearn.ensemble's RandomForestClassifier. 
 
     Parameters
     ----------
-    adata: AnnData
-        Annotated data matrix.
-    df_dummies: pd.DataFrame
-        Dummy dataframe for one vs all model. 
-    cl: str
-        Specified cluster. 
-    n_trees: int
-        Number of `n_estimators` in sklearn.ensemble's RandomForestClassifier.
-    n_jobs: int
-        Number of `n_jobs` in sklearn.ensemble's RandomForestClassifier. 
-    n_top_genes: int
-        Taking the top `n_top_genes` ranked by sklearn.ensemble's RandomForestClassifier for sklearn.tree's DecisionTreeClassifier. 
-    binary_dummies: pd.DataFrame
-        Dataframe of binary scores filtered by `gene_selection`. 
+        adata: AnnData
+            Annotated data matrix.
+        df_dummies: pd.DataFrame
+            Dummy dataframe for one vs all model. 
+        cl: str
+            Specified cell annotation. 
+        n_trees: int 
+            `n_estimators` in sklearn.ensemble's RandomForestClassifier. 
+        n_jobs: int (default: -1)
+            `n_jobs` in sklearn.ensemble's RandomForestClassifier. 
+        n_top_genes: int 
+            Taking the top `n_top_genes` ranked by sklearn.ensemble's RandomForestClassifier as input for sklearn.tree's DecisionTreeClassifier. 
+        binary_dummies: pd.DataFrame
+            Dataframe of binary scores filtered by `gene_selection` parameter. 
 
     Returns
     -------

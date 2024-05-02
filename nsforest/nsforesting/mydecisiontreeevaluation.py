@@ -11,27 +11,29 @@ def myDecisionTreeEvaluation(adata, df_dummies, cl, genes_eval, beta = 0.5, comb
     """\
     Calculating performance metrics for each `genes_eval` combination. 
 
-    Parameters
-    ----------
-    adata: AnnData
-        Annotated data matrix.
-    df_dummies: pd.DataFrame
-        Dummy dataframe for one vs all model. 
-    cl: str
-        Specified cell annotation. 
-    genes_eval: list
-        List of genes to find best combination for sklearn.tree's DecisionTreeClassifier. 
-    beta: float (default: 0.5)
-        Beta value in sklearn.metrics's fbeta_score. 
-    exact_genes_eval: bool (default: False)
-        Whether to use myDecisionTreeEvaluation on various combinations of `genes_eval`. 
+    Parameters:
+    -----------
+        adata: AnnData
+            Annotated data matrix. 
+        df_dummies: pd.DataFrame
+            Dummy dataframe for one vs all model. 
+        cl: str
+            Specified cell annotation. 
+        genes_eval: list
+            List of genes to find best combination for sklearn.tree's DecisionTreeClassifier. 
+        beta: float (default: 0.5)
+            `beta` in sklearn.metrics's fbeta_score. 
+        exact_genes_eval: bool (default: False)
+            Whether to fine best combination of `genes_eval`. 
     
-    Returns
-    -------
-    markers: combination of markers with highest fbeta. 
-    scores: fbeta, ppv, tn, fp, fn, tp of markers
-    score_max: fbeta score
-    Returning the set of genes and scores with highest fbeta. 
+    Returns:
+    ========
+        markers: list
+            List of markers. 
+        scores: list
+            List containing fbeta, ppv, tn, fp, fn, tp of `markers`. 
+        score_max: float
+            Fbeta score of `markers`. 
     """
     # Training decision tree based on single gene split
     dict_pred = {}
