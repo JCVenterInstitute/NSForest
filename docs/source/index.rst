@@ -8,13 +8,12 @@ NSForest Documentation
 Contents
 --------
 
-.. code-block:: ipython
+.. code-block:: python
     2**3
 
 .. toctree::
 
     installation
-    
     preprocessing
     nsforesting
     evaluating
