@@ -11,6 +11,7 @@ Contents
 .. toctree::
 
     installation
+    tutorial
     preprocessing
     nsforesting
     evaluating
