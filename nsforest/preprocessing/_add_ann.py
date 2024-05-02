@@ -8,12 +8,15 @@ import scanpy as sc
 
 def get_medians(adata, cluster_header, use_mean = False): 
     """\
-    Calculating the median expression per gene for each cluster
+    Calculating the median expression per gene for each cluster. 
 
     Parameters
     ----------
+
+    Parameter
+    =========
     adata
-        AnnData. Annotated data matrix.
+        AnnData. Annotated data matrix. 
     cluster_header
         Column in `adata`'s `.obs` storing cell annotation.
     use_mean
