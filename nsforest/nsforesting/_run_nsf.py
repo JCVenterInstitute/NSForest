@@ -1,7 +1,6 @@
 
 import time
 import pandas as pd
-from tqdm import tqdm 
 from nsforest.nsforesting import myrandomforest
 from nsforest.nsforesting import mydecisiontreeevaluation
 from nsforest.nsforesting import calculate_fraction
@@ -11,10 +10,10 @@ def NSForest(adata, cluster_header, medians_header, binary_scores_header,
              n_trees = 1000, n_jobs = -1, beta = 0.5, n_top_genes = 15, n_binary_genes = 10, n_genes_eval = 6,
              output_folder = "", outputfilename_prefix = ""):
     """\
-    Performs main NSForest algorithm to find a list of markers for each cluster. 
+    Performs the NS-Forest algorithm to find a list of NS-Forest markers for each cell type. 
 
     Parameters:
-    ===========
+    -----------
         adata: AnnData
             Annotated data matrix.
         cluster_header: str
@@ -26,33 +25,28 @@ def NSForest(adata, cluster_header, medians_header, binary_scores_header,
         cluster_list: list (default: all)
             For subsetting `cluster_header` values. Useful for parallelizing NSForest. 
         gene_selection: str (default: "BinaryFirst_high")
-            Threshold for filtering genes by binary score. 
-            Options: [None, "BinaryFirst_high", "BinaryFirst_moderate", "BinaryFirst_low"]. 
-            None: includes all genes. 
-            BinaryFirst_low: > median. 
-            BinaryFirst_moderate: > mean + 1*std. 
-            BinaryFirst_high: > mean + 2*std. 
+            Threshold for filtering genes by binary score. Options: [None, "BinaryFirst_high", "BinaryFirst_moderate", "BinaryFirst_low"]. None: includes all genes. BinaryFirst_low: > median. BinaryFirst_moderate: > mean + 1*std. BinaryFirst_high: > mean + 2*std. 
         n_trees: int (default: 1000)
             `n_estimators` in sklearn.ensemble's RandomForestClassifier. 
         n_jobs: int (default: -1)
             `n_jobs` in sklearn.ensemble's RandomForestClassifier. 
         beta: float (default: 0.5)
             `beta` in sklearn.metrics's fbeta_score. 
-        n_top_genes: int
+        n_top_genes: int (default: 15)
             Taking the top `n_top_genes` ranked by sklearn.ensemble's RandomForestClassifier as input for sklearn.tree's DecisionTreeClassifier. 
-        n_binary_genes: int
+        n_binary_genes: int (default: 10)
             Taking the top `n_binary_genes` ranked by binary score for supplementary table output. 
-        n_genes_eval: int
+        n_genes_eval: int (default: 6)
             Taking the top `n_genes_eval` ranked by binary score as input for sklearn.tree's DecisionTreeClassifier. 
-        output_folder: str
-            Output folder. Created if doesn't exist. 
-        outputfilename_prefix: str
+        output_folder: str (default: "")
+            Output folder for output files. 
+        outputfilename_prefix: str (default: "")
             Prefix for all output files. 
     
     Returns:
-    --------
+    ========
         df_results: pd.DataFrame 
-            NS-Forest results. Contains classification metrics (f_score, PPV, recall, onTarget). 
+            NS-Forest results. Contains classification metrics (f_score, PPV (precision), recall, onTarget) of NS-Forest determined markers. Also includes `clusterSize`, confusion matrix, and `binary_genes`. 
     """
     ##-----
     ## prepare adata

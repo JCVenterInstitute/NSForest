@@ -1,6 +1,10 @@
 Plotting with plotly
 ====================
 
+.. autofunction:: plotting.boxplot
+
+.. autofunction:: plotting.scatter_w_clusterSize
+
 .. autofunction:: plotting.boxplot_fscore
 
 .. autofunction:: plotting.boxplot_ppv

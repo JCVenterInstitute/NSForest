@@ -6,23 +6,45 @@ from tqdm import tqdm # may have to play with "import tqdm" vs "from tqdm import
 import matplotlib.pyplot as plt
 import scanpy as sc
 
+def dendrogram(adata, cluster_header, save = ".png"): 
+    """\
+    Generating a scanpy dendrogram from anndata. 
+
+    Parameters:
+    -----------
+        adata: AnnData
+            Annotated data matrix. 
+        cluster_header: str
+            Key in `adata.obs` storing cell type. 
+        save: str (default: "dendrogram.png")
+            Dendrogram file name suffix.  
+    
+    Returns:
+    ========
+        adata: AnnData
+            AnnData with `cluster_header`_dendrogram in `adata.uns`. 
+    """
+    with plt.rc_context({"figure.figsize": (12, 1)}):
+        sc.pl.dendrogram(adata, cluster_header, orientation = "top", save = save)
+    return adata
+
 def get_medians(adata, cluster_header, use_mean = False): 
     """\
     Calculating the median expression per gene for each cluster. 
 
     Parameters:
-    ===========
+    -----------
         adata: AnnData
             Annotated data matrix. 
         cluster_header: str
-            Column in `adata`'s `.obs` storing cell annotation.
+            Key in `adata.obs` storing cell type. 
         use_mean: bool (default: False)
             Whether to use the mean or median for minimum gene expression threshold. 
     
     Returns:
     ========
-        cluster_medians: 
-            gene-by-cluster dataframe
+        cluster_medians: pd.DataFrame
+            gene-by-cluster median (mean) expression matrix. 
     """
     cluster_medians = pd.DataFrame()
     for cl in tqdm(sorted(set(adata.obs[cluster_header])), desc="Calculating medians (means) per cluster"):
@@ -36,22 +58,23 @@ def get_medians(adata, cluster_header, use_mean = False):
 
 def prep_medians(adata, cluster_header, use_mean = False, positive_genes_only = True):
     """\
-    Calculating the median expression and filtering genes
+    Calling get_medians(). Filtering for positive genes if specified. 
 
     Parameters:
-    ===========
-    adata
-        AnnData. Annotated data matrix.
-    cluster_header
-        Column in `adata`'s `.obs` storing cell annotation.
-    use_mean
-        Whether to use the mean or median for minimum gene expression threshold. 
-    positive_genes_only
-        Whether to subset AnnData to only have genes with median/mean expression greater than 0. 
+    -----------
+        adata: AnnData
+            Annotated data matrix. 
+        cluster_header: str
+            Key in `adata.obs` storing cell type. 
+        use_mean: bool (default: False)
+            Whether to use the mean or median for minimum gene expression threshold. 
+        positive_genes_only: bool (default: True)
+            Whether to subset `adata` to only have genes with median (mean) expression greater than 0. 
     
     Returns:
-    ++++++++
-    adata: anndata with cluster_medians in adata.varm
+    ========
+        adata: AnnData
+            AnnData with `cluster_header`_medians in `adata.varm`. 
     """
     print("Calculating medians...")
     start_time = time.time()
@@ -74,20 +97,21 @@ def prep_medians(adata, cluster_header, use_mean = False, positive_genes_only = 
 
 def prep_binary_scores(adata, cluster_header, medians_header):
     """\
-    Calculating the binary scores
+    Calculating the binary scores for each gene per cluster. 
 
     Parameters:
-    ___________
-        adata
-            AnnData. Annotated data matrix.
-        cluster_header
-            Column in `adata`'s `.obs` storing cell annotation.
-        medians_header
-            Key in `adata`'s `.varm` storing median expression matrix. 
+    -----------
+        adata: AnnData
+            Annotated data matrix. 
+        cluster_header: str
+            Key in `adata.obs` storing cell type. 
+        medians_header: str
+            Key in `adata.varm` storing median expression matrix. 
     
-    Returns
-    ^^^^^^^
-        adata: anndata with binary_scores in adata.varm
+    Returns:
+    ========
+        adata: AnnData
+            AnnData with `cluster_header`_binary_scores in `adata.varm`. 
     """
     print("Calculating binary scores...")
     start_time = time.time()
@@ -112,25 +136,4 @@ def prep_binary_scores(adata, cluster_header, medians_header):
     print("mean:", binary_scores.stack().mean())
     print("std:", binary_scores.stack().std())
     
-    return adata
-
-def dendrogram(adata, cluster_header, save = ".png"): 
-    """\
-    Generating a dendrogram with the unfiltered anndata. 
-
-    Parameters
-    ----------
-    adata
-        AnnData. Annotated data matrix.
-    cluster_header
-        Column in `adata`'s `.obs` storing cell annotation.
-    save
-        Dendrogram file name suffix
-    
-    Returns
-    -------
-    adata: anndata with dendrogram in adata.uns
-    """
-    with plt.rc_context({"figure.figsize": (12, 1)}):
-        sc.pl.dendrogram(adata, cluster_header, orientation = "top", save = save)
     return adata

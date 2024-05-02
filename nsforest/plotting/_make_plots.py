@@ -3,23 +3,84 @@ import pandas as pd
 import scanpy as sc
 import plotly.express as px
 
+def boxplot(df, col, save = False, output_folder = "", outputfilename_prefix = ""): 
+    """\
+    Generating plotly boxplot of specified column in df. 
+
+    Parameters:
+    -----------
+        df: pd.DataFrame
+            NS-Forest results containing `clusterName` and `col`. 
+        col: str
+            Column in `df` to create the boxplot. 
+        save: bool (default: False)
+            Whether to save html file. 
+        output_folder: str (default: "")
+            Output folder for output files. 
+        outputfilename_prefix: str (default: "")
+            Prefix for all output files. 
+    
+    Returns:
+    ========
+        fig: plotly.graph_objects.Figure
+            Boxplot of `col` values
+    """
+    fig = px.box(df, y=col, points='all', range_y=[-.05,1.05],
+                 title=f"{col} median = {round(df['f_score'].median(),3)}",
+                 width=400, height=500, hover_name='clusterName')
+    if save: 
+        filename = output_folder + outputfilename_prefix + f"_boxplot_{col}.html"
+        print("Saving...\n", filename)
+        fig.write_html(filename)
+    return fig
+
+def scatter_w_clusterSize(df, col, save = False, output_folder = "", outputfilename_prefix = ""): 
+    """\
+    Generating plotly scatterplot of specified column by `clusterSize. 
+
+    Parameters:
+    -----------
+        df: pd.DataFrame
+            NS-Forest results containing `clusterName`, `clusterSize`, and `col`. 
+        col: str
+            Column in `df` to create the scatterplot. 
+        save: bool (default: False)
+            Whether to save html file. 
+        output_folder: str (default: "")
+            Output folder for output files. 
+        outputfilename_prefix: str (default: "")
+            Prefix for all output files. 
+    
+    Returns:
+    ========
+        fig: plotly.graph_objects.Figure
+            Boxplot of `col` values
+    """
+    fig = px.scatter(df, x='clusterSize', y=col, range_y=[-.05,1.05],
+                     width=700, height=500, hover_name='clusterName')
+    if save: 
+        filename = output_folder + outputfilename_prefix + f"_scatter_{col}.html"
+        print("Saving...\n", filename)
+        fig.write_html(filename)
+    return fig 
+
 def boxplot_fscore(df, save = False, output_folder = "", outputfilename_prefix = ""): 
     """\
     Generating plotly boxplot of f_score. 
 
-    Parameters
-    ----------
-    df: pd.DataFrame
-        NS-Forest results containing f_score column. 
-    save: bool
-        Whether to save html file. 
-    output_folder
-        Output folder. 
-    outputfilename_prefix
-        Prefix for all output files. 
+    Parameters:
+    -----------
+        df: pd.DataFrame
+            NS-Forest results containing `f_score` column. 
+        save: bool (default: False)
+            Whether to save html file. 
+        output_folder
+            Output folder. 
+        outputfilename_prefix
+            Prefix for all output files. 
     
-    Returns
-    -------
+    Returns:
+    ========
     fig: plotly figure
     """
     fig = px.box(df, y='f_score', points='all', range_y=[-.05,1.05],
@@ -35,8 +96,8 @@ def boxplot_ppv(df, save = False, output_folder = "", outputfilename_prefix = ""
     """\
     Generating plotly boxplot of PPV. 
 
-    Parameters
-    ----------
+    Parameters:
+    -----------
     df: pd.DataFrame
         NS-Forest results containing PPV column. 
     save: bool
@@ -46,8 +107,8 @@ def boxplot_ppv(df, save = False, output_folder = "", outputfilename_prefix = ""
     outputfilename_prefix
         Prefix for all output files. 
     
-    Returns
-    -------
+    Returns:
+    ========
     fig: plotly figure
     """
     fig = px.box(df, y='PPV', points='all', range_y=[-.05,1.05],
@@ -63,8 +124,8 @@ def boxplot_ontarget(df, save = False, output_folder = "", outputfilename_prefix
     """\
     Generating plotly boxplot of onTarget fraction. 
 
-    Parameters
-    ----------
+    Parameters:
+    -----------
     df: pd.DataFrame
         NS-Forest results containing onTarget column. 
     save: bool
@@ -74,8 +135,8 @@ def boxplot_ontarget(df, save = False, output_folder = "", outputfilename_prefix
     outputfilename_prefix
         Prefix for all output files. 
     
-    Returns
-    -------
+    Returns:
+    ========
     fig: plotly figure
     """
     fig = px.box(df, y='onTarget', points='all', range_y=[-.05,1.05],
@@ -91,8 +152,8 @@ def scatter_w_clusterSize_fscore(df, save = False, output_folder = "", outputfil
     """\
     Generating plotly scatterplot of f_score by clusterSize. 
 
-    Parameters
-    ----------
+    Parameters:
+    -----------
     df: pd.DataFrame
         NS-Forest results containing f_score and clusterSize columns. 
     save: bool
@@ -102,8 +163,8 @@ def scatter_w_clusterSize_fscore(df, save = False, output_folder = "", outputfil
     outputfilename_prefix
         Prefix for all output files. 
     
-    Returns
-    -------
+    Returns:
+    ========
     fig: plotly figure
     """
     fig = px.scatter(df, x='clusterSize', y='f_score', range_y=[-.05,1.05],
@@ -118,8 +179,8 @@ def scatter_w_clusterSize_ppv(df, save = False, output_folder = "", outputfilena
     """\
     Generating plotly scatterplot of PPV by clusterSize. 
 
-    Parameters
-    ----------
+    Parameters:
+    -----------
     df: pd.DataFrame
         NS-Forest results containing PPV and clusterSize columns. 
     save: bool
@@ -129,8 +190,8 @@ def scatter_w_clusterSize_ppv(df, save = False, output_folder = "", outputfilena
     outputfilename_prefix
         Prefix for all output files. 
     
-    Returns
-    -------
+    Returns:
+    ========
     fig: plotly figure
     """
     fig = px.scatter(df, x='clusterSize', y='PPV', range_y=[-.05,1.05],
@@ -145,8 +206,8 @@ def scatter_w_clusterSize_ontarget(df, save = False, output_folder = "", outputf
     """\
     Generating plotly scatterplot of onTarget fraction by clusterSize. 
 
-    Parameters
-    ----------
+    Parameters:
+    -----------
     df: pd.DataFrame
         NS-Forest results containing onTarget and clusterSize columns. 
     save: bool
@@ -156,8 +217,8 @@ def scatter_w_clusterSize_ontarget(df, save = False, output_folder = "", outputf
     outputfilename_prefix
         Prefix for all output files. 
     
-    Returns
-    -------
+    Returns:
+    ========
     fig: plotly figure
     """
     fig = px.scatter(df, x='clusterSize', y='onTarget', range_y=[-.05,1.05], 
@@ -172,8 +233,8 @@ def dotplot(adata, markers, cluster_header, dendrogram = True, save = False, out
     """\
     Generating scanpy dotplot of anndata with input marker list. 
 
-    Parameters
-    ----------
+    Parameters:
+    -----------
     adata: AnnData
         Annotated data matrix.
     markers: dict
@@ -198,8 +259,8 @@ def stackedviolin(adata, markers, cluster_header, dendrogram = True, save = Fals
     """\
     Generating scanpy stacked_violin of anndata with input marker list. 
 
-    Parameters
-    ----------
+    Parameters:
+    -----------
     adata: AnnData
         Annotated data matrix.
     markers: dict
@@ -224,8 +285,8 @@ def matrixplot(adata, markers, cluster_header, dendrogram = True, save = False, 
     """\
     Generating scanpy matrixplot of anndata with input marker list. 
 
-    Parameters
-    ----------
+    Parameters:
+    -----------
     adata: AnnData
         Annotated data matrix.
     markers: dict
