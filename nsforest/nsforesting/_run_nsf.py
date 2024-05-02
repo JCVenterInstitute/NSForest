@@ -18,15 +18,20 @@ def NSForest(adata, cluster_header, medians_header, binary_scores_header,
         adata: AnnData
             Annotated data matrix.
         cluster_header: str
-            Column in `adata.obs` storing cell annotation.
+            Key in `adata.obs` storing cell type.
         medians_header: str
-            Key in `adata`'s `.varm` storing median expression matrix. 
+            Key in `adata.varm` storing median expression matrix. 
         binary_scores_header: str
-            Key in `adata`'s `.varm` storing binary score matrix.
-        cluster_list: list
-            For subsetting by specified cell annotations. Used for parallelizing NSForest. 
-        gene_selection: str
-            Level of filtering genes by binary score. Options: [None, "BinaryFirst_high", "BinaryFirst_moderate", "BinaryFirst_low"]. None includes all genes. BinaryFirst_high includes genes with binary scores > 2 std. BinaryFirst_moderate includes genes with binary scores > 1 std. BinaryFirst_low includes genes with binary scores > median. 
+            Key in `adata.varm` storing binary score matrix.
+        cluster_list: list (default: all `cluster_header` values)
+            For subsetting `cluster_header` values. Useful for parallelizing NSForest. 
+        gene_selection: str (default: "BinaryFirst_high)
+            Threshold for filtering genes by binary score. 
+            Options: [None, "BinaryFirst_high", "BinaryFirst_moderate", "BinaryFirst_low"]. 
+                None: includes all genes. 
+                BinaryFirst_low: > median. 
+                BinaryFirst_moderate: > mean + 1*std. 
+                BinaryFirst_high: > mean + 2*std. 
         n_trees: int
             Number of `n_estimators` in sklearn.ensemble's RandomForestClassifier. 
         n_jobs: int
