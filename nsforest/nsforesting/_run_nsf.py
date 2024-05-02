@@ -13,40 +13,41 @@ def NSForest(adata, cluster_header, medians_header, binary_scores_header,
     """\
     Performs main NSForest algorithm to find a list of markers for each cluster. 
 
-    Parameters
-    ----------
-    adata: AnnData
-        Annotated data matrix.
-    cluster_header: str
-        Column in `adata`'s `.obs` storing cell annotation.
-    medians_header: str
-        Key in `adata`'s `.varm` storing median expression matrix. 
-    binary_scores_header: str
-        Key in `adata`'s `.varm` storing binary score matrix.
-    cluster_list: list
-        For subsetting by specified cell annotations. Used for parallelizing NSForest. 
-    gene_selection: str
-        Level of filtering genes by binary score. Options: [None, "BinaryFirst_high", "BinaryFirst_moderate", "BinaryFirst_low"]. None includes all genes. BinaryFirst_high includes genes with binary scores > 2 std. BinaryFirst_moderate includes genes with binary scores > 1 std. BinaryFirst_low includes genes with binary scores > median. 
-    n_trees: int
-        Number of `n_estimators` in sklearn.ensemble's RandomForestClassifier. 
-    n_jobs: int
-        Number of `n_jobs` in sklearn.ensemble's RandomForestClassifier. 
-    beta: float
-        Beta value in sklearn.metrics's fbeta_score. 
-    n_top_genes: int
-        Taking the top `n_top_genes` ranked by sklearn.ensemble's RandomForestClassifier as input for sklearn.tree's DecisionTreeClassifier. 
-    n_binary_genes: int
-        Taking the top `n_binary_genes` ranked by binary score for supplementary table output. 
-    n_genes_eval: int
-        Taking the top `n_genes_eval` ranked by binary score as input for sklearn.tree's DecisionTreeClassifier. 
-    output_folder: str
-        Output folder. Created if doesn't exist. 
-    outputfilename_prefix: str
-        Prefix for all output files. 
+    Parameters:
+    ===========
+        adata: AnnData
+            Annotated data matrix.
+        cluster_header: str
+            Column in `adata.obs` storing cell annotation.
+        medians_header: str
+            Key in `adata`'s `.varm` storing median expression matrix. 
+        binary_scores_header: str
+            Key in `adata`'s `.varm` storing binary score matrix.
+        cluster_list: list
+            For subsetting by specified cell annotations. Used for parallelizing NSForest. 
+        gene_selection: str
+            Level of filtering genes by binary score. Options: [None, "BinaryFirst_high", "BinaryFirst_moderate", "BinaryFirst_low"]. None includes all genes. BinaryFirst_high includes genes with binary scores > 2 std. BinaryFirst_moderate includes genes with binary scores > 1 std. BinaryFirst_low includes genes with binary scores > median. 
+        n_trees: int
+            Number of `n_estimators` in sklearn.ensemble's RandomForestClassifier. 
+        n_jobs: int
+            Number of `n_jobs` in sklearn.ensemble's RandomForestClassifier. 
+        beta: float
+            Beta value in sklearn.metrics's fbeta_score. 
+        n_top_genes: int
+            Taking the top `n_top_genes` ranked by sklearn.ensemble's RandomForestClassifier as input for sklearn.tree's DecisionTreeClassifier. 
+        n_binary_genes: int
+            Taking the top `n_binary_genes` ranked by binary score for supplementary table output. 
+        n_genes_eval: int
+            Taking the top `n_genes_eval` ranked by binary score as input for sklearn.tree's DecisionTreeClassifier. 
+        output_folder: str
+            Output folder. Created if doesn't exist. 
+        outputfilename_prefix: str
+            Prefix for all output files. 
     
-    Returns
-    -------
-    df_results: pd.DataFrame of the NS-Forest results. Contains classification metrics (f_score, PPV, recall, onTarget). 
+    Returns:
+    --------
+        df_results: pd.DataFrame 
+            NS-Forest results. Contains classification metrics (f_score, PPV, recall, onTarget). 
     """
     ##-----
     ## prepare adata
