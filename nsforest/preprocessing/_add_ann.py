@@ -10,21 +10,19 @@ def get_medians(adata, cluster_header, use_mean = False):
     """\
     Calculating the median expression per gene for each cluster. 
 
-    Parameters
-    ----------
-
-    Parameter
-    =========
-    adata
-        AnnData. Annotated data matrix. 
-    cluster_header
-        Column in `adata`'s `.obs` storing cell annotation.
-    use_mean
-        Whether to use the mean or median for minimum gene expression threshold. 
+    Parameters:
+    ===========
+        adata: AnnData
+            Annotated data matrix. 
+        cluster_header: str
+            Column in `adata`'s `.obs` storing cell annotation.
+        use_mean: bool (default: False)
+            Whether to use the mean or median for minimum gene expression threshold. 
     
-    Returns
-    -------
-    cluster_medians: gene-by-cluster dataframe
+    Returns:
+    ========
+        cluster_medians: 
+            gene-by-cluster dataframe
     """
     cluster_medians = pd.DataFrame()
     for cl in tqdm(sorted(set(adata.obs[cluster_header])), desc="Calculating medians (means) per cluster"):
