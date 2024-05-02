@@ -11,7 +11,7 @@ def get_medians(adata, cluster_header, use_mean = False):
     Calculating the median expression per gene for each cluster. 
 
     Parameters:
-    ===========
+    -----------
         adata: AnnData
             Annotated data matrix. 
         cluster_header: str
@@ -38,8 +38,8 @@ def prep_medians(adata, cluster_header, use_mean = False, positive_genes_only = 
     """\
     Calculating the median expression and filtering genes
 
-    Parameters
-    ----------
+    Parameters:
+    ===========
     adata
         AnnData. Annotated data matrix.
     cluster_header
@@ -49,8 +49,8 @@ def prep_medians(adata, cluster_header, use_mean = False, positive_genes_only = 
     positive_genes_only
         Whether to subset AnnData to only have genes with median/mean expression greater than 0. 
     
-    Returns
-    -------
+    Returns:
+    ++++++++
     adata: anndata with cluster_medians in adata.varm
     """
     print("Calculating medians...")
@@ -76,18 +76,18 @@ def prep_binary_scores(adata, cluster_header, medians_header):
     """\
     Calculating the binary scores
 
-    Parameters
-    ----------
-    adata
-        AnnData. Annotated data matrix.
-    cluster_header
-        Column in `adata`'s `.obs` storing cell annotation.
-    medians_header
-        Key in `adata`'s `.varm` storing median expression matrix. 
+    Parameters:
+    ___________
+        adata
+            AnnData. Annotated data matrix.
+        cluster_header
+            Column in `adata`'s `.obs` storing cell annotation.
+        medians_header
+            Key in `adata`'s `.varm` storing median expression matrix. 
     
     Returns
-    -------
-    adata: anndata with binary_scores in adata.varm
+    ^^^^^^^
+        adata: anndata with binary_scores in adata.varm
     """
     print("Calculating binary scores...")
     start_time = time.time()
