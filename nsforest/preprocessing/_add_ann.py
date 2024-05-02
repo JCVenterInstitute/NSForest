@@ -11,7 +11,7 @@ def get_medians(adata, cluster_header, use_mean = False):
     Calculating the median expression per gene for each cluster. 
 
     Parameters:
-    -----------
+    ===========
         adata: AnnData
             Annotated data matrix. 
         cluster_header: str
