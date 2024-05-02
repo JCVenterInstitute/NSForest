@@ -5,7 +5,7 @@ import plotly.express as px
 
 def boxplot(df, col, save = False, output_folder = "", outputfilename_prefix = ""): 
     """\
-    Generating plotly boxplot of specified column in df. 
+    Generating plotly boxplot. 
 
     Parameters:
     -----------
@@ -36,14 +36,14 @@ def boxplot(df, col, save = False, output_folder = "", outputfilename_prefix = "
 
 def scatter_w_clusterSize(df, col, save = False, output_folder = "", outputfilename_prefix = ""): 
     """\
-    Generating plotly scatterplot of specified column by `clusterSize`. 
+    Generating plotly scatterplot with `clusterSize`. 
 
     Parameters:
     -----------
         df: pd.DataFrame
             NS-Forest results containing `clusterName`, `clusterSize`, and `col`. 
         col: str
-            Column in `df` to create the scatterplot. 
+            Column in `df` to plot against `clusterSize`. 
         save: bool (default: False)
             Whether to save html file. 
         output_folder: str (default: "")
@@ -54,7 +54,7 @@ def scatter_w_clusterSize(df, col, save = False, output_folder = "", outputfilen
     Returns:
     ========
         fig: plotly.graph_objects.Figure
-            Boxplot of `col` values
+            Scatterplot of `col` values against `clusterSize`. 
     """
     fig = px.scatter(df, x='clusterSize', y=col, range_y=[-.05,1.05],
                      width=700, height=500, hover_name='clusterName')
@@ -70,16 +70,18 @@ def dotplot(adata, markers, cluster_header, dendrogram = True, save = False, out
 
     Parameters:
     -----------
-    adata: AnnData
-        Annotated data matrix.
-    markers: dict
-        clusterName: list of markers
-    dendrogram: bool/list
-        Whether to use user-defined dendrogram. Dendrogram order. 
-    save: bool
-        Whether to save png file. 
-    outputfilename_prefix
-        Prefix for all output files. 
+        adata: AnnData
+            Annotated data matrix.
+        markers: list/dict
+            List of markers to show in dotplot. Dictionary of markers per cell type to group by. 
+        cluster_header: str
+            Key in `adata.obs` storing cell type.
+        dendrogram: bool/list (default: True)
+            Whether to use user-defined dendrogram. Dendrogram order. 
+        save: bool (default: False)
+            Whether to save png file. 
+        outputfilename_prefix: str (default: "")
+            Prefix for all output files. 
     """
     if save: 
         print("Saving...\n", outputfilename_prefix + ".png")
@@ -96,16 +98,18 @@ def stackedviolin(adata, markers, cluster_header, dendrogram = True, save = Fals
 
     Parameters:
     -----------
-    adata: AnnData
-        Annotated data matrix.
-    markers: dict
-        clusterName: list of markers
-    dendrogram: bool/list
-        Whether to use user-defined dendrogram. Dendrogram order. 
-    save: bool
-        Whether to save png file. 
-    outputfilename_prefix
-        Prefix for all output files. 
+        adata: AnnData
+            Annotated data matrix.
+        markers: list/dict
+            List of markers to show in dotplot. Dictionary of markers per cell type to group by. 
+        cluster_header: str
+            Key in `adata.obs` storing cell type.
+        dendrogram: bool/list (default: True)
+            Whether to use user-defined dendrogram. Dendrogram order. 
+        save: bool (default: False)
+            Whether to save png file. 
+        outputfilename_prefix: str (default: "")
+            Prefix for all output files. 
     """
     if save: 
         print("Saving...\n", outputfilename_prefix + ".png")
@@ -122,16 +126,18 @@ def matrixplot(adata, markers, cluster_header, dendrogram = True, save = False, 
 
     Parameters:
     -----------
-    adata: AnnData
-        Annotated data matrix.
-    markers: dict
-        clusterName: list of markers
-    dendrogram: bool/list
-        Whether to use user-defined dendrogram. Dendrogram order. 
-    save: bool
-        Whether to save png file. 
-    outputfilename_prefix
-        Prefix for all output files. 
+        adata: AnnData
+            Annotated data matrix.
+        markers: list/dict
+            List of markers to show in dotplot. Dictionary of markers per cell type to group by. 
+        cluster_header: str
+            Key in `adata.obs` storing cell type.
+        dendrogram: bool/list (default: True)
+            Whether to use user-defined dendrogram. Dendrogram order. 
+        save: bool (default: False)
+            Whether to save png file. 
+        outputfilename_prefix: str (default: "")
+            Prefix for all output files. 
     """
     if save: 
         print("Saving...\n", outputfilename_prefix + ".png")
