@@ -23,21 +23,21 @@ def NSForest(adata, cluster_header, medians_header, binary_scores_header,
             Key in `adata.varm` storing median expression matrix. 
         binary_scores_header: str
             Key in `adata.varm` storing binary score matrix.
-        cluster_list: list (default: all `cluster_header` values)
+        cluster_list: list (default: all)
             For subsetting `cluster_header` values. Useful for parallelizing NSForest. 
-        gene_selection: str (default: "BinaryFirst_high)
+        gene_selection: str (default: "BinaryFirst_high")
             Threshold for filtering genes by binary score. 
             Options: [None, "BinaryFirst_high", "BinaryFirst_moderate", "BinaryFirst_low"]. 
-                None: includes all genes. 
-                BinaryFirst_low: > median. 
-                BinaryFirst_moderate: > mean + 1*std. 
-                BinaryFirst_high: > mean + 2*std. 
-        n_trees: int
-            Number of `n_estimators` in sklearn.ensemble's RandomForestClassifier. 
-        n_jobs: int
-            Number of `n_jobs` in sklearn.ensemble's RandomForestClassifier. 
-        beta: float
-            Beta value in sklearn.metrics's fbeta_score. 
+            None: includes all genes. 
+            BinaryFirst_low: > median. 
+            BinaryFirst_moderate: > mean + 1*std. 
+            BinaryFirst_high: > mean + 2*std. 
+        n_trees: int (default: 1000)
+            `n_estimators` in sklearn.ensemble's RandomForestClassifier. 
+        n_jobs: int (default: -1)
+            `n_jobs` in sklearn.ensemble's RandomForestClassifier. 
+        beta: float (default: 0.5)
+            `beta` in sklearn.metrics's fbeta_score. 
         n_top_genes: int
             Taking the top `n_top_genes` ranked by sklearn.ensemble's RandomForestClassifier as input for sklearn.tree's DecisionTreeClassifier. 
         n_binary_genes: int
