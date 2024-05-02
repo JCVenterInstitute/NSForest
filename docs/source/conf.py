@@ -35,6 +35,7 @@ extensions = [
 exclude_patterns = ['_build', '**.ipynb_checkpoints']
 
 intersphinx_mapping = {
+    'IPython': ('https://ipython.readthedocs.io/en/stable/', None),
     'python': ('https://docs.python.org/3/', None),
     'sphinx': ('https://www.sphinx-doc.org/en/master/', None),
     'anndata': ("https://anndata.readthedocs.io/en/stable/", None),
