@@ -13,35 +13,41 @@ def str_to_list(values):
     """\
     Converting str representation of list to list
 
-    Parameters:
-    -----------
-        values: str 
-            String representation of list
+    Parameters
+    ----------
+    values: str representation of list
     
-    Returns:
-    ========
-        values: list
+    Returns
+    -------
+    values: list
     """
     values = [val.replace("[", "").replace("]", "").replace(", ", ",").replace("'", "").replace('"', "").split(",") for val in values]
     return values
 
-def prepare_markers(results, col_cluster, col_marker): 
+def prepare_markers(results, col_cluster, col_marker, output_folder = "", outputfilename_prefix = ""): 
     """\
-    Converting cell type to marker dictionary. 
+    Converting marker_genes_csv to dictionary (clusterName: marker_genes)
 
-    Parameters:
-    -----------
-        results: pd.DataFrame
-            DataFrame with `col_cluster` and `col_marker`. 
-        col_cluster
-            Column name in `results` storing cell type.
-        col_marker
-            Column name in `results` storing markers.
+    Parameters
+    ----------
+    filename
+        csv with markers per cluster. 
+    col_cluster
+        Column name in file storing cell annotation.
+    col_marker
+        Column name in file storing markers.
+    output_folder
+        Output folder for missing genes. 
+    outputfilename_prefix
+        Prefix for missing genes file. 
     
-    Returns:
-    ========
-        marker_genes_dict: dict
-            Dictionary of clusterName: marker_genes
+    Returns
+    -------
+    marker_genes_dict: dictionary (cluster: list of markers)
+
+    Creates files
+    -------------
+    {output_folder}{outputfilename_prefix}_not_found.csv: list of markers not found in anndata
     """
     # marker_genes_csv = pd.read_csv(filename) 
     not_found = []
