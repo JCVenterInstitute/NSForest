@@ -1,7 +1,6 @@
 
 import time
 import pandas as pd
-from tqdm import tqdm 
 from nsforest.nsforesting import myrandomforest
 from nsforest.nsforesting import mydecisiontreeevaluation
 from nsforest.nsforesting import calculate_fraction
@@ -9,7 +8,7 @@ from nsforest.nsforesting import calculate_fraction
 def NSForest(adata, cluster_header, medians_header = "medians_", binary_scores_header = "binary_scores_", 
              cluster_list = [], gene_selection = "BinaryFirst_high",
              n_trees = 1000, n_jobs = -1, beta = 0.5, n_top_genes = 15, n_binary_genes = 10, n_genes_eval = 6,
-             output_folder = "", outputfilename_prefix = ""):
+             save_supplementary = False, output_folder = "", outputfilename_prefix = ""):
     """\
     Performs main NSForest algorithm to find a list of markers for each cluster. 
 
@@ -106,8 +105,9 @@ def NSForest(adata, cluster_header, medians_header = "medians_", binary_scores_h
     binary_dummies_sum = binary_dummies.stack().sum()
     print("\tAverage number of genes after gene_selection in each cluster:", binary_dummies_sum/n_total_clusters)
     ## write number of genes selected for each cluster
-    print(f"Saving number of genes selected per cluster as...\n{output_folder}{outputfilename_prefix}_gene_selection.csv")
-    pd.DataFrame(binary_dummies.sum(axis=1)).to_csv(output_folder + outputfilename_prefix + "_gene_selection.csv") # , header=["n_genes_selected"]
+    if save_supplementary: 
+        print(f"Saving number of genes selected per cluster as...\n{output_folder}{outputfilename_prefix}_gene_selection.csv")
+        pd.DataFrame(binary_dummies.sum(axis=1)).to_csv(output_folder + outputfilename_prefix + "_gene_selection.csv") # , header=["n_genes_selected"]
     
     ############################## START iterations ######################################
     if cluster_list == []:
@@ -161,12 +161,14 @@ def NSForest(adata, cluster_header, medians_header = "medians_", binary_scores_h
                                 'cluster_median': top_gene_medians[binary_genes_list],
                                 'binary_score': top_binary_genes[binary_genes_list]}).sort_values('binary_score', ascending=False)
         df_supp = pd.concat([df_supp,df_supp_cl]).reset_index(drop=True)
-        df_supp.to_csv(output_folder + outputfilename_prefix + "_supplementary.csv", index=False)
+        if save_supplementary: 
+            df_supp.to_csv(output_folder + outputfilename_prefix + "_supplementary.csv", index=False)
 
         ## return markers table as csv
         df_markers_cl = pd.DataFrame({'clusterName': cl, 'markerGene': markers, 'score': scores[0]})
         df_markers = pd.concat([df_markers, df_markers_cl]).reset_index(drop=True)
-        df_markers.to_csv(output_folder + outputfilename_prefix + "_markers.csv", index=False)
+        if save_supplementary: 
+            df_markers.to_csv(output_folder + outputfilename_prefix + "_markers.csv", index=False)
 
         ## return final results as dataframe
         dict_results_cl = {'clusterName': cl,
@@ -186,11 +188,12 @@ def NSForest(adata, cluster_header, medians_header = "medians_", binary_scores_h
         df_results = pd.concat([df_results,df_results_cl]).reset_index(drop=True)
         df_results.to_csv(f"{output_folder}{outputfilename_prefix}_results.csv", index=False)
 
-    print(f"Saving supplementary table as...\n{output_folder}{outputfilename_prefix}_supplementary.csv")
-    print(f"Saving markers table as...\n{output_folder}{outputfilename_prefix}_markers.csv")
+    if save_supplementary: 
+        print(f"Saving supplementary table as...\n{output_folder}{outputfilename_prefix}_supplementary.csv")
+        print(f"Saving markers table as...\n{output_folder}{outputfilename_prefix}_markers.csv")
     print(f"Saving results table as...\n{output_folder}{outputfilename_prefix}_results.csv")
     markers_dict = dict(zip(df_results["clusterName"], df_results["NSForest_markers"]))
-    on_target_ratio = calculate_fraction.markers_onTarget(adata, markers_dict, cluster_header, medians_header, output_folder = output_folder, outputfilename_prefix = outputfilename_prefix)
+    on_target_ratio = calculate_fraction.markers_onTarget(adata, markers_dict, cluster_header, medians_header, save_supplementary = save_supplementary, output_folder = output_folder, outputfilename_prefix = outputfilename_prefix)
     df_results = df_results.merge(on_target_ratio, on = "clusterName", how = "left")
     df_results.to_csv(f"{output_folder}{outputfilename_prefix}_results.csv", index=False)
     print(f"Saving final results table as...\n{output_folder}{outputfilename_prefix}_results.csv")

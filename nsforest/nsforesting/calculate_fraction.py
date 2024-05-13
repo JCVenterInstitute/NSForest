@@ -8,7 +8,7 @@ import nsforest as ns
 import nsforest.preprocessing as pp
 
 # Calculate ratio of diagonal/total expression
-def markers_onTarget(adata, markers_dict, cluster_header, use_mean = False, output_folder = "", outputfilename_prefix = ""):
+def markers_onTarget(adata, markers_dict, cluster_header, use_mean = False, save_supplementary = False, output_folder = "", outputfilename_prefix = ""):
     all_markers = list(set(itertools.chain.from_iterable(markers_dict.values())))
     adata_eval = adata[:,all_markers]
     # cluster_medians = adata.varm[medians_header].T
@@ -36,10 +36,12 @@ def markers_onTarget(adata, markers_dict, cluster_header, use_mean = False, outp
         df_ontarget_cl = pd.DataFrame({'clusterName': cl, 'markerGene': markers, 
                                        'onTarget_per_gene': ontarget_per_gene, 'onTarget': ontarget})
         df_ontarget_supp = pd.concat([df_ontarget_supp, df_ontarget_cl]).reset_index(drop=True) 
-        df_ontarget_supp.to_csv(output_folder + outputfilename_prefix + "_markers_onTarget_supp.csv", index=False)
+        if save_supplementary: 
+            df_ontarget_supp.to_csv(output_folder + outputfilename_prefix + "_markers_onTarget_supp.csv", index=False)
     
     df_ontarget = df_ontarget_supp[['clusterName', 'onTarget']].drop_duplicates().reset_index(drop=True)
-    df_ontarget.to_csv(output_folder + outputfilename_prefix + "_markers_onTarget.csv", index=False)
+    if save_supplementary: 
+        df_ontarget.to_csv(output_folder + outputfilename_prefix + "_markers_onTarget.csv", index=False)
     return df_ontarget
 
 # Calculate ratio of diagonal/total expression

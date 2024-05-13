@@ -4,9 +4,9 @@ import pandas as pd
 from nsforest.nsforesting import mydecisiontreeevaluation
 from nsforest.nsforesting import calculate_fraction
 
-def DecisionTree(adata, cluster_header, medians_header = "medians_", 
-                 markers_dict = {}, beta = 0.5, combinations = False, use_mean = False,
-                 output_folder = "", outputfilename_prefix = ""): 
+def DecisionTree(adata, cluster_header, markers_dict, medians_header = "medians_", 
+                 beta = 0.5, combinations = False, use_mean = False,
+                 save_supplementary = False, output_folder = "", outputfilename_prefix = ""): 
     """\
     Calculating sklearn.metrics's fbeta_score, sklearn.metrics's prevision_score, sklearn.metrics's confusion_matrix for each `genes_eval` combination. 
     Returning set of genes and scores with highest score sum. 
@@ -99,7 +99,7 @@ def DecisionTree(adata, cluster_header, medians_header = "medians_",
         df_results.to_csv(output_folder + outputfilename_prefix + "_results.csv", index=False)
 
     markers_dict = dict(zip(df_results["clusterName"], df_results["markers"]))
-    on_target_ratio = calculate_fraction.markers_onTarget(adata, markers_dict, cluster_header, medians_header, use_mean = use_mean, output_folder = output_folder, outputfilename_prefix = outputfilename_prefix)
+    on_target_ratio = calculate_fraction.markers_onTarget(adata, markers_dict, cluster_header, use_mean = use_mean, save_supplementary = save_supplementary, output_folder = output_folder, outputfilename_prefix = outputfilename_prefix)
     df_results = df_results.merge(on_target_ratio, on = "clusterName", how = "left")
     df_results.to_csv(f"{output_folder}{outputfilename_prefix}_results.csv", index=False)
     print(f"Saving final results table as...\n{output_folder}{outputfilename_prefix}_results.csv")
@@ -108,7 +108,7 @@ def DecisionTree(adata, cluster_header, medians_header = "medians_",
     
     return df_results
 
-def add_fraction(adata, df_results, cluster_header, medians_header = "medians_", use_mean = False, output_folder = "", outputfilename_prefix = ""): 
+def add_fraction(adata, df_results, cluster_header, medians_header = "medians_", use_mean = False, save_supplementary = False, output_folder = "", outputfilename_prefix = ""): 
     """\
     Calculating sklearn.metrics's fbeta_score, sklearn.metrics's prevision_score, sklearn.metrics's confusion_matrix for each `genes_eval` combination. 
     Returning set of genes and scores with highest score sum. 
@@ -139,7 +139,7 @@ def add_fraction(adata, df_results, cluster_header, medians_header = "medians_",
     if medians_header == "medians_": medians_header = "medians_" + cluster_header
 
     markers_dict = dict(zip(df_results["clusterName"], df_results["markers"]))
-    on_target_ratio = calculate_fraction.markers_onTarget(adata, markers_dict, cluster_header, medians_header, use_mean, output_folder, outputfilename_prefix)
+    on_target_ratio = calculate_fraction.markers_onTarget(adata, markers_dict, cluster_header, medians_header, use_mean, save_supplementary, output_folder, outputfilename_prefix)
     if "fraction" in list(df_results.columns): del df_results["fraction"]
     if "onTarget" in list(df_results.columns): del df_results["onTarget"]
     df_results = df_results.merge(on_target_ratio, on = "clusterName", how = "left")
