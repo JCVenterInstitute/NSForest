@@ -4,7 +4,7 @@
 
 Documentation: https://nsforest.readthedocs.io/en/latest/
 
-BioArchive Link: TBD
+BioArchive Link: https://www.biorxiv.org/content/10.1101/2024.04.22.590194v1.full
 
 ## Download and installation
 
@@ -22,7 +22,7 @@ cd tutorials
 
 ## Tutorial
 
-Follow the on readthedocs: [here](https://nsforest.readthedocs.io/en/latest/tutorial.html)
+Follow the on readthedocs: https://nsforest.readthedocs.io/en/latest/tutorial.html
 
 ## Pipeline
 
