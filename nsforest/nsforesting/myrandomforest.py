@@ -3,31 +3,33 @@ import pandas as pd
 import scanpy as sc
 from sklearn.ensemble import RandomForestClassifier
 
-## run Random Forest on the binary dummy variables ==> outputs all genes ranked by Gini impurity
 def myRandomForest(adata, df_dummies, cl, n_trees, n_jobs, n_top_genes, binary_dummies):
     """\
-    Returning top genes sorted by gini index from sklearn.ensemble's RandomForestClassifier. 
+    Running sklearn.ensemble's RandomForestClassifier on the binary dummy variables. 
 
     Parameters
     ----------
-    adata: AnnData
-        Annotated data matrix.
-    df_dummies: pd.DataFrame
-        Dummy dataframe for one vs all model. 
-    cl: str
-        Specified cluster. 
-    n_trees: int
-        Number of `n_estimators` in sklearn.ensemble's RandomForestClassifier.
-    n_jobs: int
-        Number of `n_jobs` in sklearn.ensemble's RandomForestClassifier. 
-    n_top_genes: int
-        Taking the top `n_top_genes` ranked by sklearn.ensemble's RandomForestClassifier for sklearn.tree's DecisionTreeClassifier. 
-    binary_dummies: pd.DataFrame
-        Dataframe of binary scores filtered by `gene_selection`. 
+        adata: AnnData
+            Annotated data matrix.
+        df_dummies: pd.DataFrame
+            Dummy dataframe for one vs all model. 
+        cl: str
+            Specified `cluster_header` value. 
+        n_trees: int (default: 1000)
+            `n_estimators` parameter in sklearn.ensemble's RandomForestClassifier. 
+        n_jobs: int (default: -1)
+            `n_jobs` parameter in sklearn.ensemble's RandomForestClassifier. 
+        beta: float (default: 0.5)
+            `beta` parameter in sklearn.metrics's fbeta_score. 
+        n_top_genes: int (default: 15)
+            Taking the top `n_top_genes` genes ranked by sklearn.ensemble's RandomForestClassifier as input for sklearn.tree's DecisionTreeClassifier. 
+        binary_dummies: pd.DataFrame
+            Dataframe of binary scores filtered by `gene_selection`. 
 
     Returns
     -------
-    top_rf_genes: top `n_top_genes` genes ranked by gini index
+    top_rf_genes: list 
+        The top `n_top_genes` genes ranked by Gini Impurity. 
     """
     x_train = adata.to_df()
     y_train = df_dummies[cl]

@@ -1,4 +1,5 @@
 
+import os
 import time
 import pandas as pd
 from nsforest.nsforesting import mydecisiontreeevaluation
@@ -8,35 +9,42 @@ def DecisionTree(adata, cluster_header, markers_dict, medians_header = "medians_
                  beta = 0.5, combinations = False, use_mean = False,
                  save_supplementary = False, output_folder = "", outputfilename_prefix = ""): 
     """\
-    Calculating sklearn.metrics's fbeta_score, sklearn.metrics's prevision_score, sklearn.metrics's confusion_matrix for each `genes_eval` combination. 
-    Returning set of genes and scores with highest score sum. 
+    Calculating sklearn.metrics's fbeta_score, precision_score, recall_score, and confusion_matrix for `genes_eval`. 
 
     Parameters
     ----------
-    adata: AnnData
-        Annotated data matrix.
-    cluster_header
-        Column in `adata`'s `.obs` representing cell annotation.
-    markers_dict
-        Dictionary containing marker genes for cell annotations (clusterName: list of markers)
-    beta
-        Beta value in sklearn.metrics's fbeta_score. 
-    combinations
-        Whether to use myDecisionTreeEvaluation on various combinations of `genes_eval`. 
-    use_mean
-        Whether to use the mean or median for minimum gene expression threshold. 
-    output_folder
-        Output folder. 
-    outputfilename_prefix
-        Prefix for all output files. 
+        adata: AnnData
+            Annotated data matrix.
+        cluster_header: str
+            Column in `adata.obs` storing cell annotation.
+        markers_dict: dict
+            Dictionary containing genes for each `cluster_header` (clusterName: list of markers)
+        medians_header: str (default: "medians_{cluster_header}")
+            Key in `adata.varm` storing median expression matrix. 
+        beta: float (default: 0.5)
+            `beta` parameter in sklearn.metrics's fbeta_score. 
+        combinations: bool (default: True)
+            Whether to find the combination of `genes_eval` with the highest fbeta_score. 
+        use_mean: bool (default: False)
+            Whether to use the mean (vs median) for minimum gene expression threshold. 
+        save_supplementary: bool (default: False)
+            Whether to save additional supplementary csvs. 
+        output_folder: str (default: "")
+            Output folder. Created if doesn't exist. 
+        outputfilename_prefix: str (default: "")
+            Prefix for all output files. 
     
     Returns
     -------
-    df_results: pd.DataFrame of the NS-Forest results. Contains classification metrics (f_score, PPV, recall, onTarget). 
+    df_results: pd.DataFrame 
+        NS-Forest results. Includes classification metrics (f_score, PPV, recall, onTarget). 
     """
-
     # default medians_header
     if medians_header == "medians_": medians_header = "medians_" + cluster_header
+    # Creating directory if does not exist
+    if not os.path.exists(output_folder):
+        os.makedirs(output_folder)
+        print(f"Creating new directory...\n{output_folder}")
 
     ##-----
     ## prepare adata
@@ -76,21 +84,22 @@ def DecisionTree(adata, cluster_header, markers_dict, medians_header = "medians_
         if len(markers) == 0: continue
         
         ## Evaluation step: calculate F-beta score for gene combinations
-        markers, scores, score_max = mydecisiontreeevaluation.myDecisionTreeEvaluation(adata, df_dummies, cl, markers, beta, combinations = combinations)
+        markers, scores = mydecisiontreeevaluation.myDecisionTreeEvaluation(adata, df_dummies, cl, markers, beta, combinations = combinations)
         print("\t" + str(markers))
-        print("\tf-beta:" + str(scores[0]))
-        print("\tPPV:" + str(scores[1]))
+        print("\t" + "fbeta: " + str(scores[0]))
+        print("\t" + "PPV: " + str(scores[1]))
+        print("\t" + "recall: " + str(scores[2]))
 
         ## return final results as dataframe
         dict_results_cl = {'clusterName': cl,
-                           'clusterSize': int(scores[4]+scores[5]),
+                           'clusterSize': int(scores[5]+scores[6]),
                            'f_score': scores[0],
-                           'recall': int(scores[5]) / (int(scores[5]) + int(scores[4])),
                            'PPV': scores[1],
-                           'TN': int(scores[2]),
-                           'FP': int(scores[3]),
-                           'FN': int(scores[4]),
-                           'TP': int(scores[5]),
+                           'recall': scores[2],
+                           'TN': int(scores[3]),
+                           'FP': int(scores[4]),
+                           'FN': int(scores[5]),
+                           'TP': int(scores[6]),
                            'marker_count': len(markers),
                            'markers': [markers] 
                            }
@@ -99,7 +108,7 @@ def DecisionTree(adata, cluster_header, markers_dict, medians_header = "medians_
         df_results.to_csv(output_folder + outputfilename_prefix + "_results.csv", index=False)
 
     markers_dict = dict(zip(df_results["clusterName"], df_results["markers"]))
-    on_target_ratio = calculate_fraction.markers_onTarget(adata, markers_dict, cluster_header, use_mean = use_mean, save_supplementary = save_supplementary, output_folder = output_folder, outputfilename_prefix = outputfilename_prefix)
+    on_target_ratio = calculate_fraction.markers_onTarget(adata, cluster_header, markers_dict, use_mean = use_mean, save_supplementary = save_supplementary, output_folder = output_folder, outputfilename_prefix = outputfilename_prefix)
     df_results = df_results.merge(on_target_ratio, on = "clusterName", how = "left")
     df_results.to_csv(f"{output_folder}{outputfilename_prefix}_results.csv", index=False)
     print(f"Saving final results table as...\n{output_folder}{outputfilename_prefix}_results.csv")

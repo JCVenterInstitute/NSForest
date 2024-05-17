@@ -3,35 +3,36 @@ import pandas as pd
 from sklearn.tree import DecisionTreeClassifier
 from sklearn.metrics import fbeta_score
 from sklearn.metrics import precision_score
+from sklearn.metrics import recall_score
 from sklearn.metrics import confusion_matrix
 import itertools
 
 ## construct decision tree for each gene and evaluate the fbeta score in all combinations ==> outputs markers with max fbeta, and all scores
 def myDecisionTreeEvaluation(adata, df_dummies, cl, genes_eval, beta = 0.5, combinations = True):
     """\
-    Calculating performance metrics for each `genes_eval` combination. 
+    Calculating performance metrics for `genes_eval`. 
 
     Parameters
     ----------
-    adata: AnnData
-        Annotated data matrix.
-    df_dummies: pd.DataFrame
-        Dummy dataframe for one vs all model. 
-    cl: str
-        Specified cell annotation. 
-    genes_eval: list
-        List of genes to find best combination for sklearn.tree's DecisionTreeClassifier. 
-    beta: float (default: 0.5)
-        Beta value in sklearn.metrics's fbeta_score. 
-    exact_genes_eval: bool (default: False)
-        Whether to use myDecisionTreeEvaluation on various combinations of `genes_eval`. 
+        adata: AnnData
+            Annotated data matrix.
+        df_dummies: pd.DataFrame
+            Dummy dataframe for one vs all model. 
+        cl: str
+            Specified `cluster_header` value. 
+        genes_eval: list
+            List of genes to find best combination in sklearn.tree's DecisionTreeClassifier. 
+        beta: float (default: 0.5)
+            `beta` parameter in sklearn.metrics's fbeta_score. 
+        combinations: bool (default: True)
+            Whether to find the combination of `genes_eval` with the highest fbeta_score. 
     
     Returns
     -------
-    markers: combination of markers with highest fbeta. 
-    scores: fbeta, ppv, tn, fp, fn, tp of markers
-    score_max: fbeta score
-    Returning the set of genes and scores with highest fbeta. 
+    markers: list
+        list of markers with returned scores. 
+    scores: list
+        fbeta, ppv, recall, tn, fp, fn, tp of `markers`. 
     """
     # Training decision tree based on single gene split
     dict_pred = {}
@@ -62,13 +63,14 @@ def myDecisionTreeEvaluation(adata, df_dummies, cl, genes_eval, beta = 0.5, comb
         y_pred = df_pred[ii].product(axis=1)
         fbeta = fbeta_score(y_true, y_pred, average='binary', beta=beta)
         ppv = precision_score(y_true, y_pred, average='binary', zero_division=0)
+        recall = recall_score(y_true, y_pred, average='binary', zero_division=0)
         tn, fp, fn, tp = confusion_matrix(y_true, y_pred).ravel()
-        dict_scores['&'.join(ii)] = fbeta, ppv, tn, fp, fn, tp
+        dict_scores['&'.join(ii)] = fbeta, ppv, recall, tn, fp, fn, tp
     df_scores = pd.DataFrame(dict_scores) #cell-by-genecombo
         
     ## find which combination has the max fbeta
     idx_max = df_scores.idxmax(axis=1)[0] # axis = 1 means axis = columns, [0] is fbeta (first column)
     markers = idx_max.split('&')
     scores = df_scores[idx_max]
-    score_max = scores[0]
-    return markers, scores, score_max
+    
+    return markers, scores
