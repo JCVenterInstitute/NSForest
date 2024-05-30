@@ -5,10 +5,11 @@ description =  "A machine learning method for the discovery of minimum marker ge
 license = "MIT"
 authors = [
     "Renee Zhang <zhangy@jcvi.org>",
-    "Richard Scheuermann <RScheuermann@jcvi.org>",
+    "Richard Scheuermann <richard.scheuermann@nih.gov>",
     "Brian Aevermann <baevermann@chanzuckerberg.com>", 
     "Angela Liu <aliu@jcvi.org>", 
-    "Beverly Peng <bpeng@jcvi.org>"
+    "Beverly Peng <bpeng@jcvi.org>", 
+    "Ajith V. Pankajam <ajith.viswanathanasaripankajam@nih.gov>"
 ]
 maintainers = [
     "Beverly Peng <bpeng@jcvi.org>", 
