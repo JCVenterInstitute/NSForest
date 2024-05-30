@@ -49,10 +49,11 @@ Aevermann BD, Novotny M, Bakken T, Miller JA, Diehl AD, Osumi-Sutherland D, Lask
 ## Authors
 
 * Yun (Renee) Zhang zhangy@jcvi.org
-* Richard Scheuermann RScheuermann@jcvi.org
+* Richard Scheuermann richard.scheuermann@nih.gov
 * Brian Aevermann baevermann@chanzuckerberg.com
 * Angela Liu aliu@jcvi.org
 * Beverly Peng bpeng@jcvi.org
+* Ajith V. Pankajam ajith.viswanathanasaripankajam@nih.gov
 
 ## License
 
