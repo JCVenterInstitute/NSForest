@@ -12,8 +12,7 @@ authors = [
     "Ajith V. Pankajam <ajith.viswanathanasaripankajam@nih.gov>"
 ]
 maintainers = [
-    "Beverly Peng <bpeng@jcvi.org>", 
-    "Tian Liu <ttl074@ucsd.edu>"
+    "Beverly Peng <bpeng@jcvi.org>"
 ]
 readme = "README.md"
 
