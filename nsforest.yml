@@ -1,8 +1,7 @@
-name: nsforest_2
+name: nsforest
 channels: 
   - conda-forge
 dependencies: 
-  - python=3.12
   - python=3.11.7
   - scanpy=1.9.6
   - numpy=1.24.3
