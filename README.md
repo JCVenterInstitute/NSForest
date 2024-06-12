@@ -18,8 +18,6 @@ conda env create -f nsforest.yml
 
 conda activate nsforest
 
-cd tutorials
-
 ## Tutorial
 
 Follow the on readthedocs: https://nsforest.readthedocs.io/en/latest/tutorial.html
