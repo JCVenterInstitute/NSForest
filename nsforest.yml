@@ -2,12 +2,9 @@ name: nsforest
 channels: 
   - conda-forge
 dependencies: 
-  - python
-  - scanpy
-  - pip: 
-    - numpy
-    - pandas
-    - itertools
-    - time
-    - tqdm
-    - plotly
+  - python=3.11.7
+  - scanpy=1.9.6
+  - numpy=1.24.3
+  - pandas=2.1.4
+  - tqdm=4.66.1
+  - plotly=5.19.0
