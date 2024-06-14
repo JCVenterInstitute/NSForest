@@ -34,9 +34,9 @@ Will be uploaded to official PyPI channel soon.
 
 ## Versions and citations
 
-Earlier versions are managed in [Releases](https://github.com/JCVenterInstitute/NSForest/releases).  
+This is version 4.0.0. Earlier versions are managed in [Releases](https://github.com/JCVenterInstitute/NSForest/releases).  
 
-Version 2 and beyond:
+Version 2:
 
 Aevermann BD, Zhang Y, Novotny M, Keshk M, Bakken TE, Miller JA, Hodge RD, Lelieveldt B, Lein ES, Scheuermann RH. A machine learning method for the discovery of minimum marker gene combinations for cell-type identification from single-cell RNA sequencing. Genome Res. 2021 Jun 4:gr.275569.121. doi: 10.1101/gr.275569.121.
 
