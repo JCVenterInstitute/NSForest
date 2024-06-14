@@ -26,21 +26,21 @@ Follow the on readthedocs: https://nsforest.readthedocs.io/en/latest/tutorial.ht
 
 <img src="pipeline.PNG">
 
-Will be uploaded to official conda channel soon.
+Will be uploaded to official PyPI channel soon.
 
-**Prerequisites:**
-* This is a python script written and tested in python 3.8, scanpy 1.8.2, anndata 0.8.0.
-* Other required libraries: numpy, pandas, sklearn, itertools, time, tqdm.
+## Prerequisites
+* This is a python script written and tested in python 3.11, scanpy 1.9.6.
+* Other required libraries: numpy, pandas, sklearn, plotly, time, tqdm.
 
 ## Versions and citations
 
 Earlier versions are managed in [Releases](https://github.com/JCVenterInstitute/NSForest/releases).  
 
-Version 2.0:
+Version 2 and beyond:
 
 Aevermann BD, Zhang Y, Novotny M, Keshk M, Bakken TE, Miller JA, Hodge RD, Lelieveldt B, Lein ES, Scheuermann RH. A machine learning method for the discovery of minimum marker gene combinations for cell-type identification from single-cell RNA sequencing. Genome Res. 2021 Jun 4:gr.275569.121. doi: 10.1101/gr.275569.121.
 
-Version 1.3:
+Version 1.3/1.0:
 
 Aevermann BD, Novotny M, Bakken T, Miller JA, Diehl AD, Osumi-Sutherland D, Lasken RS, Lein ES, Scheuermann RH. Cell type discovery using single-cell transcriptomics: implications for ontological representation. Hum Mol Genet. 2018 May 1;27(R1):R40-R47. doi: 10.1093/hmg/ddy100.
 
