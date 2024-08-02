@@ -26,8 +26,6 @@ Follow the on readthedocs: https://nsforest.readthedocs.io/en/latest/tutorial.ht
 
 <img src="pipeline.PNG">
 
-### NS-Forest Algorithm Summary
-
 NS-Forest is an algorithm designed to identify minimum combinations of necessary and sufficient marker genes for a cell type cluster identified in a single cell or single nucleus RNA sequencing experiment that optimizes classification accuracy. NS-Forest proceeds through the following steps (default setting):
 
 1. Data input: An AnnData object (e.g., .h5ad file) with cell type cluster labels. 
