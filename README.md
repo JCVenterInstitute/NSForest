@@ -9,7 +9,7 @@ BioArchive Link: https://www.biorxiv.org/content/10.1101/2024.04.22.590194v1.ful
 ## Download and installation
 
 In terminal: 
-
+```
 git clone https://github.com/JCVenterInstitute/NSForest.git
 
 cd NSForest
@@ -17,7 +17,7 @@ cd NSForest
 conda env create -f nsforest.yml
 
 conda activate nsforest
-
+```
 ## Tutorial
 
 Follow the on readthedocs: https://nsforest.readthedocs.io/en/latest/tutorial.html
@@ -61,6 +61,10 @@ The final module in the NS-Forest algorithm can also be used to assess the perfo
 
 This is version 4.0.0. Earlier versions are managed in [Releases](https://github.com/JCVenterInstitute/NSForest/releases).  
 
+Version 4:
+
+BioArchive Link: https://www.biorxiv.org/content/10.1101/2024.04.22.590194v1.full
+
 Version 2:
 
 Aevermann BD, Zhang Y, Novotny M, Keshk M, Bakken TE, Miller JA, Hodge RD, Lelieveldt B, Lein ES, Scheuermann RH. A machine learning method for the discovery of minimum marker gene combinations for cell-type identification from single-cell RNA sequencing. Genome Res. 2021 Jun 4:gr.275569.121. doi: 10.1101/gr.275569.121.
@@ -72,11 +76,10 @@ Aevermann BD, Novotny M, Bakken T, Miller JA, Diehl AD, Osumi-Sutherland D, Lask
 ## Authors
 
 * Yun (Renee) Zhang zhangy@jcvi.org
+* Beverly Peng bpeng@jcvi.org
+* Angela Liu aliu@jcvi.org
 * Richard Scheuermann richard.scheuermann@nih.gov
 * Brian Aevermann baevermann@chanzuckerberg.com
-* Angela Liu aliu@jcvi.org
-* Beverly Peng bpeng@jcvi.org
-* Ajith V. Pankajam ajith.viswanathanasaripankajam@nih.gov
 
 ## License
 
@@ -84,7 +87,7 @@ This project is licensed under the [MIT License](https://github.com/JCVenterInst
 
 ## Acknowledgments
 
-* BICCN
 * Allen Institute of Brain Science
+* Brain Initiative Cell Census Network
 * Chan Zuckerberg Initiative
 * California Institute for Regenerative Medicine
