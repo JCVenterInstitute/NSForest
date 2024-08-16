@@ -129,6 +129,10 @@ def NSForest(adata, cluster_header, medians_header = "medians_", binary_scores_h
         ct = list(cluster_list).index(cl) + 1
         print(f"{ct} out of {n_clusters}:")
         print(f"\t{cl}")
+
+        if cl not in list(adata.obs[cluster_header]): 
+            print(f"warning: {cl} not found in adata.obs[{cluster_header}], skipping cluster.")
+            continue
         
         ##=== reset parameters for this iteration!!! (for taking care of special cases) ===##
         n_binary_genes_cl = n_binary_genes
@@ -165,10 +169,10 @@ def NSForest(adata, cluster_header, medians_header = "medians_", binary_scores_h
         ## return supplementary table as csv
         binary_genes_list = top_binary_genes.index[:n_binary_genes_cl].to_list()
         df_supp_cl = pd.DataFrame({'clusterName': cl,
-                                'binary_genes': binary_genes_list,
-                                'rf_feature_importance': top_rf_genes[binary_genes_list],
-                                'cluster_median': top_gene_medians[binary_genes_list],
-                                'binary_score': top_binary_genes[binary_genes_list]}).sort_values('binary_score', ascending=False)
+                                   'binary_genes': binary_genes_list,
+                                   'rf_feature_importance': top_rf_genes[binary_genes_list],
+                                   'cluster_median': top_gene_medians[binary_genes_list],
+                                   'binary_score': top_binary_genes[binary_genes_list]}).sort_values('binary_score', ascending=False)
         df_supp = pd.concat([df_supp,df_supp_cl]).reset_index(drop=True)
         if save_supplementary: 
             df_supp.to_csv(output_folder + outputfilename_prefix + "_supplementary.csv", index=False)
