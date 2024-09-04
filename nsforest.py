@@ -9,7 +9,9 @@ import nsforest as ns
 from nsforest import nsforesting
 
 
-def run_nsforest_on_file(h5ad_filepath, cluster_header="cell_type", total_counts=5000000):
+def run_nsforest_on_file(
+    h5ad_filepath, cluster_header="cell_type", total_counts=5000000
+):
     """Run NSForest using the specified dataset filepath, and
     cluster_header.
 
@@ -185,6 +187,7 @@ def generate_scanpy_dendrogram(
     print(f"Saving output AnnData file: {out_adata_file}")
     out_adata.write_h5ad(out_adata_file)
 
+
 def calculate_cluster_medians_per_gene(inp_adata_file, cluster_header, out_adata_file):
     """Calculate the median expression matrix.
 
@@ -273,77 +276,72 @@ def run_nsforest(inp_adata_file, cluster_header, out_csv_dir):
 
 
 def main():
-    """Parse command line arguments, then run NS-Forest."""
+    """Parse command line arguments, then run NS-Forest function."""
     # Parse command line arguments
-    parser = argparse.ArgumentParser(description="Run NS-Forest.")
+    parser = argparse.ArgumentParser(description="Run NS-Forest functions.")
     parser.add_argument("h5ad_filepath", help="The dataset filepath")
     parser.add_argument(
         "-c",
         "--cluster-header",
+        default="cell_type",
         help="The cluster header, default: 'cell_type'",
         metavar="CLUSTER",
     )
     parser.add_argument(
         "-t",
         "--total-counts",
+        default=5000000,
         type=int,
         help="Total counts after downsampling, default: 5000000",
         metavar="COUNTS",
     )
+    group = parser.add_mutually_exclusive_group()
+    group.add_argument("--run-nsforest-on-file", action="store_true")
+    group.add_argument("--downsample-adata-file", action="store_true")
+    group.add_argument("--generate-scanpy-dendrogram", action="store_true")
+    group.add_argument("--calculate-cluster-medians-per-gene", action="store_true")
+    group.add_argument(
+        "--calculate-binary-scores-per-gene-per-cluster", action="store_true"
+    )
+    group.add_argument("--run-nsforest", action="store_true")
     args = parser.parse_args()
 
-    # Run NS-Forest
-    if args.cluster_header or args.total_counts:
-        if not args.cluster_header:
-            run_nsforest_on_file(args.h5ad_filepath, args.total_counts)
-
-        elif not args.total_counts:
-            run_nsforest_on_file(args.h5ad_filepath, args.cluster_header)
-
-        else:
-            run_nsforest_on_file(
-                args.h5ad_filepath, args.cluster_header, args.total_counts
-            )
-
-    else:
+    # Run the NS-Forest function
+    if args.run_nsforest_on_file:
         run_nsforest_on_file(args.h5ad_filepath)
 
-        inp_adata_file = args.h5ad_filepath
-        total_counts = 5000000
-        out_adata_file = args.h5ad_filepath.lower().replace(".h5ad", "_1.h5ad")
+    if args.downsample_adata_file:
+        downsample_adata_file(
+            args.h5ad_filepath,
+            args.total_counts,
+            args.h5ad_filepath.lower().replace(".h5ad", "_1.h5ad"),
+        )
 
-        downsample_adata_file(inp_adata_file, total_counts, out_adata_file)
-
-        inp_adata_file = out_adata_file
-        cluster_header = "cell_type"
-        out_dendrogram_dir = "."
-        out_adata_file = inp_adata_file.replace("_1.", "_2.")
-
+    if args.generate_scanpy_dendrogram:
         generate_scanpy_dendrogram(
-            inp_adata_file, cluster_header, out_dendrogram_dir, out_adata_file
+            args.h5ad_filepath,
+            args.cluster_header,
+            ".",
+            args.h5ad_filepath.lower().replace(".h5ad", "_2.h5ad"),
         )
 
-        inp_adata_file = out_adata_file
-        cluster_header = "cell_type"
-        out_adata_file = inp_adata_file.replace("_2.", "_3.")
-
+    if args.calculate_cluster_medians_per_gene:
         calculate_cluster_medians_per_gene(
-            inp_adata_file, cluster_header, out_adata_file
+            args.h5ad_filepath,
+            args.cluster_header,
+            args.h5ad_filepath.lower().replace(".h5ad", "_3.h5ad"),
         )
 
-        inp_adata_file = out_adata_file
-        cluster_header = "cell_type"
-        out_adata_file = inp_adata_file.replace("_3.", "_4.")
-
+    if args.calculate_binary_scores_per_gene_per_cluster:
         calculate_binary_scores_per_gene_per_cluster(
-            inp_adata_file, cluster_header, out_adata_file
+            args.h5ad_filepath,
+            args.cluster_header,
+            args.h5ad_filepath.lower().replace(".h5ad", "_4.h5ad"),
         )
 
-        inp_adata_file = out_adata_file
-        cluster_header = "cell_type"
-        out_csv_dir = "."
+    if args.run_nsforest:
+        run_nsforest(args.h5ad_filepath, args.cluster_header, ".")
 
-        run_nsforest(inp_adata_file, cluster_header, out_csv_dir)
 
 if __name__ == "__main__":
     main()
