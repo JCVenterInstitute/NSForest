@@ -9,7 +9,7 @@ import nsforest as ns
 from nsforest import nsforesting
 
 
-def run_nsforest_on_file(h5ad_filepath, cluster_header="cell_type", total_counts=5000):
+def run_nsforest_on_file(h5ad_filepath, cluster_header="cell_type", total_counts=5000000):
     """Run NSForest using the specified dataset filepath, and
     cluster_header.
 
@@ -71,7 +71,7 @@ def run_nsforest_on_file(h5ad_filepath, cluster_header="cell_type", total_counts
         print("Generating scanpy dendrogram")
         # Dendrogram order is stored in
         # `pp_adata.uns["dendrogram_cluster"]["categories_ordered"]`
-        pp_adata = up_adata.copy()
+        pp_adata = ds_adata.copy()
         pp_adata.obs[cluster_header] = pp_adata.obs[cluster_header].astype(str)
         pp_adata.obs[cluster_header] = pp_adata.obs[cluster_header].astype("category")
         pp_adata = ns.pp.dendrogram(
@@ -133,10 +133,9 @@ def downsample_adata_file(inp_adata_file, total_counts, out_adata_file):
         out_adata = sc.pp.downsample_counts(
             inp_adata, total_counts=total_counts, copy=True
         )
-        return out_adata
 
     else:
-        return inp_adata
+        out_adata = inp_adata  # No need to copy
 
     print(f"Saving output AnnData file: {out_adata_file}")
     out_adata.write_h5ad(out_adata_file)
@@ -185,7 +184,6 @@ def generate_scanpy_dendrogram(
 
     print(f"Saving output AnnData file: {out_adata_file}")
     out_adata.write_h5ad(out_adata_file)
-
 
 def calculate_cluster_medians_per_gene(inp_adata_file, cluster_header, out_adata_file):
     """Calculate the median expression matrix.
@@ -289,7 +287,7 @@ def main():
         "-t",
         "--total-counts",
         type=int,
-        help="Total counts after downsampling, default: 5000",
+        help="Total counts after downsampling, default: 5000000",
         metavar="COUNTS",
     )
     args = parser.parse_args()
@@ -311,14 +309,14 @@ def main():
         run_nsforest_on_file(args.h5ad_filepath)
 
         inp_adata_file = args.h5ad_filepath
-        total_counts = 5000
+        total_counts = 5000000
         out_adata_file = args.h5ad_filepath.lower().replace(".h5ad", "_1.h5ad")
 
         downsample_adata_file(inp_adata_file, total_counts, out_adata_file)
 
         inp_adata_file = out_adata_file
         cluster_header = "cell_type"
-        out_dendrogram_dir = ""
+        out_dendrogram_dir = "."
         out_adata_file = inp_adata_file.replace("_1.", "_2.")
 
         generate_scanpy_dendrogram(
@@ -346,7 +344,6 @@ def main():
         out_csv_dir = "."
 
         run_nsforest(inp_adata_file, cluster_header, out_csv_dir)
-
 
 if __name__ == "__main__":
     main()
