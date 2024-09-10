@@ -314,7 +314,7 @@ def main():
         downsample_adata_file(
             args.h5ad_filepath,
             args.total_counts,
-            args.h5ad_filepath.lower().replace(".h5ad", "_1.h5ad"),
+            args.h5ad_filepath.lower().replace(".h5ad", "_ds.h5ad"),
         )
 
     if args.generate_scanpy_dendrogram:
@@ -322,21 +322,21 @@ def main():
             args.h5ad_filepath,
             args.cluster_header,
             ".",
-            args.h5ad_filepath.lower().replace(".h5ad", "_2.h5ad"),
+            args.h5ad_filepath.lower().replace(".h5ad", "_gd.h5ad"),
         )
 
     if args.calculate_cluster_medians_per_gene:
         calculate_cluster_medians_per_gene(
             args.h5ad_filepath,
             args.cluster_header,
-            args.h5ad_filepath.lower().replace(".h5ad", "_3.h5ad"),
+            args.h5ad_filepath.lower().replace(".h5ad", "_cc.h5ad"),
         )
 
     if args.calculate_binary_scores_per_gene_per_cluster:
         calculate_binary_scores_per_gene_per_cluster(
             args.h5ad_filepath,
             args.cluster_header,
-            args.h5ad_filepath.lower().replace(".h5ad", "_4.h5ad"),
+            args.h5ad_filepath.lower().replace(".h5ad", "_cb.h5ad"),
         )
 
     if args.run_nsforest:
