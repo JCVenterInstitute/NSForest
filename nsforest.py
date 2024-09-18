@@ -10,7 +10,7 @@ from nsforest import nsforesting
 
 
 def run_nsforest_on_file(
-    h5ad_filepath, cluster_header="cell_type", total_counts=5000000
+    h5ad_filepath, cluster_header="cell_type", results_dirpath=".", total_counts=5000000
 ):
     """Run NSForest using the specified dataset filepath, and
     cluster_header.
@@ -21,6 +21,8 @@ def run_nsforest_on_file(
         The dataset filepath
     cluster_header : str
         The cluster header
+    results_dirpath : str
+        dirpath for the results
     total_counts : int
         Total counts after downsampling
 
@@ -50,7 +52,6 @@ def run_nsforest_on_file(
     # Assign results filename and directory
     h5ad_filename = os.path.basename(h5ad_filepath)
     # TODO: Improve
-    results_dirpath = "."
     pp_h5ad_filename = f"pp_{h5ad_filename}"
     pp_h5ad_filepath = f"{results_dirpath}/{pp_h5ad_filename}"
 
@@ -288,6 +289,13 @@ def main():
         metavar="CLUSTER",
     )
     parser.add_argument(
+        "-d",
+        "--results-dirpath",
+        default=".",
+        help="The directory path for results",
+        metavar="DIR",
+    )
+    parser.add_argument(
         "-t",
         "--total-counts",
         default=5000000,
@@ -308,7 +316,7 @@ def main():
 
     # Run the NS-Forest function
     if args.run_nsforest_on_file:
-        run_nsforest_on_file(args.h5ad_filepath, args.cluster_header)
+        run_nsforest_on_file(args.h5ad_filepath, args.cluster_header, args.results_dirpath)
 
     if args.downsample_adata_file:
         downsample_adata_file(
