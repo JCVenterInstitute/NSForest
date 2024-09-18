@@ -76,13 +76,14 @@ def run_nsforest_on_file(
         pp_adata = ds_adata.copy()
         pp_adata.obs[cluster_header] = pp_adata.obs[cluster_header].astype(str)
         pp_adata.obs[cluster_header] = pp_adata.obs[cluster_header].astype("category")
-        pp_adata = ns.pp.dendrogram(
-            pp_adata,
-            cluster_header,
-            save=False,
-            output_folder=results_dirpath,
-            outputfilename_suffix=cluster_header,
-        )
+        if generate_dendrogram:
+            pp_adata = ns.pp.dendrogram(
+                pp_adata,
+                cluster_header,
+                save=False,
+                output_folder=results_dirpath,
+                outputfilename_suffix=cluster_header,
+            )
 
         print("Calculating cluster medians per gene")
         pp_adata = ns.pp.prep_medians(pp_adata, cluster_header)
@@ -308,7 +309,7 @@ def main():
 
     # Run the NS-Forest function
     if args.run_nsforest_on_file:
-        run_nsforest_on_file(args.h5ad_filepath)
+        run_nsforest_on_file(args.h5ad_filepath, args.cluster_header)
 
     if args.downsample_adata_file:
         downsample_adata_file(
