@@ -34,7 +34,7 @@ def dendrogram(adata, cluster_header, width = 2, save = False, output_folder = "
         sc.settings.figdir = output_folder
         save = "_" + outputfilename_suffix + ".png"
     with plt.rc_context({"figure.figsize": (12, width)}):
-        sc.pl.dendrogram(adata, cluster_header, orientation = "top", save = save)
+        sc.pl.dendrogram(adata, cluster_header, orientation = "top", show = save, save = save)
     return adata
 
 def get_medians(adata, cluster_header, use_mean = False): 
