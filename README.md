@@ -9,7 +9,7 @@ BioArchive Link: https://www.biorxiv.org/content/10.1101/2024.04.22.590194v1.ful
 ## Download and installation
 
 In terminal: 
-
+```
 git clone https://github.com/JCVenterInstitute/NSForest.git
 
 cd NSForest
@@ -17,7 +17,7 @@ cd NSForest
 conda env create -f nsforest.yml
 
 conda activate nsforest
-
+```
 ## Tutorial
 
 Follow the on readthedocs: https://nsforest.readthedocs.io/en/latest/tutorial.html
@@ -26,7 +26,32 @@ Follow the on readthedocs: https://nsforest.readthedocs.io/en/latest/tutorial.ht
 
 <img src="pipeline.PNG">
 
-Will be uploaded to official PyPI channel soon.
+NS-Forest is an algorithm designed to identify minimum combinations of necessary and sufficient marker genes for a cell type cluster identified in a single cell or single nucleus RNA sequencing experiment that optimizes classification accuracy. NS-Forest proceeds through the following steps (default setting):
+
+1. Data input: An AnnData object (e.g., .h5ad file) with cell type cluster labels. 
+
+2. Binary score calculation: Each gene is assigned a binary score for every cluster. Binary score is a measurement of the binary expression pattern of a gene. A higher binary score means a gene is expressed in one cluster and not others. A lower binary score means a gene is expressed in many clusters and would not be an ideal candidate for a cell type-specific marker gene. 
+
+3. Binary scoring criterion: NS-Forest then filters for genes with high binary scores. Candidate genes are selected if their binary scores are 2 standard deviations above the mean of all genes expressed in the cluster. 
+
+4. Random forest: The top 15 binary score genes are used as input into a random forest classifier, which ranks the genes by Gini Impurity, while producing a classification model for each cluster. 
+
+5. Decision tree evaluation: The top 6 ranked random forest genes are used as input into decision trees where all combinations of input genes are evaluated and the combination with the highest F-beta score is selected. 
+
+6. Output: The NS-Forest algorithm outputs 1-6 marker genes per cluster along with the classification metrics (F-beta, PPV (precision), recall) and the On-Target Fraction expression metric. 
+
+### NS-Forest Marker Gene Evaluation
+
+The final module in the NS-Forest algorithm can also be used to assess the performance of any collection of marker gene combinations identified using any approach.  The marker gene evaluation module includes the following steps (default setting):
+
+1. Data input: 1) An AnnData object (e.g., .h5ad file) with cell type cluster labels. 2) A list of marker genes for every cluster to be evaluated. 
+
+2. Decision tree creation: One-vs-all decision trees are created for each gene in the cluster combination and evaluated for classification accuracy. 
+
+3. Decision tree evaluation: Each gene in the cluster combination is evaluated using these decision trees to determine if the gene gives the correct classification. If even one gene in the cluster combination gives a misclassification, then the prediction is considered incorrect. Note: This strict criteria may lead to PPV = 0 when no true positives (TP) classification are obtained. 
+
+4. Output: The NS-Forest marker gene evaluation outputs the classification metrics (F-beta, PPV (precision), recall) and On-Target Fraction for every cluster combination, which can be used to compare against other marker gene lists.
+
 
 ## Prerequisites
 * This is a python script written and tested in python 3.11, scanpy 1.9.6.
@@ -35,6 +60,10 @@ Will be uploaded to official PyPI channel soon.
 ## Versions and citations
 
 This is version 4.0.0. Earlier versions are managed in [Releases](https://github.com/JCVenterInstitute/NSForest/releases).  
+
+Version 4:
+
+BioArchive Link: https://www.biorxiv.org/content/10.1101/2024.04.22.590194v1.full
 
 Version 2:
 
@@ -47,11 +76,10 @@ Aevermann BD, Novotny M, Bakken T, Miller JA, Diehl AD, Osumi-Sutherland D, Lask
 ## Authors
 
 * Yun (Renee) Zhang zhangy@jcvi.org
+* Beverly Peng bpeng@jcvi.org
+* Angela Liu aliu@jcvi.org
 * Richard Scheuermann richard.scheuermann@nih.gov
 * Brian Aevermann baevermann@chanzuckerberg.com
-* Angela Liu aliu@jcvi.org
-* Beverly Peng bpeng@jcvi.org
-* Ajith V. Pankajam ajith.viswanathanasaripankajam@nih.gov
 
 ## License
 
@@ -59,7 +87,7 @@ This project is licensed under the [MIT License](https://github.com/JCVenterInst
 
 ## Acknowledgments
 
-* BICCN
 * Allen Institute of Brain Science
+* Brain Initiative Cell Census Network
 * Chan Zuckerberg Initiative
 * California Institute for Regenerative Medicine

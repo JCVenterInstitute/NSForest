@@ -72,6 +72,10 @@ def DecisionTree(adata, cluster_header, markers_dict, medians_header = "medians_
         print(f"{ct} out of {n_clusters}:")
         print(f"\t{cl}")
         print(f"\tmarker genes to be evaluated: {markers_dict[cl]}")
+
+        if cl not in list(adata.obs[cluster_header]): 
+            print(f"warning: {cl} not found in adata.obs[{cluster_header}], skipping cluster.")
+            continue
         
         ##=== reset parameters for this iteration!!! (for taking care of special cases) ===##
         markers = []

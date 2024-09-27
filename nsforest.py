@@ -10,7 +10,7 @@ from nsforest import nsforesting
 
 
 def run_nsforest_on_file(
-    h5ad_filepath, cluster_header="cell_type", results_dirpath=".", total_counts=5000000
+    h5ad_filepath, cluster_header="cell_type", results_dirpath=".", total_counts=0
 ):
     """Run NSForest using the specified dataset filepath, and
     cluster_header.
@@ -24,7 +24,7 @@ def run_nsforest_on_file(
     results_dirpath : str
         dirpath for the results
     total_counts : int
-        Total counts after downsampling
+        Total counts after downsampling, default: 0, do not downsample
 
     Returns
     -------
@@ -61,15 +61,18 @@ def run_nsforest_on_file(
         print(f"Loading unprocessed AnnData file: {h5ad_filename}")
         up_adata = sc.read_h5ad(h5ad_filepath)
 
-        print("Calculating QC metrics")
-        up_metrics = sc.pp.calculate_qc_metrics(up_adata)
-        if up_metrics[1]["total_counts"].sum() > total_counts:
-            print("Downsampling unprocessed AnnData file")
-            ds_adata = sc.pp.downsample_counts(
-                up_adata, total_counts=total_counts, copy=True
-            )
-        else:
-            ds_adata = up_adata  # No need to copy
+        # Do not downsample by default
+        ds_adata = up_adata  # No need to copy
+        if total_counts > 0:
+
+            print("Calculating QC metrics")
+            up_metrics = sc.pp.calculate_qc_metrics(up_adata)
+            if up_metrics[1]["total_counts"].sum() > total_counts:
+
+                print("Downsampling unprocessed AnnData file")
+                ds_adata = sc.pp.downsample_counts(
+                    up_adata, total_counts=total_counts, copy=True
+                )
 
         print("Generating scanpy dendrogram")
         # Dendrogram order is stored in
@@ -298,9 +301,9 @@ def main():
     parser.add_argument(
         "-t",
         "--total-counts",
-        default=5000000,
+        default=0,
         type=int,
-        help="Total counts after downsampling, default: 5000000",
+        help="Total counts after downsampling, default: 0, do not downsample",
         metavar="COUNTS",
     )
     group = parser.add_mutually_exclusive_group()
@@ -316,7 +319,12 @@ def main():
 
     # Run the NS-Forest function
     if args.run_nsforest_on_file:
-        run_nsforest_on_file(args.h5ad_filepath, args.cluster_header, args.results_dirpath)
+        run_nsforest_on_file(
+            args.h5ad_filepath,
+            cluster_header=args.cluster_header,
+            results_dirpath=args.results_dirpath,
+            total_counts=args.total_counts,
+        )
 
     if args.downsample_adata_file:
         downsample_adata_file(
