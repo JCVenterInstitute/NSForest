@@ -2,7 +2,7 @@
 
 import argparse
 import os
-import Path
+from pathlib import Path
 
 import scanpy as sc
 
