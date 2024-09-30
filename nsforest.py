@@ -443,7 +443,10 @@ def main():
 
     if args.run_nsforest_without_preprocessing:
         run_nsforest_without_preprocessing(
-            args.h5ad_filepath, args.cluster_header, ".", cluster_list=args.cluster_list
+            args.h5ad_filepath,
+            args.cluster_header,
+            args.results_dirpath,
+            cluster_list=args.cluster_list,
         )
 
 
