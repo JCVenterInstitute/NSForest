@@ -423,8 +423,8 @@ def main():
         generate_scanpy_dendrogram(
             args.h5ad_filepath,
             args.cluster_header,
-            results_dirpath=args.results_dirpath,
             prefix_extension(args.h5ad_filepath, "_gd"),
+            results_dirpath=args.results_dirpath,
         )
 
     if args.calculate_cluster_medians_per_gene:
