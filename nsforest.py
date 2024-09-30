@@ -29,7 +29,7 @@ def run_nsforest_with_preprocessing(
     cluster_list: list
         List of clusters, default: all clusters
     results_dirpath : str
-        dirpath for the results
+        Directory path for the results
     total_counts : int
         Total counts after downsampling, default: 0, do not downsample
 
@@ -130,7 +130,7 @@ def preprocess_adata_file(
     out_adata_file : str
         Output AnnData file name
     results_dirpath : str
-        dirpath for the results
+        Directory path for the results
 
     Returns
     -------
@@ -208,7 +208,7 @@ def downsample_adata_file(inp_adata_file, total_counts, out_adata_file):
 
 
 def generate_scanpy_dendrogram(
-    inp_adata_file, cluster_header, out_dendrogram_dir, out_adata_file
+    inp_adata_file, cluster_header, out_adata_file, results_dirpath="."
 ):
     """Plots a dendrogram of the categories defined in grouping by
     cluster_header.
@@ -219,8 +219,8 @@ def generate_scanpy_dendrogram(
         Input AnnData file name
     cluster_header : str
         Column in `adata.obs` storing cell annotation
-    out_dendrogram_dir : str
-        Output directory, created if doesn't exist
+    results_dirpath : str
+        Directory path for the results
     out_adata_file : str
         Output AnnData file name
 
@@ -244,7 +244,7 @@ def generate_scanpy_dendrogram(
         out_adata,
         cluster_header,
         save=False,
-        output_folder=out_dendrogram_dir,
+        output_folder=results_dirpath,
         outputfilename_suffix=cluster_header,
     )
 
@@ -311,7 +311,7 @@ def calculate_binary_scores_per_gene_per_cluster(
 
 
 def run_nsforest_without_preprocessing(
-    inp_adata_file, cluster_header, out_csv_dir, cluster_list=[]
+        inp_adata_file, cluster_header, cluster_list=[], results_dirpath="."
 ):
     """Performs the main NS-Forest algorithm to find a list of
     NS-Forest markers for each `cluster_header`.
@@ -322,8 +322,8 @@ def run_nsforest_without_preprocessing(
         Input AnnData file name
     cluster_header : str
         Column in `adata.obs` storing cell annotation
-    out_csv_dir : str
-        Output CSV directory
+    results_dirpath : str
+        Directory path for the results
     cluster_list: list
         List of clusters, default: all clusters
 
@@ -339,7 +339,7 @@ def run_nsforest_without_preprocessing(
         inp_adata,
         cluster_header,
         cluster_list=cluster_list,
-        output_folder=f"{out_csv_dir}/",
+        output_folder=f"{results_dirpath}/",
         outputfilename_prefix=cluster_header,
     )
 
@@ -423,7 +423,7 @@ def main():
         generate_scanpy_dendrogram(
             args.h5ad_filepath,
             args.cluster_header,
-            ".",
+            results_dirpath=args.results_dirpath,
             prefix_extension(args.h5ad_filepath, "_gd"),
         )
 
@@ -445,8 +445,8 @@ def main():
         run_nsforest_without_preprocessing(
             args.h5ad_filepath,
             args.cluster_header,
-            args.results_dirpath,
             cluster_list=args.cluster_list,
+            results_dirpath=args.results_dirpath,
         )
 
 
