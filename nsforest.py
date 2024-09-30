@@ -2,6 +2,7 @@
 
 import argparse
 import os
+import Path
 
 import scanpy as sc
 
@@ -57,8 +58,7 @@ def run_nsforest_with_preprocessing(
     """
     # Assign results filename and directory
     h5ad_filename = os.path.basename(h5ad_filepath)
-    # TODO: Improve
-    pp_h5ad_filename = f"pp_{h5ad_filename}"
+    pp_h5ad_filename = prefix_extension(h5ad_filename, "_pp")
     pp_h5ad_filepath = f"{results_dirpath}/{pp_h5ad_filename}"
 
     # Run NSForest if results do not exist
@@ -142,7 +142,7 @@ def preprocess_adata_file(
 
     print("Generating scanpy dendrogram")
     # Dendrogram order is stored in
-    # `pp_adata.uns["dendrogram_cluster"]["categories_ordered"]`
+    # `out_adata.uns["dendrogram_cluster"]["categories_ordered"]`
     out_adata = inp_adata.copy()
     out_adata.obs[cluster_header] = out_adata.obs[cluster_header].astype(str)
     out_adata.obs[cluster_header] = out_adata.obs[cluster_header].astype("category")
@@ -236,7 +236,7 @@ def generate_scanpy_dendrogram(
 
     print("Generating scanpy dendrogram")
     # Dendrogram order is stored in:
-    #   `pp_adata.uns["dendrogram_cluster"]["categories_ordered"]`
+    #   `out_adata.uns["dendrogram_cluster"]["categories_ordered"]`
     out_adata = inp_adata.copy()
     out_adata.obs[cluster_header] = out_adata.obs[cluster_header].astype(str)
     out_adata.obs[cluster_header] = out_adata.obs[cluster_header].astype("category")
@@ -344,6 +344,11 @@ def run_nsforest_without_preprocessing(
     )
 
 
+def prefix_extension(filename, prefix):
+    suffix = Path(filename).suffix
+    return filename.replace(f"{suffix}", f"{prefix}{suffix}")
+
+
 def main():
     """Parse command line arguments, then run NS-Forest function."""
     # Parse command line arguments
@@ -404,14 +409,14 @@ def main():
         preprocess_adata_file(
             args.h5ad_filepath,
             args.cluster_header,
-            args.h5ad_filepath.lower().replace(".h5ad", "_pp.h5ad"),
+            prefix_extension(args.h5ad_filepath, "_pp"
         )
 
     if args.downsample_adata_file:
         downsample_adata_file(
             args.h5ad_filepath,
             args.total_counts,
-            args.h5ad_filepath.lower().replace(".h5ad", "_ds.h5ad"),
+            prefix_extension(args.h5ad_filepath, "_ds"),
         )
 
     if args.generate_scanpy_dendrogram:
@@ -419,21 +424,21 @@ def main():
             args.h5ad_filepath,
             args.cluster_header,
             ".",
-            args.h5ad_filepath.lower().replace(".h5ad", "_gd.h5ad"),
+            prefix_extension(args.h5ad_filepath, "_gd"),
         )
 
     if args.calculate_cluster_medians_per_gene:
         calculate_cluster_medians_per_gene(
             args.h5ad_filepath,
             args.cluster_header,
-            args.h5ad_filepath.lower().replace(".h5ad", "_cc.h5ad"),
+            prefix_extension(args.h5ad_filepath, "_cm"),
         )
 
     if args.calculate_binary_scores_per_gene_per_cluster:
         calculate_binary_scores_per_gene_per_cluster(
             args.h5ad_filepath,
             args.cluster_header,
-            args.h5ad_filepath.lower().replace(".h5ad", "_cb.h5ad"),
+            prefix_extension(args.h5ad_filepath, "_cs"),
         )
 
     if args.run_nsforest_without_preprocessing:
