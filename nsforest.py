@@ -9,11 +9,15 @@ import nsforest as ns
 from nsforest import nsforesting
 
 
-def run_nsforest_on_file(
-    h5ad_filepath, cluster_header="cell_type", results_dirpath=".", total_counts=0
+def run_nsforest_with_preprocessing(
+    h5ad_filepath,
+    cluster_header="cell_type",
+    cluster_list=[],
+    results_dirpath=".",
+    total_counts=0,
 ):
     """Run NSForest using the specified dataset filepath, and
-    cluster_header.
+    cluster_header first preprocessing the dataset.
 
     Parameters
     ----------
@@ -21,6 +25,8 @@ def run_nsforest_on_file(
         The dataset filepath
     cluster_header : str
         The cluster header
+    cluster_list: list
+        List of clusters, default: all clusters
     results_dirpath : str
         dirpath for the results
     total_counts : int
@@ -101,12 +107,66 @@ def run_nsforest_on_file(
         results = nsforesting.NSForest(
             pp_adata,
             cluster_header,
+            cluster_list=cluster_list,
             output_folder=f"{results_dirpath}/",
             outputfilename_prefix=cluster_header,
         )
 
     else:
         print(f"Completed NSForest for preprocessed AnnData file: {pp_h5ad_filename}")
+
+
+def preprocess_adata_file(
+    inp_adata_file, cluster_header, out_adata_file, results_dirpath="."
+):
+    """Preprocess the specified dataset filepath.
+
+    Parameters
+    ----------
+    inp_adata_file : str
+        Input AnnData file name
+    cluster_header : str
+        The cluster header
+    out_adata_file : str
+        Output AnnData file name
+    results_dirpath : str
+        dirpath for the results
+
+    Returns
+    -------
+    None
+
+    """
+    print(f"Loading input AnnData file: {inp_adata_file}")
+    inp_adata = sc.read_h5ad(inp_adata_file)
+
+    print("Generating scanpy dendrogram")
+    # Dendrogram order is stored in
+    # `pp_adata.uns["dendrogram_cluster"]["categories_ordered"]`
+    out_adata = inp_adata.copy()
+    out_adata.obs[cluster_header] = out_adata.obs[cluster_header].astype(str)
+    out_adata.obs[cluster_header] = out_adata.obs[cluster_header].astype("category")
+    out_adata = ns.pp.dendrogram(
+        out_adata,
+        cluster_header,
+        save=False,
+        output_folder=results_dirpath,
+        outputfilename_suffix=cluster_header,
+    )
+
+    print("Calculating cluster medians per gene")
+    out_adata = ns.pp.prep_medians(out_adata, cluster_header)
+
+    print("Calculating binary scores per gene per cluster")
+    out_adata = ns.pp.prep_binary_scores(out_adata, cluster_header)
+
+    print("Writing clusters")
+    with open("clusters.txt", "w") as fp:
+        for cluster in out_adata.obs[cluster_header].cat.categories:
+            fp.write(f"{cluster}\n")
+
+    print(f"Saving output AnnData file: {out_adata_file}")
+    out_adata.write_h5ad(out_adata_file)
 
 
 def downsample_adata_file(inp_adata_file, total_counts, out_adata_file):
@@ -250,7 +310,9 @@ def calculate_binary_scores_per_gene_per_cluster(
     out_adata.write_h5ad(out_adata_file)
 
 
-def run_nsforest(inp_adata_file, cluster_header, out_csv_dir):
+def run_nsforest_without_preprocessing(
+    inp_adata_file, cluster_header, out_csv_dir, cluster_list=[]
+):
     """Performs the main NS-Forest algorithm to find a list of
     NS-Forest markers for each `cluster_header`.
 
@@ -262,6 +324,8 @@ def run_nsforest(inp_adata_file, cluster_header, out_csv_dir):
         Column in `adata.obs` storing cell annotation
     out_csv_dir : str
         Output CSV directory
+    cluster_list: list
+        List of clusters, default: all clusters
 
     Returns
     -------
@@ -274,6 +338,7 @@ def run_nsforest(inp_adata_file, cluster_header, out_csv_dir):
     nsforesting.NSForest(
         inp_adata,
         cluster_header,
+        cluster_list=cluster_list,
         output_folder=f"{out_csv_dir}/",
         outputfilename_prefix=cluster_header,
     )
@@ -289,7 +354,14 @@ def main():
         "--cluster-header",
         default="cell_type",
         help="The cluster header, default: 'cell_type'",
-        metavar="CLUSTER",
+        metavar="CLUSTER HEADER",
+    )
+    parser.add_argument(
+        "-l",
+        "--cluster-list",
+        default=[],
+        help="The cluster list, default: all clusters",
+        metavar="CLUSTER LIST",
     )
     parser.add_argument(
         "-d",
@@ -307,23 +379,32 @@ def main():
         metavar="COUNTS",
     )
     group = parser.add_mutually_exclusive_group()
-    group.add_argument("--run-nsforest-on-file", action="store_true")
+    group.add_argument("--run-nsforest-with-preprocessing", action="store_true")
+    group.add_argument("--preprocess-adata-file", action="store_true")
     group.add_argument("--downsample-adata-file", action="store_true")
     group.add_argument("--generate-scanpy-dendrogram", action="store_true")
     group.add_argument("--calculate-cluster-medians-per-gene", action="store_true")
     group.add_argument(
         "--calculate-binary-scores-per-gene-per-cluster", action="store_true"
     )
-    group.add_argument("--run-nsforest", action="store_true")
+    group.add_argument("--run-nsforest-without-preprocessing", action="store_true")
     args = parser.parse_args()
 
     # Run the NS-Forest function
-    if args.run_nsforest_on_file:
-        run_nsforest_on_file(
+    if args.run_nsforest_with_preprocessing:
+        run_nsforest_with_preprocessing(
             args.h5ad_filepath,
             cluster_header=args.cluster_header,
+            cluster_list=args.cluster_list,
             results_dirpath=args.results_dirpath,
             total_counts=args.total_counts,
+        )
+
+    if args.preprocess_adata_file:
+        preprocess_adata_file(
+            args.h5ad_filepath,
+            args.cluster_header,
+            args.h5ad_filepath.lower().replace(".h5ad", "_pp.h5ad"),
         )
 
     if args.downsample_adata_file:
@@ -355,8 +436,10 @@ def main():
             args.h5ad_filepath.lower().replace(".h5ad", "_cb.h5ad"),
         )
 
-    if args.run_nsforest:
-        run_nsforest(args.h5ad_filepath, args.cluster_header, ".")
+    if args.run_nsforest_without_preprocessing:
+        run_nsforest_without_preprocessing(
+            args.h5ad_filepath, args.cluster_header, ".", cluster_list=args.cluster_list
+        )
 
 
 if __name__ == "__main__":
