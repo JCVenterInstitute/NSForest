@@ -104,10 +104,11 @@ def run_nsforest_with_preprocessing(
         pp_adata.write_h5ad(pp_h5ad_filepath)
 
         print(f"Running NSForest for preprocessed AnnData file: {pp_h5ad_filename}")
+
         results = nsforesting.NSForest(
             pp_adata,
             cluster_header,
-            cluster_list=cluster_list,
+            cluster_list=cluster_list if isinstance(cluster_list, list) else [cluster_list],
             output_folder=f"{results_dirpath}/",
             outputfilename_prefix=cluster_header,
         )
@@ -338,7 +339,7 @@ def run_nsforest_without_preprocessing(
     nsforesting.NSForest(
         inp_adata,
         cluster_header,
-        cluster_list=cluster_list,
+        cluster_list=cluster_list if isinstance(cluster_list, list) else [cluster_list],
         output_folder=f"{results_dirpath}/",
         outputfilename_prefix=cluster_header,
     )
