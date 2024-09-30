@@ -409,7 +409,7 @@ def main():
         preprocess_adata_file(
             args.h5ad_filepath,
             args.cluster_header,
-            prefix_extension(args.h5ad_filepath, "_pp"
+            prefix_extension(args.h5ad_filepath, "_pp"),
         )
 
     if args.downsample_adata_file:
