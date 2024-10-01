@@ -164,7 +164,7 @@ def preprocess_adata_file(
     print("Writing clusters")
     with open("clusters.txt", "w") as fp:
         for cluster in out_adata.obs[cluster_header].cat.categories:
-            fp.write(f"{cluster}\n")
+            fp.write(f"{out_adata_file},{cluster}\n")
 
     print(f"Saving output AnnData file: {out_adata_file}")
     out_adata.write_h5ad(out_adata_file)
