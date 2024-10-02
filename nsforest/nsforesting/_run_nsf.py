@@ -86,31 +86,44 @@ def NSForest(adata, cluster_header, medians_header = "medians_", binary_scores_h
         # if this line below is too slow, could also convert binary_scores df to np array and use np statistics
         median = binary_scores.stack().median()
         threshold = median
-        print("\t", "Threshold (median):", threshold)
+        print(f"\t{gene_selection} Threshold (median): {threshold}")
         
     elif gene_selection == "BinaryFirst_moderate":
         mean = binary_scores.stack().mean()
         stddev = binary_scores.stack().std()
         threshold = mean + stddev
-        print("\t", "Threshold (mean + 1 * std):", threshold)
+        print(f"\t{gene_selection} Threshold (mean + 1 * std): {threshold}")
     
     elif gene_selection == "BinaryFirst_high":
         mean = binary_scores.stack().mean()
         stddev = binary_scores.stack().std()
         threshold = mean + 2 * stddev
-        print("\t", "Threshold (mean + 2 * std):", threshold)
+        print(f"\t{gene_selection} Threshold (mean + 2 * std): {threshold}")
     
     else: 
-        threshold = 0
-        print("\t", "Threshold (all genes (default)):", threshold)
-    
+        if "BinaryFirst_" in str(gene_selection): 
+            try: 
+                mult = float(gene_selection.split("BinaryFirst_")[-1])
+                mean = binary_scores.stack().mean()
+                stddev = binary_scores.stack().std()
+                threshold = mean + mult * stddev
+                print(f"\t{gene_selection} Threshold (mean + {mult} * std): {threshold}")
+
+            except ValueError: 
+                threshold = 0
+                print(f"\twarning: invalid gene_selection threshold input: {gene_selection}, using default instead.")
+                print(f"\tThreshold (all genes (default)): {threshold}")
+        else: 
+            threshold = 0
+            print(f"\tThreshold (all genes (default)): {threshold}")
+        
     ## create dummy matrix based on if binary score is greater than threshold
     binary_dummies = binary_scores >= threshold
     binary_dummies = binary_dummies*1
     binary_dummies = pd.DataFrame(binary_dummies, index=binary_scores.index, columns=binary_scores.columns) #cluster-by-gene
     ## average number of genes selected
     binary_dummies_sum = binary_dummies.stack().sum()
-    print("\tAverage number of genes after gene_selection in each cluster:", binary_dummies_sum/n_total_clusters)
+    print(f"\tAverage number of genes after gene_selection in each cluster: {binary_dummies_sum/n_total_clusters}")
     ## write number of genes selected for each cluster
     if save_supplementary: 
         print(f"Saving number of genes selected per cluster as...\n{output_folder}{outputfilename_prefix}_gene_selection.csv")
@@ -121,14 +134,13 @@ def NSForest(adata, cluster_header, medians_header = "medians_", binary_scores_h
         cluster_list = df_dummies.columns
     n_clusters = len(cluster_list)
     
-    print ("Number of clusters to evaluate: " + str(n_clusters))
+    print (f"Number of clusters to evaluate: {n_clusters}")
     df_supp = df_markers = df_results = pd.DataFrame()
     start_time = time.time()
     
     for cl in cluster_list: 
         ct = list(cluster_list).index(cl) + 1
-        print(f"{ct} out of {n_clusters}:")
-        print(f"\t{cl}")
+        print(f"{ct} out of {n_clusters}:\n\t{cl}")
 
         if cl not in list(adata.obs[cluster_header]): 
             print(f"warning: {cl} not found in adata.obs[{cluster_header}], skipping cluster.")
@@ -146,11 +158,11 @@ def NSForest(adata, cluster_header, medians_header = "medians_", binary_scores_h
         
         ##=== special cases: ===##
         if n_positive_genes == 0:
-            print("\t" + "No positive genes for evaluation. Skipped. Optionally, consider increasing n_top_genes.")
+            print("\tNo positive genes for evaluation. Skipped. Optionally, consider increasing n_top_genes.")
             continue
 
         if n_positive_genes < n_binary_genes:
-            print("\t" + f"Only {n_positive_genes} out of {n_top_genes} top Random Forest features with median > 0 will be further evaluated.")
+            print(f"\tOnly {n_positive_genes} out of {n_top_genes} top Random Forest features with median > 0 will be further evaluated.")
             n_binary_genes_cl = n_positive_genes
             n_genes_eval_cl = min(n_positive_genes, n_genes_eval)
         ##===##
@@ -161,10 +173,10 @@ def NSForest(adata, cluster_header, medians_header = "medians_", binary_scores_h
         ## Evaluation step: calculate F-beta score for gene combinations
         genes_eval = top_binary_genes.index[:n_genes_eval_cl].to_list()
         markers, scores = mydecisiontreeevaluation.myDecisionTreeEvaluation(adata, df_dummies, cl, genes_eval, beta)
-        print("\t" + str(markers))
-        print("\t" + "fbeta: " + str(scores[0]))
-        print("\t" + "PPV: " + str(scores[1]))
-        print("\t" + "recall: " + str(scores[2]))
+        print(f"\t{markers}")
+        print(f"\tfbeta: {scores[0]}")
+        print(f"\tPPV: {scores[1]}")
+        print(f"\trecall: {scores[2]}")
 
         ## return supplementary table as csv
         binary_genes_list = top_binary_genes.index[:n_binary_genes_cl].to_list()

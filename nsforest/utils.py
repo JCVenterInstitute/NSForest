@@ -61,6 +61,12 @@ def prepare_markers(results, col_cluster, col_marker, output_folder = "", output
                 marker_genes_dict[cluster] = [marker]
             else: 
                 marker_genes_dict[cluster].append(marker)
+    # removing duplicates
+    for key in marker_genes_dict.keys(): 
+        values = []
+        for marker in marker_genes_dict[key]: 
+            if marker not in values: values.append(marker)
+        marker_genes_dict[key] = values
     # print out too
     if len(not_found) > 1: 
         print("WARNING: input markers not found in anndata\nMarkers:", not_found)
