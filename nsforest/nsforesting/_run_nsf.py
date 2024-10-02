@@ -207,13 +207,15 @@ def NSForest(adata, cluster_header, medians_header = "medians_", binary_scores_h
         print(f"Saving supplementary table as...\n{output_folder}{outputfilename_prefix}_supplementary.csv")
         print(f"Saving markers table as...\n{output_folder}{outputfilename_prefix}_markers.csv")
 
-    print(f"Saving results table as...\n{output_folder}{outputfilename_prefix}_results.csv")
-    markers_dict = dict(zip(df_results["clusterName"], df_results["NSForest_markers"]))
-    on_target_ratio = calculate_fraction.markers_onTarget(adata, cluster_header, markers_dict, medians_header, save_supplementary = save_supplementary, output_folder = output_folder, outputfilename_prefix = outputfilename_prefix)
-    df_results = df_results.merge(on_target_ratio, on = "clusterName", how = "left")
+    if not df_results.empty:
+        print(f"Saving results table as...\n{output_folder}{outputfilename_prefix}_results.csv")
+        markers_dict = dict(zip(df_results["clusterName"], df_results["NSForest_markers"]))
+        on_target_ratio = calculate_fraction.markers_onTarget(adata, cluster_header, markers_dict, medians_header, save_supplementary = save_supplementary, output_folder = output_folder, outputfilename_prefix = outputfilename_prefix)
+        df_results = df_results.merge(on_target_ratio, on = "clusterName", how = "left")
+
     df_results.to_csv(f"{output_folder}{outputfilename_prefix}_results.csv", index=False)
     print(f"Saving final results table as...\n{output_folder}{outputfilename_prefix}_results.csv")
 
     print("--- %s seconds ---" % (time.time() - start_time))
-    
+
     return df_results
