@@ -26,20 +26,19 @@ def main():
 
     file = "../demo_data/adata_layer1.h5ad" 
     adata = sc.read_h5ad(file)
+    adata.var = adata.var.reset_index()
     adata.var_names = adata.var["feature_name"]
 
     cluster_header = "cluster"
-    medians_header = "medians_" + cluster_header
-    binary_scores_header = "binary_scores_" + cluster_header
 
     #### Preprocessing ####
     ns.pp.dendrogram(adata, cluster_header) 
-    ns.pp.prep_medians(adata, cluster_header, use_mean = False, positive_genes_only = True) 
-    ns.pp.prep_binary_scores(adata, cluster_header, medians_header) 
+    adata = ns.pp.prep_medians(adata, cluster_header) 
+    adata = ns.pp.prep_binary_scores(adata, cluster_header) 
 
-    filename = file.replace(".h5ad", "_preprocessed.h5ad")
-    print(f"Saving new anndata object as...\n{filename}")
-    adata.write_h5ad(filename)
+    # filename = file.replace(".h5ad", "_preprocessed.h5ad")
+    # print(f"Saving new anndata object as...\n{filename}")
+    # adata.write_h5ad(filename)
 
     # Start here if you already preprocessed the anndata
     adata = sc.read_h5ad(file.replace(".h5ad", "_preprocessed.h5ad"))
@@ -52,18 +51,18 @@ def main():
 
     #### Running NSForest ####
     # Adding this line to actually subset to positive genes if running NSForest
-    adata = ns.pp.prep_medians(adata, cluster_header, use_mean = False, positive_genes_only = True) 
+    adata = ns.pp.prep_medians(adata, cluster_header) 
     if args.c: 
-        nsforesting.NSForest(adata, cluster_header, medians_header, binary_scores_header, cluster_list = [args.c], output_folder = output_folder, outputfilename = outputfilename)
+        nsforesting.NSForest(adata, cluster_header, cluster_list = [args.c], output_folder = output_folder, outputfilename = outputfilename)
     else: 
-        results = nsforesting.NSForest(adata, cluster_header, medians_header, binary_scores_header, output_folder = output_folder, outputfilename = outputfilename)
+        results = nsforesting.NSForest(adata, cluster_header, output_folder = output_folder, outputfilename = outputfilename)
 
     #### Evaluating markers ####
     outputfilename = "markers"
     markers = pd.read_csv("../outputs_layer1/cluster_results.csv")
     markers_dict = utils.prepare_markers(markers, "clusterName", "NSForest_markers")
     adata = sc.read_h5ad(file.replace(".h5ad", "_preprocessed.h5ad"))
-    results = evaluating.DecisionTree(adata, cluster_header, medians_header, markers_dict, combinations = False, output_folder = output_folder, outputfilename = outputfilename)
+    results = evaluating.DecisionTree(adata, cluster_header, markers_dict, combinations = False, output_folder = output_folder, outputfilename = outputfilename)
 
     # Loading results csv
     # if parallelizing, remember to combine the separate output csv's into a single results csv before plotting
@@ -88,9 +87,9 @@ def main():
     markers = []
     for val in results["NSForest_markers"]: # markers NSForest_markers binary_markers
         markers.extend(val)
-    
-    ns.pl.dotplot(adata, markers, cluster_header, dendrogram, True, output_folder, outputfilename)
-    ns.pl.stackedviolin(adata, markers, cluster_header, dendrogram, True, output_folder, outputfilename)
-    ns.pl.matrixplot(adata, markers, cluster_header, True, True, output_folder, outputfilename)
+        
+    ns.pl.dotplot(adata, markers_dict, cluster_header, dendrogram = True, save = True, output_folder = output_folder, outputfilename_suffix = outputfilename)
+    ns.pl.stackedviolin(adata, markers_dict, cluster_header, dendrogram = True, save = True, output_folder = output_folder, outputfilename_suffix = outputfilename)
+    ns.pl.matrixplot(adata, markers_dict, cluster_header, dendrogram = True, save = True, output_folder = output_folder, outputfilename_suffix = outputfilename)
 
 main()
