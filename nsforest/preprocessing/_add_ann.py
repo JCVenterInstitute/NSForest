@@ -6,7 +6,7 @@ from tqdm import tqdm # may have to play with "import tqdm" vs "from tqdm import
 import matplotlib.pyplot as plt
 import scanpy as sc
 
-def dendrogram(adata, cluster_header, width = 2, save = False, output_folder = "", outputfilename_suffix = ""): 
+def dendrogram(adata, cluster_header, width=2, save=False, output_folder="", outputfilename_suffix="", plot=False):
     """\
     Generating a dendrogram from the AnnData object. 
 
