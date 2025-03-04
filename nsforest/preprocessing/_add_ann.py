@@ -18,7 +18,9 @@ def dendrogram(adata, cluster_header, width = 2, save = False, output_folder = "
             Column in `adata.obs` storing cell annotation.
         width: int (default: 2)
             Width of scanpy figure. 
-        save: bool (default: False)
+        plot: bool (default: False)
+            Whether to use sc.pl.dendrogram. 
+        save_plot_as: bool (default: False)
             Whether to save dendrogram as png file in `output_folder`. 
         output_folder: str (default: "")
             Output folder. Created if doesn't exist. 
@@ -30,12 +32,24 @@ def dendrogram(adata, cluster_header, width = 2, save = False, output_folder = "
     adata: AnnData
         AnnData with dendrogram stored in `adata.uns["dendrogram_{cluster_header}"]`. 
     """
+<<<<<<< HEAD
     if save: 
         sc.settings.figdir = output_folder
         save = "_" + outputfilename_suffix + ".png"
     with plt.rc_context({"figure.figsize": (12, width)}):
         sc.pl.dendrogram(adata, cluster_header, orientation = "top", save = save)
     return adata
+=======
+    if not plot: # default no plot
+        sc.tl.dendrogram(adata, cluster_header)
+    else: 
+        if save_plot: 
+            sc.settings.figdir = output_folder
+            save_plot = "_" + outputfilename_suffix + ".png"
+        with plt.rc_context({"figure.figsize": (12, width)}):
+            sc.pl.dendrogram(adata, cluster_header, orientation = "top", save = save_plot)
+    return
+>>>>>>> b69898955e2d6c4f8f148b7a26f25d3cb5dbaf8b
 
 def get_medians(adata, cluster_header, use_mean = False): 
     """\
