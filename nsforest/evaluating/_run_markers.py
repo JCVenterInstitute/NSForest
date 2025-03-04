@@ -114,8 +114,14 @@ def DecisionTree(adata, cluster_header, markers_dict, medians_header = "medians_
     markers_dict = dict(zip(df_results["clusterName"], df_results["markers"]))
     on_target_ratio = calculate_fraction.markers_onTarget(adata, cluster_header, markers_dict, use_mean = use_mean, save_supplementary = save_supplementary, output_folder = output_folder, outputfilename_prefix = outputfilename_prefix)
     df_results = df_results.merge(on_target_ratio, on = "clusterName", how = "left")
+    
     df_results.to_csv(f"{output_folder}{outputfilename_prefix}_results.csv", index=False)
     print(f"Saving final results table as...\n{output_folder}{outputfilename_prefix}_results.csv")
+    
+    df_results.to_pickle(f"{output_folder}{outputfilename_prefix}_results.pkl")
+    print(f"Saving final results table as...\n{output_folder}{outputfilename_prefix}_results.pkl")
+    
+    
     print("--- %s seconds ---" % (time.time() - start_time))
     ### END iterations ###
     
