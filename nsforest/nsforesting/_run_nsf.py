@@ -49,7 +49,7 @@ def NSForest(adata, cluster_header, medians_header = "medians_", binary_scores_h
     Returns
     -------
     df_results: pd.DataFrame
-        NS-Forest results. Includes classification metrics (f_score, PPV, recall, onTarget). 
+        NS-Forest results. Includes classification metrics (f_score, precision, recall, onTarget). 
     """
 
     # default medians_header and binary_scores_header
@@ -173,10 +173,10 @@ def NSForest(adata, cluster_header, medians_header = "medians_", binary_scores_h
         ## Evaluation step: calculate F-beta score for gene combinations
         genes_eval = top_binary_genes.index[:n_genes_eval_cl].to_list()
         markers, scores = mydecisiontreeevaluation.myDecisionTreeEvaluation(adata, df_dummies, cl, genes_eval, beta)
-        print(f"\t{markers}")
-        print(f"\tfbeta: {scores[0]}")
-        print(f"\tPPV: {scores[1]}")
-        print(f"\trecall: {scores[2]}")
+        print(f"\t {markers}")
+        print(f"\t fbeta: {scores[0]}")
+        print(f"\t precision: {scores[1]}")
+        print(f"\t recall: {scores[2]}")
 
         ## return supplementary table as csv
         binary_genes_list = top_binary_genes.index[:n_binary_genes_cl].to_list()
@@ -199,7 +199,7 @@ def NSForest(adata, cluster_header, medians_header = "medians_", binary_scores_h
         dict_results_cl = {'clusterName': cl,
                            'clusterSize': int(scores[5]+scores[6]),
                            'f_score': scores[0],
-                           'PPV': scores[1],
+                           'precision': scores[1],
                            'recall': scores[2],
                            'TN': int(scores[3]),
                            'FP': int(scores[4]),
@@ -218,11 +218,12 @@ def NSForest(adata, cluster_header, medians_header = "medians_", binary_scores_h
     if save_supplementary: 
         print(f"Saving supplementary table as...\n{output_folder}{outputfilename_prefix}_supplementary.csv")
         print(f"Saving markers table as...\n{output_folder}{outputfilename_prefix}_markers.csv")
-
-    print(f"Saving results table as...\n{output_folder}{outputfilename_prefix}_results.csv")
-    markers_dict = dict(zip(df_results["clusterName"], df_results["NSForest_markers"]))
-    on_target_ratio = calculate_fraction.markers_onTarget(adata, cluster_header, markers_dict, medians_header, save_supplementary = save_supplementary, output_folder = output_folder, outputfilename_prefix = outputfilename_prefix)
-    df_results = df_results.merge(on_target_ratio, on = "clusterName", how = "left")
+    
+    if not df_results.empty:
+        print(f"Saving results table as...\n{output_folder}{outputfilename_prefix}_results.csv")
+        markers_dict = dict(zip(df_results["clusterName"], df_results["NSForest_markers"]))
+        on_target_ratio = calculate_fraction.markers_onTarget(adata, cluster_header, markers_dict, medians_header, save_supplementary = save_supplementary, output_folder = output_folder, outputfilename_prefix = outputfilename_prefix)
+        df_results = df_results.merge(on_target_ratio, on = "clusterName", how = "left")
     df_results.to_csv(f"{output_folder}{outputfilename_prefix}_results.csv", index=False)
     print(f"Saving final results table as...\n{output_folder}{outputfilename_prefix}_results.csv")
 

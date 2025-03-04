@@ -13,8 +13,8 @@ def boxplot(df, col, save = False, output_folder = "", outputfilename_prefix = "
             NS-Forest results containing "clusterName" and `col` columns. 
         col: str
             Column in `df` to create the boxplot from. 
-        save: bool (default: False)
-            Whether to save plot as an html file. 
+        save: bool, str (default: False)
+            Whether to save plot. Set as option for type of image to save ("html", "svg", "png", etc)
         output_folder: str (default: "")
             Output folder for output files. 
         outputfilename_prefix: str (default: "")
@@ -29,9 +29,16 @@ def boxplot(df, col, save = False, output_folder = "", outputfilename_prefix = "
                  title=f"{col} median = {round(df[col].median(),3)}",
                  width=400, height=500, hover_name='clusterName')
     if save: 
-        filename = output_folder + outputfilename_prefix + f"_boxplot_{col}.html"
+        if save in [True, "html"]: 
+            filename = output_folder + outputfilename_prefix + f"_boxplot_{col}.html"
+            fig.write_html(filename)
+        elif save in ["png", "jpeg", "webp", "svg", "pdf"]: 
+            filename = output_folder + outputfilename_prefix + f"_boxplot_{col}.{save}"
+            fig.write_image(filename)
+        else: 
+            print(f"ERROR: invalid file extension: {save}")
         print("Saving...\n", filename)
-        fig.write_html(filename)
+        
     return fig
 
 def scatter_w_clusterSize(df, col, save = False, output_folder = "", outputfilename_prefix = ""): 

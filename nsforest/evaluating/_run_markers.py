@@ -37,7 +37,7 @@ def DecisionTree(adata, cluster_header, markers_dict, medians_header = "medians_
     Returns
     -------
     df_results: pd.DataFrame 
-        NS-Forest results. Includes classification metrics (f_score, PPV, recall, onTarget). 
+        NS-Forest results. Includes classification metrics (f_score, precision, recall, onTarget). 
     """
     # default medians_header
     if medians_header == "medians_": medians_header = "medians_" + cluster_header
@@ -91,14 +91,14 @@ def DecisionTree(adata, cluster_header, markers_dict, medians_header = "medians_
         markers, scores = mydecisiontreeevaluation.myDecisionTreeEvaluation(adata, df_dummies, cl, markers, beta, combinations = combinations)
         print("\t" + str(markers))
         print("\t" + "fbeta: " + str(scores[0]))
-        print("\t" + "PPV: " + str(scores[1]))
+        print("\t" + "precision: " + str(scores[1]))
         print("\t" + "recall: " + str(scores[2]))
 
         ## return final results as dataframe
         dict_results_cl = {'clusterName': cl,
                            'clusterSize': int(scores[5]+scores[6]),
                            'f_score': scores[0],
-                           'PPV': scores[1],
+                           'precision': scores[1],
                            'recall': scores[2],
                            'TN': int(scores[3]),
                            'FP': int(scores[4]),
@@ -131,7 +131,7 @@ def add_fraction(adata, df_results, cluster_header, medians_header = "medians_",
     adata: AnnData
         Annotated data matrix.
     df_results: pd.DataFrame
-        NS-Forest results. Contains classification metrics (f_score, PPV, recall, onTarget). 
+        NS-Forest results. Contains classification metrics (f_score, precision, recall, onTarget). 
     cluster_header
         Column in `adata`'s `.obs` representing cell annotation.
     medians_header: str
@@ -145,7 +145,7 @@ def add_fraction(adata, df_results, cluster_header, medians_header = "medians_",
     
     Returns
     -------
-    df_results: pd.DataFrame of the NS-Forest results. Contains classification metrics (f_score, PPV, recall, onTarget). 
+    df_results: pd.DataFrame of the NS-Forest results. Contains classification metrics (f_score, precision, recall, onTarget). 
     """
 
     # default medians_header
