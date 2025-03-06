@@ -12,4 +12,10 @@ Contents
 
     installation
     preprocessing
-
+    tutorial
+    preprocessing
+    nsforesting
+    evaluating
+    plotting_scanpy
+    plotting_plotly
+    utils
