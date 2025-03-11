@@ -2,9 +2,24 @@ name: nsforest
 channels: 
   - conda-forge
 dependencies: 
+  - emacs
   - python=3.11.7
   - scanpy=1.9.6
   - numpy=1.24.3
   - pandas=2.1.4
   - tqdm=4.66.1
   - plotly=5.19.0
+  - ipykernel
+  - pytest>=7.4.0
+  - sphinx>=7.2.6
+  - sphinx-rtd-theme  # Optional, for "Read the Docs"-style documentation
+  - nbsphinx
+  - notebook
+  - r-irkernel
+  - bash_kernel
+  - docutils
+  - pygments
+  - babel
+  - importlib_metadata
+  - jupyter_core>=5.1.3
+  

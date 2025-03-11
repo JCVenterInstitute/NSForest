@@ -6,7 +6,7 @@ from tqdm import tqdm # may have to play with "import tqdm" vs "from tqdm import
 import matplotlib.pyplot as plt
 import scanpy as sc
 
-def dendrogram(adata, cluster_header, width = 2, save = False, output_folder = "", outputfilename_suffix = ""): 
+def dendrogram(adata, cluster_header, width = 2, save = False, plot = False, output_folder = "", outputfilename_suffix = ""): 
     """\
     Generating a dendrogram from the AnnData object. 
 
@@ -20,6 +20,8 @@ def dendrogram(adata, cluster_header, width = 2, save = False, output_folder = "
             Width of scanpy figure. 
         save: bool (default: False)
             Whether to save dendrogram as png file in `output_folder`. 
+        plot: bool (default: False)
+            Whether to use sc.pl.dendrogram. 
         output_folder: str (default: "")
             Output folder. Created if doesn't exist. 
         outputfilename_suffix: str (default: "")
@@ -30,12 +32,15 @@ def dendrogram(adata, cluster_header, width = 2, save = False, output_folder = "
     adata: AnnData
         AnnData with dendrogram stored in `adata.uns["dendrogram_{cluster_header}"]`. 
     """
-    if save: 
-        sc.settings.figdir = output_folder
-        save = "_" + outputfilename_suffix + ".png"
-    with plt.rc_context({"figure.figsize": (12, width)}):
-        sc.pl.dendrogram(adata, cluster_header, orientation = "top", save = save)
-    return adata
+    if not plot: # default no plot
+        sc.tl.dendrogram(adata, cluster_header)
+    else: 
+        if save_plot: 
+            sc.settings.figdir = output_folder
+            save_plot = "_" + outputfilename_suffix + ".png"
+        with plt.rc_context({"figure.figsize": (12, width)}):
+            sc.pl.dendrogram(adata, cluster_header, orientation = "top", save = save_plot)
+    return
 
 def get_medians(adata, cluster_header, use_mean = False): 
     """\
