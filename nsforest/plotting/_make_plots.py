@@ -51,8 +51,8 @@ def scatter_w_clusterSize(df, col, save = False, output_folder = "", outputfilen
             NS-Forest results containing "clusterName", "clusterSize", and `col` columns. 
         col: str
             Column in `df` to plot against "clusterSize". 
-        save: bool (default: False)
-            Whether to save html file. 
+        save: bool, str (default: False)
+            Whether to save plot. Set as option for type of image to save ("html", "svg", "png", etc)
         output_folder: str (default: "")
             Output folder for output files. 
         outputfilename_prefix: str (default: "")
@@ -65,13 +65,18 @@ def scatter_w_clusterSize(df, col, save = False, output_folder = "", outputfilen
     """
     fig = px.scatter(df, x='clusterSize', y=col, range_y=[-.05,1.05],
                      width=700, height=500, hover_name='clusterName')
-    if save: 
+    if save in [True, "html"]: 
         filename = output_folder + outputfilename_prefix + f"_scatter_{col}.html"
         print("Saving...\n", filename)
         fig.write_html(filename)
+    elif save in ["png", "jpeg", "webp", "svg", "pdf"]: 
+        filename = output_folder + outputfilename_prefix + f"_scatter_{col}.{save}"
+        fig.write_image(filename)
+    else: 
+        print(f"ERROR: invalid file extension: {save}")
     return fig 
 
-def dotplot(adata, markers, cluster_header, gene_symbols = None, dendrogram = True, save = False, output_folder = "", outputfilename_suffix = ""): 
+def dotplot(adata, markers, cluster_header, gene_symbols = None, dendrogram = True, save = False, show = False, output_folder = "", outputfilename_suffix = ""): 
     """\
     Generating scanpy dotplot of `adata` with input marker list. 
 
@@ -85,8 +90,10 @@ def dotplot(adata, markers, cluster_header, gene_symbols = None, dendrogram = Tr
             Column in `adata.obs` storing cell annotation.
         dendrogram: bool/list (default: True)
             Whether to use dendrogram from `adata.uns["dendrogram_{cluster_header}"]`. Dendrogram order. 
-        save: bool (default: False)
-            Whether to save png file. 
+        save: bool, str (default: False)
+            Whether to save plot. Set as option for type of image to save ("html", "svg", "png", etc)
+        show: bool (default: False)
+            Whether to show plot and block.
         output_folder: str (default: ".")
             Output folder. Created if doesn't exist. 
         outputfilename_suffix: str (default: "")
@@ -94,14 +101,20 @@ def dotplot(adata, markers, cluster_header, gene_symbols = None, dendrogram = Tr
     """
     if save: 
         sc.settings.figdir = output_folder
-        save = outputfilename_suffix + ".png"
+        if save in [True, "png"]: 
+            save = outputfilename_suffix + ".png"
+        elif save in ["png", "jpeg", "webp", "svg", "pdf"]: 
+            save = outputfilename_suffix + f".{save}"
+        else: 
+            print(f"ERROR: invalid file extension: {save}")
+            save = False
     if isinstance(dendrogram, bool): 
-        sc.pl.dotplot(adata, markers, cluster_header, gene_symbols = gene_symbols, use_raw = False, standard_scale = "var", dendrogram = dendrogram, save = save)
+        sc.pl.dotplot(adata, markers, cluster_header, gene_symbols = gene_symbols, use_raw = False, standard_scale = "var", dendrogram = dendrogram, save = save, show = show)
     elif isinstance(dendrogram, list): 
-        sc.pl.dotplot(adata, markers, cluster_header, gene_symbols = gene_symbols, use_raw = False, standard_scale = "var", categories_order = dendrogram, save = save)
+        sc.pl.dotplot(adata, markers, cluster_header, gene_symbols = gene_symbols, use_raw = False, standard_scale = "var", categories_order = dendrogram, save = save, show = show)
     return 
 
-def stackedviolin(adata, markers, cluster_header, gene_symbols = None, dendrogram = True, save = False, output_folder = ".", outputfilename_suffix = ""): 
+def stackedviolin(adata, markers, cluster_header, gene_symbols = None, dendrogram = True, save = False, show = False, output_folder = ".", outputfilename_suffix = ""): 
     """\
     Generating scanpy stacked_violin of `adata` with input marker list. 
 
@@ -115,8 +128,8 @@ def stackedviolin(adata, markers, cluster_header, gene_symbols = None, dendrogra
             Key in `adata.obs` storing cell type.
         dendrogram: bool/list (default: True)
             Whether to use dendrogram from `adata.uns["dendrogram_{cluster_header}"]`. Dendrogram order. 
-        save: bool (default: False)
-            Whether to save png file. 
+        save: bool, str (default: False)
+            Whether to save plot. Set as option for type of image to save ("html", "svg", "png", etc)
         output_folder: str (default: ".")
             Output folder. Created if doesn't exist. 
         outputfilename_suffix: str (default: "")
@@ -124,14 +137,20 @@ def stackedviolin(adata, markers, cluster_header, gene_symbols = None, dendrogra
     """
     if save: 
         sc.settings.figdir = output_folder
-        save = outputfilename_suffix + ".png"
+        if save in [True, "png"]: 
+            save = outputfilename_suffix + ".png"
+        elif save in ["png", "jpeg", "webp", "svg", "pdf"]: 
+            save = outputfilename_suffix + f".{save}"
+        else: 
+            print(f"ERROR: invalid file extension: {save}")
+            save = False
     if isinstance(dendrogram, bool): 
-        sc.pl.stacked_violin(adata, markers, cluster_header, gene_symbols = gene_symbols, use_raw = False, dendrogram = dendrogram, save = save)
+        sc.pl.stacked_violin(adata, markers, cluster_header, gene_symbols = gene_symbols, use_raw = False, dendrogram = dendrogram, save = save, show = show)
     elif isinstance(dendrogram, list): 
-        sc.pl.stacked_violin(adata, markers, cluster_header, gene_symbols = gene_symbols, use_raw = False, categories_order = dendrogram, save = save)
+        sc.pl.stacked_violin(adata, markers, cluster_header, gene_symbols = gene_symbols, use_raw = False, categories_order = dendrogram, save = save, show = show)
     return
 
-def matrixplot(adata, markers, cluster_header, dendrogram = True, save = False, output_folder = "", outputfilename_suffix = ""): 
+def matrixplot(adata, markers, cluster_header, dendrogram = True, save = False, show = False, output_folder = "", outputfilename_suffix = ""): 
     """\
     Generating scanpy matrixplot of `adata` from `markers`. 
 
@@ -145,8 +164,8 @@ def matrixplot(adata, markers, cluster_header, dendrogram = True, save = False, 
             Key in `adata.obs` storing cell type.
         dendrogram: bool/list (default: True)
             Whether to use dendrogram from `adata.uns["dendrogram_{cluster_header}"]`. Dendrogram order. 
-        save: bool (default: False)
-            Whether to save png file. 
+        save: bool, str (default: False)
+            Whether to save plot. Set as option for type of image to save ("html", "svg", "png", etc)
         output_folder: str (default: ".")
             Output folder. Created if doesn't exist. 
         outputfilename_suffix: str (default: "")
@@ -154,10 +173,16 @@ def matrixplot(adata, markers, cluster_header, dendrogram = True, save = False, 
     """
     if save: 
         sc.settings.figdir = output_folder
-        save = outputfilename_suffix + ".png"
+        if save in [True, "png"]: 
+            save = outputfilename_suffix + ".png"
+        elif save in ["png", "jpeg", "webp", "svg", "pdf"]: 
+            save = outputfilename_suffix + f".{save}"
+        else: 
+            print(f"ERROR: invalid file extension: {save}")
+            save = False
     if isinstance(dendrogram, bool): 
         # sc.pl.heatmap(adata, markers, cluster_header, use_raw = False, standard_scale = "var", dendrogram = dendrogram, save = save)
-        sc.pl.matrixplot(adata, markers, cluster_header, use_raw=False, standard_scale='var', dendrogram = dendrogram, save = save)
+        sc.pl.matrixplot(adata, markers, cluster_header, use_raw=False, standard_scale='var', dendrogram = dendrogram, save = save, show = show)
     elif isinstance(dendrogram, list): 
-        sc.pl.matrixplot(adata, markers, cluster_header, use_raw=False, standard_scale='var', categories_order = dendrogram, save = save)
+        sc.pl.matrixplot(adata, markers, cluster_header, use_raw=False, standard_scale='var', categories_order = dendrogram, save = save, show = show)
     return
