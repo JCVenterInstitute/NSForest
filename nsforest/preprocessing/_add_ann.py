@@ -6,7 +6,8 @@ from tqdm import tqdm # may have to play with "import tqdm" vs "from tqdm import
 import matplotlib.pyplot as plt
 import scanpy as sc
 
-def dendrogram(adata, cluster_header, width = 2, save = False, plot = False, output_folder = "", outputfilename_suffix = ""): 
+def dendrogram(adata, cluster_header, *, plot = False, save = False, figsize = (12, 2), 
+               output_folder = "", outputfilename_suffix = "", **kwargs): 
     """\
     Generating a dendrogram from the AnnData object. 
 
@@ -15,31 +16,39 @@ def dendrogram(adata, cluster_header, width = 2, save = False, plot = False, out
         adata: AnnData
             Annotated data matrix.
         cluster_header: str
-            Column in `adata.obs` storing cell annotation.
-        width: int (default: 2)
-            Width of scanpy figure. 
-        save: bool (default: False)
-            Whether to save dendrogram as png file in `output_folder`. 
+            Column in `adata.obs` storing cell annotation. Passed into scanpy dendrogram as groupby.
         plot: bool (default: False)
-            Whether to use sc.pl.dendrogram. 
+            Whether to use sc.pl.dendrogram instead of sc.tl.dendrogram. 
+        save: bool | str (default: False)
+            Whether to save plot in `output_folder`. If string, choose the type of file to save as ('pdf', 'png', 'svg').
+        figsize: tuple (default: (12, 2))
+            figure.figsize for plt.rc_context. 
         output_folder: str (default: "")
             Output folder. Created if doesn't exist. 
         outputfilename_suffix: str (default: "")
             Suffix for all output files. 
+        kwargs: dictionary (default: None)
+            Additional parameters to pass to sc.tl.dendrogram or sc.pl.dendrogram.
     
     Returns
     -------
     adata: AnnData
         AnnData with dendrogram stored in `adata.uns["dendrogram_{cluster_header}"]`. 
     """
-    if not plot: # default no plot
-        sc.tl.dendrogram(adata, cluster_header)
+    if not plot: # default no plot, no save
+        sc.tl.dendrogram(adata, cluster_header, **kwargs)
     else: 
-        if save_plot: 
+        if save: 
+            if isinstance(save, bool): 
+                save = "png"
+            if save not in ['pdf', 'png', 'svg']: 
+                print("warning: `save` must be one of the following: 'pdf', 'png', 'svg'")
+                print("saving as png")
+                save = "png"
             sc.settings.figdir = output_folder
-            save_plot = "_" + outputfilename_suffix + ".png"
-        with plt.rc_context({"figure.figsize": (12, width)}):
-            sc.pl.dendrogram(adata, cluster_header, orientation = "top", save = save_plot)
+            save = f"_{outputfilename_suffix}.{save}"
+        with plt.rc_context({"figure.figsize": figsize}): 
+            sc.pl.dendrogram(adata, cluster_header, save = save, **kwargs)
     return
 
 def get_medians(adata, cluster_header, use_mean = False): 
