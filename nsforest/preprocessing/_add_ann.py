@@ -16,11 +16,11 @@ def dendrogram(adata, cluster_header, *, plot = False, save = False, figsize = (
         adata: AnnData
             Annotated data matrix.
         cluster_header: str
-            Column in `adata.obs` storing cell annotation. Passed into scanpy dendrogram as groupby.
+            Column in `adata.obs` storing cell annotation. Passed into scanpy's dendrogram as `groupby`.
         plot: bool (default: False)
             Whether to use sc.pl.dendrogram instead of sc.tl.dendrogram. 
         save: bool | str (default: False)
-            Whether to save plot in `output_folder`. If string, choose the type of file to save as ('pdf', 'png', 'svg').
+            Whether to save plot in `output_folder`. If string, choose the type of file to save as ('png'(default), 'svg', 'pdf).
         figsize: tuple (default: (12, 2))
             figure.figsize for plt.rc_context. 
         output_folder: str (default: "")
@@ -32,14 +32,13 @@ def dendrogram(adata, cluster_header, *, plot = False, save = False, figsize = (
     
     Returns
     -------
-    adata: AnnData
-        AnnData with dendrogram stored in `adata.uns["dendrogram_{cluster_header}"]`. 
+    does not return anything. Adds `adata.uns["dendrogram_{cluster_header}"]` to passed in adata. 
     """
     if not plot: # default no plot, no save
         sc.tl.dendrogram(adata, cluster_header, **kwargs)
     else: 
         if save: 
-            if isinstance(save, bool): 
+            if save == True: 
                 save = "png"
             if save not in ['pdf', 'png', 'svg']: 
                 print("warning: `save` must be one of the following: 'pdf', 'png', 'svg'")

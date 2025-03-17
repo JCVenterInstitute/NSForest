@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "nsforest"
-version = "4.0"
+version = "4.1"
 description =  "A machine learning method for the discovery of minimum marker gene combinations for cell type identification from single-cell RNA sequencing"
 license = "MIT"
 authors = [
