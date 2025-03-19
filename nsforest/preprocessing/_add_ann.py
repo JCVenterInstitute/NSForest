@@ -5,6 +5,7 @@ import pandas as pd
 from tqdm import tqdm # may have to play with "import tqdm" vs "from tqdm import tqdm"
 import matplotlib.pyplot as plt
 import scanpy as sc
+import logging
 
 def dendrogram(adata, cluster_header, *, plot = False, save = False, figsize = (12, 2), 
                output_folder = "", outputfilename_suffix = "", **kwargs): 

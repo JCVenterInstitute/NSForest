@@ -9,7 +9,7 @@ from nsforest.nsforesting import calculate_fraction
 def NSForest(adata, cluster_header, medians_header = "medians_", binary_scores_header = "binary_scores_", 
              cluster_list = [], gene_selection = "BinaryFirst_high",
              n_trees = 1000, n_jobs = -1, beta = 0.5, n_top_genes = 15, n_binary_genes = 10, n_genes_eval = 6,
-             save_supplementary = False, output_folder = "", outputfilename_prefix = ""):
+             save = False, save_supplementary = False, output_folder = "", outputfilename_prefix = ""):
     """\
     Performs the main NS-Forest algorithm to find a list of NS-Forest markers for each `cluster_header`. 
 
@@ -39,6 +39,8 @@ def NSForest(adata, cluster_header, medians_header = "medians_", binary_scores_h
             Taking the top `n_binary_genes` genes ranked by binary score for supplementary table output. 
         n_genes_eval: int (default: 6)
             Taking the top `n_genes_eval` genes ranked by binary score as input for sklearn.tree's DecisionTreeClassifier. 
+        save: bool (default: False)
+            Whether to save csv and pkl of `df_results` in `output_folder`.
         save_supplementary: bool (default: False)
             Whether to save additional supplementary csvs. 
         output_folder: str (default: "")
@@ -173,10 +175,10 @@ def NSForest(adata, cluster_header, medians_header = "medians_", binary_scores_h
         ## Evaluation step: calculate F-beta score for gene combinations
         genes_eval = top_binary_genes.index[:n_genes_eval_cl].to_list()
         markers, scores = mydecisiontreeevaluation.myDecisionTreeEvaluation(adata, df_dummies, cl, genes_eval, beta)
-        print(f"\t {markers}")
-        print(f"\t fbeta: {scores[0]}")
-        print(f"\t precision: {scores[1]}")
-        print(f"\t recall: {scores[2]}")
+        print(f"\t NSForest-selected markers: {markers}")
+        print(f"\t fbeta: {round(scores[0], 3)}")
+        print(f"\t precision: {round(scores[1], 3)}")
+        print(f"\t recall: {round(scores[2], 3)}")
 
         ## return supplementary table as csv
         binary_genes_list = top_binary_genes.index[:n_binary_genes_cl].to_list()
@@ -211,24 +213,25 @@ def NSForest(adata, cluster_header, medians_header = "medians_", binary_scores_h
                            }
         df_results_cl = pd.DataFrame(dict_results_cl)
         df_results = pd.concat([df_results,df_results_cl]).reset_index(drop=True)
-        df_results.to_csv(f"{output_folder}{outputfilename_prefix}_results.csv", index=False)
+        if save: 
+            df_results.to_csv(f"{output_folder}{outputfilename_prefix}_results.csv", index=False)
 
     ### END iterations ###
 
-    if save_supplementary: 
+    if save_supplementary: # after iterations so not printed every time
         print(f"Saving supplementary table as...\n{output_folder}{outputfilename_prefix}_supplementary.csv")
         print(f"Saving markers table as...\n{output_folder}{outputfilename_prefix}_markers.csv")
     
     if not df_results.empty:
-        print(f"Saving results table as...\n{output_folder}{outputfilename_prefix}_results.csv")
         markers_dict = dict(zip(df_results["clusterName"], df_results["NSForest_markers"]))
         on_target_ratio = calculate_fraction.markers_onTarget(adata, cluster_header, markers_dict, medians_header, save_supplementary = save_supplementary, output_folder = output_folder, outputfilename_prefix = outputfilename_prefix)
         df_results = df_results.merge(on_target_ratio, on = "clusterName", how = "left")
     
-    df_results.to_csv(f"{output_folder}{outputfilename_prefix}_results.csv", index=False)
-    print(f"Saving final results table as...\n{output_folder}{outputfilename_prefix}_results.csv")
-    df_results.to_pickle(f"{output_folder}{outputfilename_prefix}_results.pkl")
-    print(f"Saving final results table as...\n{output_folder}{outputfilename_prefix}_results.pkl")
+    if save: 
+        df_results.to_csv(f"{output_folder}{outputfilename_prefix}_results.csv", index=False)
+        print(f"Saving final results table as...\n{output_folder}{outputfilename_prefix}_results.csv")
+        df_results.to_pickle(f"{output_folder}{outputfilename_prefix}_results.pkl")
+        print(f"Saving final results table as...\n{output_folder}{outputfilename_prefix}_results.pkl")
 
     print("--- %s seconds ---" % (time.time() - start_time))
     

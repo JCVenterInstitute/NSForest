@@ -127,6 +127,9 @@ def markers_onTarget(adata, cluster_header, markers_dict, use_mean = False, save
     
     df_ontarget = df_ontarget_supp[['clusterName', 'onTarget']].drop_duplicates().reset_index(drop=True)
     if save_supplementary: 
+        print(f"Saving supplementary table as...\n{output_folder}{outputfilename_prefix}_markers_onTarget_supp.csv")
+        df_ontarget_supp.to_csv(output_folder + outputfilename_prefix + "_markers_onTarget_supp.csv", index=False)
+        print(f"Saving supplementary table as...\n{output_folder}{outputfilename_prefix}_markers_onTarget.csv")
         df_ontarget.to_csv(output_folder + outputfilename_prefix + "_markers_onTarget.csv", index=False)
 
     return df_ontarget

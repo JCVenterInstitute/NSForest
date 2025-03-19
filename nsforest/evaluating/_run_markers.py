@@ -7,7 +7,7 @@ from nsforest.nsforesting import calculate_fraction
 
 def DecisionTree(adata, cluster_header, markers_dict, medians_header = "medians_", 
                  beta = 0.5, combinations = False, use_mean = False,
-                 save_supplementary = False, output_folder = "", outputfilename_prefix = ""): 
+                 save = False, save_supplementary = False, output_folder = "", outputfilename_prefix = ""): 
     """\
     Calculating sklearn.metrics's fbeta_score, precision_score, recall_score, and confusion_matrix for `genes_eval`. 
 
@@ -27,6 +27,8 @@ def DecisionTree(adata, cluster_header, markers_dict, medians_header = "medians_
             Whether to find the combination of `genes_eval` with the highest fbeta_score. 
         use_mean: bool (default: False)
             Whether to use the mean (vs median) for minimum gene expression threshold. 
+        save: bool (default: False)
+            Whether to save csv and pkl of `df_results` in `output_folder`.
         save_supplementary: bool (default: False)
             Whether to save additional supplementary csvs. 
         output_folder: str (default: "")
@@ -109,17 +111,18 @@ def DecisionTree(adata, cluster_header, markers_dict, medians_header = "medians_
                            }
         df_results_cl = pd.DataFrame(dict_results_cl)
         df_results = pd.concat([df_results,df_results_cl]).reset_index(drop=True)
-        df_results.to_csv(output_folder + outputfilename_prefix + "_results.csv", index=False)
+        if save: 
+            df_results.to_csv(output_folder + outputfilename_prefix + "_results.csv", index=False)
 
     markers_dict = dict(zip(df_results["clusterName"], df_results["markers"]))
     on_target_ratio = calculate_fraction.markers_onTarget(adata, cluster_header, markers_dict, use_mean = use_mean, save_supplementary = save_supplementary, output_folder = output_folder, outputfilename_prefix = outputfilename_prefix)
     df_results = df_results.merge(on_target_ratio, on = "clusterName", how = "left")
     
-    df_results.to_csv(f"{output_folder}{outputfilename_prefix}_results.csv", index=False)
-    print(f"Saving final results table as...\n{output_folder}{outputfilename_prefix}_results.csv")
-    
-    df_results.to_pickle(f"{output_folder}{outputfilename_prefix}_results.pkl")
-    print(f"Saving final results table as...\n{output_folder}{outputfilename_prefix}_results.pkl")
+    if save: 
+        df_results.to_csv(f"{output_folder}{outputfilename_prefix}_results.csv", index=False)
+        print(f"Saving final results table as...\n{output_folder}{outputfilename_prefix}_results.csv")
+        df_results.to_pickle(f"{output_folder}{outputfilename_prefix}_results.pkl")
+        print(f"Saving final results table as...\n{output_folder}{outputfilename_prefix}_results.pkl")
     
     
     print("--- %s seconds ---" % (time.time() - start_time))
