@@ -4,7 +4,7 @@
 
 Documentation: https://nsforest.readthedocs.io/en/latest/
 
-BioArchive Link: https://www.biorxiv.org/content/10.1101/2024.04.22.590194v1.full
+BMC Methods Link: https://bmcmethods.biomedcentral.com/articles/10.1186/s44330-024-00015-2
 
 ## Download and installation
 
