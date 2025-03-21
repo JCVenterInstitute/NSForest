@@ -16,6 +16,7 @@ Additionally, emacs is installed, to faciliate editing.   Feel free to inspect t
    $ conda env create -f nsforest.yml
    $ conda activate nsforest
    $ cd tutorials
+
 Once the environment is activated.  We need to install the NSForest package.
 
 .. code-block:: console
