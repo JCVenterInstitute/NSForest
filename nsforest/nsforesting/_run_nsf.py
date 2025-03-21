@@ -9,7 +9,7 @@ from nsforest.nsforesting import calculate_fraction
 def NSForest(adata, cluster_header, medians_header = "medians_", binary_scores_header = "binary_scores_", 
              cluster_list = [], gene_selection = "BinaryFirst_high",
              n_trees = 1000, n_jobs = -1, beta = 0.5, n_top_genes = 15, n_binary_genes = 10, n_genes_eval = 6,
-             save = False, save_supplementary = False, output_folder = "", outputfilename_prefix = ""):
+             save = False, save_supplementary = False, output_folder = "", outputfilename_prefix = "", **kwargs):
     """\
     Performs the main NS-Forest algorithm to find a list of NS-Forest markers for each `cluster_header`. 
 
@@ -53,7 +53,8 @@ def NSForest(adata, cluster_header, medians_header = "medians_", binary_scores_h
     df_results: pd.DataFrame
         NS-Forest results. Includes classification metrics (f_score, precision, recall, onTarget). 
     """
-
+    from nsforest import NSFOREST_VERSION
+    print(f"Running NS-Forest version {NSFOREST_VERSION}")
     # default medians_header and binary_scores_header
     if medians_header == "medians_": medians_header = "medians_" + cluster_header
     if binary_scores_header == "binary_scores_": binary_scores_header = "binary_scores_" + cluster_header
@@ -175,10 +176,10 @@ def NSForest(adata, cluster_header, medians_header = "medians_", binary_scores_h
         ## Evaluation step: calculate F-beta score for gene combinations
         genes_eval = top_binary_genes.index[:n_genes_eval_cl].to_list()
         markers, scores = mydecisiontreeevaluation.myDecisionTreeEvaluation(adata, df_dummies, cl, genes_eval, beta)
-        print(f"\t NSForest-selected markers: {markers}")
-        print(f"\t fbeta: {round(scores[0], 3)}")
-        print(f"\t precision: {round(scores[1], 3)}")
-        print(f"\t recall: {round(scores[2], 3)}")
+        print(f"\t  NSForest-selected markers: {markers}")
+        print(f"\t  fbeta: {round(scores[0], 3)}")
+        print(f"\t  precision: {round(scores[1], 3)}")
+        print(f"\t  recall: {round(scores[2], 3)}")
 
         ## return supplementary table as csv
         binary_genes_list = top_binary_genes.index[:n_binary_genes_cl].to_list()
@@ -209,7 +210,9 @@ def NSForest(adata, cluster_header, medians_header = "medians_", binary_scores_h
                            'TP': int(scores[6]),
                            'marker_count': len(markers),
                            'NSForest_markers': [markers],
-                           'binary_genes': [df_supp_cl['binary_genes'].to_list()] #for this, order is the same as the supp order
+                           'binary_genes': [df_supp_cl['binary_genes'].to_list()], #for this, order is the same as the supp order
+                           'cluster_header': cluster_header,
+                           'software_version': NSFOREST_VERSION,
                            }
         df_results_cl = pd.DataFrame(dict_results_cl)
         df_results = pd.concat([df_results,df_results_cl]).reset_index(drop=True)

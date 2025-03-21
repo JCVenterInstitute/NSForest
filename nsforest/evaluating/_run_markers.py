@@ -41,6 +41,8 @@ def DecisionTree(adata, cluster_header, markers_dict, medians_header = "medians_
     df_results: pd.DataFrame 
         NS-Forest results. Includes classification metrics (f_score, precision, recall, onTarget). 
     """
+    from nsforest import NSFOREST_VERSION
+    print(f"Running NS-Forest version {NSFOREST_VERSION}")
     # default medians_header
     if medians_header == "medians_": medians_header = "medians_" + cluster_header
     # Creating directory if does not exist
@@ -92,10 +94,10 @@ def DecisionTree(adata, cluster_header, markers_dict, medians_header = "medians_
         ## Evaluation step: calculate F-beta score for gene combinations
         markers, scores = mydecisiontreeevaluation.myDecisionTreeEvaluation(adata, df_dummies, cl, markers, beta, combinations = combinations)
         if combinations: 
-            print(f"\t Best combination of markers: {markers}")
-        print(f"\t fbeta: {round(scores[0], 3)}")
-        print(f"\t precision: {round(scores[1], 3)}")
-        print(f"\t recall: {round(scores[2], 3)}")
+            print(f"\t  Best combination of markers: {markers}")
+        print(f"\t  fbeta: {round(scores[0], 3)}")
+        print(f"\t  precision: {round(scores[1], 3)}")
+        print(f"\t  recall: {round(scores[2], 3)}")
 
         ## return final results as dataframe
         dict_results_cl = {'clusterName': cl,
@@ -108,7 +110,9 @@ def DecisionTree(adata, cluster_header, markers_dict, medians_header = "medians_
                            'FN': int(scores[5]),
                            'TP': int(scores[6]),
                            'marker_count': len(markers),
-                           'markers': [markers] 
+                           'markers': [markers], 
+                           'cluster_header': cluster_header,
+                           'software_version': NSFOREST_VERSION,
                            }
         df_results_cl = pd.DataFrame(dict_results_cl)
         df_results = pd.concat([df_results,df_results_cl]).reset_index(drop=True)
