@@ -87,7 +87,7 @@ def DecisionTree(adata, cluster_header, markers_dict, medians_header = "medians_
             if marker in list(adata.var_names): 
                 markers.append(marker)
             else: 
-                print(f"cannot find {marker} in adata.var_names, excluding from DecisionTree.")
+                print(f"warning: cannot find {marker} in adata.var_names, excluding from DecisionTree.")
 
         if len(markers) == 0: continue
         

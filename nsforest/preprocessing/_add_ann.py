@@ -37,18 +37,17 @@ def dendrogram(adata, cluster_header, *, plot = False, save = False, figsize = (
     """
     if not plot: # default no plot, no save
         sc.tl.dendrogram(adata, cluster_header, **kwargs)
-    else: 
-        if save: 
-            if save == True: 
-                save = "png"
-            if save not in ['pdf', 'png', 'svg']: 
-                print("warning: `save` must be one of the following: 'pdf', 'png', 'svg'")
-                print("saving as png")
-                save = "png"
-            sc.settings.figdir = output_folder
-            save = f"_{outputfilename_suffix}.{save}"
-        with plt.rc_context({"figure.figsize": figsize}): 
-            sc.pl.dendrogram(adata, cluster_header, save = save, **kwargs)
+    if save: 
+        if save == True: 
+            save = "png"
+        if save not in ['pdf', 'png', 'svg']: 
+            print("warning: `save` must be one of the following: 'pdf', 'png', 'svg'")
+            print("saving as png")
+            save = "png"
+        sc.settings.figdir = output_folder
+        save = f"_{outputfilename_suffix}.{save}"
+    with plt.rc_context({"figure.figsize": figsize}): 
+        sc.pl.dendrogram(adata, cluster_header, save = save, **kwargs)
     return
 
 def get_medians(adata, cluster_header, use_mean = False): 
