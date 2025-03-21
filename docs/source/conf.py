@@ -10,7 +10,7 @@ import sys
 # sys.path.insert(0, os.path.abspath("../../nsforest/plotting"))
 
 # sys.path.insert(0, os.path.abspath(".."))
-# sys.path.insert(0, os.path.abspath("../.."))
+sys.path.insert(0, os.path.abspath("../.."))
 # sys.path.insert(0, os.path.abspath("../../.."))
 
 # -- Project information
