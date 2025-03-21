@@ -17,6 +17,9 @@ cd NSForest
 conda env create -f nsforest.yml
 
 conda activate nsforest
+
+pip install .
+
 ```
 ## Tutorial
 
