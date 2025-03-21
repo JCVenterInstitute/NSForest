@@ -3,7 +3,7 @@
 import os
 import sys
 
-# sys.path.insert(0, os.path.abspath("../../nsforest"))
+sys.path.insert(0, os.path.abspath("../../nsforest"))
 # sys.path.insert(0, os.path.abspath("../../nsforest/preprocessing"))
 # sys.path.insert(0, os.path.abspath("../../nsforest/nsforesting"))
 # sys.path.insert(0, os.path.abspath("../../nsforest/evaluating"))
@@ -19,8 +19,8 @@ project = 'NS-Forest'
 copyright = '202X, JCVI'
 author = 'Beverly Peng'
 
-release = '0.1'
-version = '0.1.0'
+release = '4.1'
+version = '4.1'
 
 # -- General configuration
 
