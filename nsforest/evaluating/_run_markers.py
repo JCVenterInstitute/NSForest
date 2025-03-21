@@ -5,7 +5,7 @@ import pandas as pd
 from nsforest.nsforesting import mydecisiontreeevaluation
 from nsforest.nsforesting import calculate_fraction
 
-def DecisionTree(adata, cluster_header, markers_dict, medians_header = "medians_", 
+def DecisionTree(adata, cluster_header, markers_dict, *, medians_header = "medians_", 
                  beta = 0.5, combinations = False, use_mean = False,
                  save = False, save_supplementary = False, output_folder = "", outputfilename_prefix = ""): 
     """\

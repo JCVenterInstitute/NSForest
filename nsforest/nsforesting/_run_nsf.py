@@ -6,7 +6,7 @@ from nsforest.nsforesting import myrandomforest
 from nsforest.nsforesting import mydecisiontreeevaluation
 from nsforest.nsforesting import calculate_fraction
 
-def NSForest(adata, cluster_header, medians_header = "medians_", binary_scores_header = "binary_scores_", 
+def NSForest(adata, cluster_header, *, medians_header = "medians_", binary_scores_header = "binary_scores_", 
              cluster_list = [], gene_selection = "BinaryFirst_high",
              n_trees = 1000, n_jobs = -1, beta = 0.5, n_top_genes = 15, n_binary_genes = 10, n_genes_eval = 6,
              save = False, save_supplementary = False, output_folder = "", outputfilename_prefix = ""):
