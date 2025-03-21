@@ -8,7 +8,7 @@ sys.path.insert(0, os.path.abspath("../.."))
 # -- Project information
 
 project = 'NS-Forest'
-copyright = '202X, JCVI'
+copyright = '202X, JCVI, NIH'
 author = 'Beverly Peng'
 
 release = '4.1'
