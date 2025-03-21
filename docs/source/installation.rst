@@ -13,6 +13,7 @@ Now we create the environment with all the dependencies required to run NSForest
 Additionally, emacs is installed, to faciliate editing.   Feel free to inspect the yaml file, nsforest.yml.   Once the environment is created then we activate the environment. 
 
 .. code-block:: console
+
    $ conda env create -f nsforest.yml
    $ conda activate nsforest
    $ cd tutorials
@@ -20,6 +21,7 @@ Additionally, emacs is installed, to faciliate editing.   Feel free to inspect t
 Once the environment is activated.  We need to install the NSForest package.
 
 .. code-block:: console
+
    $ pip install .
 
 You should be able to "import nsforest" and run the tutorial.ipynb. 
