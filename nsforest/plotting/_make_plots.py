@@ -114,7 +114,7 @@ def dotplot(adata, markers, cluster_header, *, dendrogram = True, save = False,
     return 
 
 def stackedviolin(adata, markers, cluster_header, *, dendrogram = True, save = False, 
-            output_folder = "", outputfilename_suffix = "", **kwargs): 
+                  output_folder = "", outputfilename_suffix = "", **kwargs): 
     """\
     Generating scanpy stacked_violin of `adata` with input marker list. 
 
@@ -144,14 +144,14 @@ def stackedviolin(adata, markers, cluster_header, *, dendrogram = True, save = F
         else: 
             print(f"ERROR: invalid file extension: {save}")
             save = False
-    if isinstance(dendrogram, bool): 
-        sc.pl.stacked_violin(adata, markers, cluster_header, gene_symbols = gene_symbols, use_raw = False, dendrogram = dendrogram, save = save, show = show)
+    if isinstance(dendrogram, bool): # gene_symbols = gene_symbols, use_raw = False, standard_scale = "var", 
+        sc.pl.stacked_violin(adata, markers, cluster_header, dendrogram = dendrogram, save = save, **kwargs)
     elif isinstance(dendrogram, list): 
-        sc.pl.stacked_violin(adata, markers, cluster_header, gene_symbols = gene_symbols, use_raw = False, categories_order = dendrogram, save = save, show = show)
+        sc.pl.stacked_violin(adata, markers, cluster_header, categories_order = dendrogram, save = save, **kwargs)
     return
 
 def matrixplot(adata, markers, cluster_header, *, dendrogram = True, save = False, 
-            output_folder = "", outputfilename_suffix = "", **kwargs): 
+               output_folder = "", outputfilename_suffix = "", **kwargs): 
     """\
     Generating scanpy matrixplot of `adata` from `markers`. 
 
@@ -181,9 +181,8 @@ def matrixplot(adata, markers, cluster_header, *, dendrogram = True, save = Fals
         else: 
             print(f"ERROR: invalid file extension: {save}")
             save = False
-    if isinstance(dendrogram, bool): 
-        # sc.pl.heatmap(adata, markers, cluster_header, use_raw = False, standard_scale = "var", dendrogram = dendrogram, save = save)
-        sc.pl.matrixplot(adata, markers, cluster_header, use_raw=False, standard_scale='var', dendrogram = dendrogram, save = save, show = show)
+    if isinstance(dendrogram, bool): # heatmap # gene_symbols = gene_symbols, use_raw = False, standard_scale = "var", 
+        sc.pl.matrixplot(adata, markers, cluster_header, dendrogram = dendrogram, save = save, **kwargs)
     elif isinstance(dendrogram, list): 
-        sc.pl.matrixplot(adata, markers, cluster_header, use_raw=False, standard_scale='var', categories_order = dendrogram, save = save, show = show)
+        sc.pl.matrixplot(adata, markers, cluster_header, categories_order = dendrogram, save = save, **kwargs)
     return

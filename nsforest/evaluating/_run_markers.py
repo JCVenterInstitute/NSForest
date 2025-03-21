@@ -91,10 +91,11 @@ def DecisionTree(adata, cluster_header, markers_dict, medians_header = "medians_
         
         ## Evaluation step: calculate F-beta score for gene combinations
         markers, scores = mydecisiontreeevaluation.myDecisionTreeEvaluation(adata, df_dummies, cl, markers, beta, combinations = combinations)
-        print("\t" + str(markers))
-        print("\t" + "fbeta: " + str(scores[0]))
-        print("\t" + "precision: " + str(scores[1]))
-        print("\t" + "recall: " + str(scores[2]))
+        if combinations: 
+            print(f"\t Best combination of markers: {markers}")
+        print(f"\t fbeta: {round(scores[0], 3)}")
+        print(f"\t precision: {round(scores[1], 3)}")
+        print(f"\t recall: {round(scores[2], 3)}")
 
         ## return final results as dataframe
         dict_results_cl = {'clusterName': cl,
