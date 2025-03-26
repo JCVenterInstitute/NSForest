@@ -97,6 +97,8 @@ def dotplot(adata, markers, cluster_header, *, dendrogram = True, save = False,
             Output folder. Created if doesn't exist. 
         outputfilename_suffix: str (default: "")
             Prefix for all output files. 
+        kwargs: dictionary (default: None)
+            Additional parameters to pass to sc.pl.dotplot.
     """
     if save: 
         sc.settings.figdir = output_folder
@@ -134,6 +136,8 @@ def stackedviolin(adata, markers, cluster_header, *, dendrogram = True, save = F
             Output folder. Created if doesn't exist. 
         outputfilename_suffix: str (default: "")
             Prefix for all output files. 
+        kwargs: dictionary (default: None)
+            Additional parameters to pass to sc.pl.stacked_violin.
     """
     if save: 
         sc.settings.figdir = output_folder
@@ -171,6 +175,8 @@ def matrixplot(adata, markers, cluster_header, *, dendrogram = True, save = Fals
             Output folder. Created if doesn't exist. 
         outputfilename_suffix: str (default: "")
             Prefix for all output files. 
+        kwargs: dictionary (default: None)
+            Additional parameters to pass to sc.pl.matrixplot.
     """
     if save: 
         sc.settings.figdir = output_folder
