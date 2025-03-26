@@ -62,11 +62,11 @@ The final module in the NS-Forest algorithm can also be used to assess the perfo
 
 ## Versions and citations
 
-This is version 4.0.0. Earlier versions are managed in [Releases](https://github.com/JCVenterInstitute/NSForest/releases).  
+Earlier versions are managed in [Releases](https://github.com/JCVenterInstitute/NSForest/releases).  
 
 Version 4.0:
 
-BioArchive Link: https://www.biorxiv.org/content/10.1101/2024.04.22.590194v1.full
+Liu A, Peng B, Pankajam A, Duong TE, Pryhuber G, Scheuermann RH, Zhang Y. Discovery of optimal cell type classification marker genes from single cell RNA sequencing data. BMC Methods 1, 15 (2024). https://doi.org/10.1186/s44330-024-00015-2
 
 Version 2:
 
