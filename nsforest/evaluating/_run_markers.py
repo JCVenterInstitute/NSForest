@@ -100,7 +100,9 @@ def DecisionTree(adata, cluster_header, markers_dict, *, medians_header = "media
         print(f"\t  recall: {round(scores[2], 3)}")
 
         ## return final results as dataframe
-        dict_results_cl = {'clusterName': cl,
+        dict_results_cl = {'cluster_header': cluster_header,
+                           'software_version': NSFOREST_VERSION,
+                           'clusterName': cl,
                            'clusterSize': int(scores[5]+scores[6]),
                            'f_score': scores[0],
                            'precision': scores[1],
@@ -111,8 +113,6 @@ def DecisionTree(adata, cluster_header, markers_dict, *, medians_header = "media
                            'TP': int(scores[6]),
                            'marker_count': len(markers),
                            'markers': [markers], 
-                           'cluster_header': cluster_header,
-                           'software_version': NSFOREST_VERSION,
                            }
         df_results_cl = pd.DataFrame(dict_results_cl)
         df_results = pd.concat([df_results,df_results_cl]).reset_index(drop=True)

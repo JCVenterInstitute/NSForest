@@ -199,7 +199,9 @@ def NSForest(adata, cluster_header, *, medians_header = "medians_", binary_score
             df_markers.to_csv(output_folder + outputfilename_prefix + "_markers.csv", index=False)
 
         ## return final results as dataframe
-        dict_results_cl = {'clusterName': cl,
+        dict_results_cl = {'cluster_header': cluster_header,
+                           'software_version': NSFOREST_VERSION,
+                           'clusterName': cl,
                            'clusterSize': int(scores[5]+scores[6]),
                            'f_score': scores[0],
                            'precision': scores[1],
@@ -211,8 +213,6 @@ def NSForest(adata, cluster_header, *, medians_header = "medians_", binary_score
                            'marker_count': len(markers),
                            'NSForest_markers': [markers],
                            'binary_genes': [df_supp_cl['binary_genes'].to_list()], #for this, order is the same as the supp order
-                           'cluster_header': cluster_header,
-                           'software_version': NSFOREST_VERSION,
                            }
         df_results_cl = pd.DataFrame(dict_results_cl)
         df_results = pd.concat([df_results,df_results_cl]).reset_index(drop=True)
