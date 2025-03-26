@@ -4,7 +4,7 @@ version = "4.1"
 description =  "A machine learning method for the discovery of minimum marker gene combinations for cell type identification from single-cell RNA sequencing"
 license = "MIT"
 authors = [
-    "Renee Zhang <zhangy@jcvi.org>",
+    "Renee Zhang <yun.zhang@nih.gov>",
     "Richard Scheuermann <richard.scheuermann@nih.gov>",
     "Brian Aevermann <baevermann@chanzuckerberg.com>", 
     "Angela Liu <aliu@jcvi.org>", 
@@ -15,6 +15,7 @@ maintainers = [
     "Beverly Peng <bpeng@jcvi.org>"
 ]
 readme = "README.md"
+packages = [{ include = "nsforest" }]
 
 [tool.poetry.dependencies]
 scanpy = "^1.9.3"
