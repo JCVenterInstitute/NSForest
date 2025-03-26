@@ -23,7 +23,7 @@ def DecisionTree(adata, cluster_header, markers_dict, *, medians_header = "media
             Key in `adata.varm` storing median expression matrix. 
         beta: float (default: 0.5)
             `beta` parameter in sklearn.metrics's fbeta_score. 
-        combinations: bool (default: True)
+        combinations: bool (default: False)
             Whether to find the combination of `genes_eval` with the highest fbeta_score. 
         use_mean: bool (default: False)
             Whether to use the mean (vs median) for minimum gene expression threshold. 
