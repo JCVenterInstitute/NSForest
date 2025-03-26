@@ -1,6 +1,6 @@
 <img src="NS-Forest-sticker.png" width="110" height="125">
 
-# NS-Forest v4.0
+# NS-Forest v4.1
 
 Documentation: https://nsforest.readthedocs.io/en/latest/
 
@@ -64,7 +64,7 @@ The final module in the NS-Forest algorithm can also be used to assess the perfo
 
 This is version 4.0.0. Earlier versions are managed in [Releases](https://github.com/JCVenterInstitute/NSForest/releases).  
 
-Version 4:
+Version 4.0:
 
 BioArchive Link: https://www.biorxiv.org/content/10.1101/2024.04.22.590194v1.full
 
