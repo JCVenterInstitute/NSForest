@@ -1,12 +1,13 @@
 
+from IPython.core.debugger import set_trace
 import os
 import time
 import pandas as pd
 from nsforest.nsforesting import mydecisiontreeevaluation
 from nsforest.nsforesting import calculate_fraction
 
-def DecisionTree(adata, cluster_header, markers_dict, *, medians_header = "medians_", 
-                 beta = 0.5, combinations = False, use_mean = False,
+def DecisionTree(adata, cluster_header, markers_dict, *, medians_header = "medians_", test = 0, 
+                 beta = 0.5, combinations = False, individual_markers = False, use_mean = False,
                  save = False, save_supplementary = False, output_folder = "", outputfilename_prefix = ""): 
     """\
     Calculating sklearn.metrics's fbeta_score, precision_score, recall_score, and confusion_matrix for `genes_eval`. 
@@ -92,29 +93,49 @@ def DecisionTree(adata, cluster_header, markers_dict, *, medians_header = "media
         if len(markers) == 0: continue
         
         ## Evaluation step: calculate F-beta score for gene combinations
-        markers, scores = mydecisiontreeevaluation.myDecisionTreeEvaluation(adata, df_dummies, cl, markers, beta, combinations = combinations)
-        if combinations: 
-            print(f"\t  Best combination of markers: {markers}")
-        print(f"\t  fbeta: {round(scores[0], 3)}")
-        print(f"\t  precision: {round(scores[1], 3)}")
-        print(f"\t  recall: {round(scores[2], 3)}")
+        if not individual_markers: 
+            markers, scores = mydecisiontreeevaluation.myDecisionTreeEvaluation(adata, df_dummies, cl, markers, beta, combinations = combinations)
+            if combinations: 
+                print(f"\t  Best combination of markers: {markers}")
+            print(f"\t  fbeta: {round(scores[0], 3)}")
+            print(f"\t  precision: {round(scores[1], 3)}")
+            print(f"\t  recall: {round(scores[2], 3)}")
 
-        ## return final results as dataframe
-        dict_results_cl = {'software_version': NSFOREST_VERSION,
-                           'cluster_header': cluster_header,
-                           'clusterName': cl,
-                           'clusterSize': int(scores[5]+scores[6]),
-                           'f_score': scores[0],
-                           'precision': scores[1],
-                           'recall': scores[2],
-                           'TN': int(scores[3]),
-                           'FP': int(scores[4]),
-                           'FN': int(scores[5]),
-                           'TP': int(scores[6]),
-                           'marker_count': len(markers),
-                           'markers': [markers], 
-                           }
-        df_results_cl = pd.DataFrame(dict_results_cl)
+            ## return final results as dataframe
+            dict_results_cl = {'software_version': NSFOREST_VERSION,
+                            'cluster_header': cluster_header,
+                            'clusterName': cl,
+                            'clusterSize': int(scores[5]+scores[6]),
+                            'f_score': scores[0],
+                            'precision': scores[1],
+                            'recall': scores[2],
+                            'TN': int(scores[3]),
+                            'FP': int(scores[4]),
+                            'FN': int(scores[5]),
+                            'TP': int(scores[6]),
+                            'marker_count': len(markers),
+                            'markers': [markers], 
+                            }
+            df_results_cl = pd.DataFrame(dict_results_cl)
+        else: 
+            df_results_cl = pd.DataFrame()
+            for marker in markers: 
+                marker, scores = mydecisiontreeevaluation.myDecisionTreeEvaluation(adata, df_dummies, cl, [marker], beta)
+                dict_results_cl = {'software_version': NSFOREST_VERSION,
+                            'cluster_header': cluster_header,
+                            'clusterName': cl,
+                            'clusterSize': int(scores[5]+scores[6]),
+                            'f_score': scores[0],
+                            'precision': scores[1],
+                            'recall': scores[2],
+                            'TN': int(scores[3]),
+                            'FP': int(scores[4]),
+                            'FN': int(scores[5]),
+                            'TP': int(scores[6]),
+                            'marker_count': len(marker),
+                            'markers': [marker], 
+                            }
+                df_results_cl = pd.concat([df_results_cl,pd.DataFrame(dict_results_cl)]).reset_index(drop=True)
         df_results = pd.concat([df_results,df_results_cl]).reset_index(drop=True)
         if save: 
             df_results.to_csv(output_folder + outputfilename_prefix + "_results.csv", index=False)
