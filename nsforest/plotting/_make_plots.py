@@ -2,6 +2,7 @@
 import pandas as pd
 import scanpy as sc
 import plotly.express as px
+import matplotlib.pyplot as plt
 
 def boxplot(df, col, save = False, output_folder = "", outputfilename_prefix = ""): 
     """\

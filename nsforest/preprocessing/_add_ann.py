@@ -7,6 +7,26 @@ import matplotlib.pyplot as plt
 import scanpy as sc
 import logging
 
+# def dendrogram(adata, cluster_header, **kwargs): 
+#     """\
+#     Generating a dendrogram from the AnnData object. 
+
+#     Parameters
+#     ----------
+#         adata: AnnData
+#             Annotated data matrix.
+#         cluster_header: str
+#             Column in `adata.obs` storing cell annotation. Passed into scanpy's dendrogram as `groupby`.
+#         kwargs: dictionary (default: None)
+#             Additional parameters to pass to sc.tl.dendrogram.
+    
+#     Returns
+#     -------
+#     does not return anything. Adds `adata.uns["dendrogram_{cluster_header}"]` to passed in adata. 
+#     """
+#     sc.tl.dendrogram(adata, cluster_header, **kwargs)
+#     return
+
 def dendrogram(adata, cluster_header, *, plot = False, save = False, figsize = (12, 2), 
                output_folder = "", outputfilename_suffix = "", **kwargs): 
     """\
@@ -35,8 +55,6 @@ def dendrogram(adata, cluster_header, *, plot = False, save = False, figsize = (
     -------
     does not return anything. Adds `adata.uns["dendrogram_{cluster_header}"]` to passed in adata. 
     """
-    if not plot: # default no plot, no save
-        sc.tl.dendrogram(adata, cluster_header, **kwargs)
     if save: 
         if save == True: 
             save = "png"
@@ -46,8 +64,11 @@ def dendrogram(adata, cluster_header, *, plot = False, save = False, figsize = (
             save = "png"
         sc.settings.figdir = output_folder
         save = f"_{outputfilename_suffix}.{save}"
-    with plt.rc_context({"figure.figsize": figsize}): 
-        sc.pl.dendrogram(adata, cluster_header, save = save, **kwargs)
+    if not plot: # default no plot, no save
+        sc.tl.dendrogram(adata, cluster_header, **kwargs)
+    else: 
+        with plt.rc_context({"figure.figsize": figsize}): 
+            sc.pl.dendrogram(adata, cluster_header, save = save, **kwargs)
     return
 
 def get_medians(adata, cluster_header, use_mean = False): 
