@@ -7,26 +7,6 @@ import matplotlib.pyplot as plt
 import scanpy as sc
 import logging
 
-# def dendrogram(adata, cluster_header, **kwargs): 
-#     """\
-#     Generating a dendrogram from the AnnData object. 
-
-#     Parameters
-#     ----------
-#         adata: AnnData
-#             Annotated data matrix.
-#         cluster_header: str
-#             Column in `adata.obs` storing cell annotation. Passed into scanpy's dendrogram as `groupby`.
-#         kwargs: dictionary (default: None)
-#             Additional parameters to pass to sc.tl.dendrogram.
-    
-#     Returns
-#     -------
-#     does not return anything. Adds `adata.uns["dendrogram_{cluster_header}"]` to passed in adata. 
-#     """
-#     sc.tl.dendrogram(adata, cluster_header, **kwargs)
-#     return
-
 def dendrogram(adata, cluster_header, *, plot = False, save = False, figsize = (12, 2), 
                output_folder = "", outputfilename_suffix = "", **kwargs): 
     """\
@@ -186,3 +166,80 @@ def prep_binary_scores(adata, cluster_header, medians_header = "medians_"):
     print("std:", binary_scores.stack().std())
     
     return adata
+
+def spaceTx_genefilter(adata, lower_percentile = 0.1, upper_percentile = 0.99, min_txLength = 700, species = "human", species_dict = None): 
+    # species: "human"/"mouse"/"other"
+    
+    ### FILTER 1: EXPRESSION ###
+    
+    ## expr matrix
+    expr = adata.to_df()
+
+    ## get non-zero median expression values
+    expr_nonZeroMedian = expr.apply(lambda xx: xx.loc[xx!=0].median())
+    
+    ## check
+    expr_ZeroMedian = expr.apply(lambda xx: xx.loc[xx==0].median())
+    if expr_ZeroMedian.sum() != 0: 
+        print("warning: expr_ZeroMedian.sum() != 0")#should be 0
+    
+    limits = expr_nonZeroMedian.quantile([lower_percentile, upper_percentile])
+    
+    print(f"Non-zero median expression percentile limits: \n{limits}")
+    
+    ## plot
+    ax = expr_nonZeroMedian.hist(bins=50, grid=False)
+    # Add a vertical line at a specific value
+    ax.axvline(limits.iloc[0], color='red', linestyle='dashed', label=f'{int(lower_percentile*100)}% percentile')
+    ax.axvline(limits.iloc[1], color='red', linestyle='dotted', label=f'{int(upper_percentile*100)}% percentile')
+    # Add legend
+    ax.legend()
+    # Add title
+    plt.title("Non-zero median expression value")
+    plt.show()
+    
+#     ## check
+#     print(">10%", (adata.n_vars - sum(expr_nonZeroMedian > limits.iloc[0])) / adata.n_vars)
+#     print("<99%", sum(expr_nonZeroMedian < limits.iloc[1]) / adata.n_vars)
+#     print("89%=99%-10%", sum((expr_nonZeroMedian > limits.iloc[0]) & (expr_nonZeroMedian < limits.iloc[1])) / adata.n_vars)
+
+    ## select genes that pass the expression filter
+    ind_selected_expr = (expr_nonZeroMedian > limits.iloc[0]) & (expr_nonZeroMedian < limits.iloc[1])
+    print(f'FILTER 1: {sum(ind_selected_expr)} out of {adata.n_vars} total genes passed the expression filter.')
+    
+    ### FILTER 2: TRANSCRIPT LENGTH ###
+    if not species_dict: 
+        species_dict = {"human": f"gencode_annotation/gencode.v47.annotation_txLength.csv", 
+                        "mouse": f"gencode_annotation/gencode.vM36.annotation_txLength.csv"}
+    
+    if species=="other": 
+        print('FILTER 2: Filter based on transcript length is omitted.')
+        ind_selected_final = ind_selected_expr
+    elif species not in species_dict: 
+        print("ERROR: attempting to filter transcript length. Add species in species_dict and gencode_annotation folder")
+    else: 
+        annotation_txLength = pd.read_csv(species_dict[species])
+        # column check
+        if "ENSEMBL_ID" not in list(annotation_txLength.columns) or "tx_length" not in list(annotation_txLength.columns): 
+            print("ERROR: some required column names are missing: ENSEMBL_ID, tx_length")
+            return
+        tx_length = adata.var.copy().reset_index()
+        if tx_length[tx_length.duplicated("index", keep = False)].shape[0] != 0: 
+            print("ERROR: duplicate adata.var_names detected")
+            return
+        if "ENS" in list(tx_length["index"])[0]: col = "ENSEMBL_ID"
+        else: col = "gene_name"
+        tx_length = tx_length.rename(columns = {"index": col})
+        tx_length = pd.merge(tx_length, annotation_txLength[[col, "tx_length"]], on = col, how = "left").sort_values("tx_length")
+        tx_length = tx_length.drop_duplicates(col, keep = "first")
+        tx_length.index = tx_length[col]
+        ind_selected_txLength = tx_length["tx_length"] > min_txLength
+        ## select genes that pass the txLength filter
+        print(f'FILTER 2: {sum(ind_selected_txLength)} out of {adata.n_vars} total genes passed the transcript length filter.')
+        ind_selected_final = ind_selected_expr & ind_selected_txLength
+
+    ## subset adata for final selected genes
+    print(f'FINAL: {sum(ind_selected_final)} out of {adata.n_vars} total genes passed both filters.')
+    adata_prep = adata[:,ind_selected_final].copy()
+    
+    return adata_prep
