@@ -168,8 +168,28 @@ def prep_binary_scores(adata, cluster_header, medians_header = "medians_"):
     return adata
 
 def spaceTx_genefilter(adata, lower_percentile = 0.1, upper_percentile = 0.99, min_txLength = 700, species = "human", species_dict = None): 
-    # species: "human"/"mouse"/"other"
+
+    """\
+    Calculating the binary scores of each gene per `cluster_header`. 
+
+    Parameters
+    ----------
+        adata: AnnData
+            Annotated data matrix.
+        lower_percentile: float (default: 0.1)
+            Lower quartile percentile to filter non-0 median gene expression. 
+        upper_percentile: float (default: 0.99)
+            Upper quartile percentile to filter non-0 median gene expression. 
+        min_txLength: int (default: 700)
+            Minimum transcript length. 
+        species: ["human", "mouse", "other"] (default: "human")
+            Species relating to gencode_annotation. 
     
+    Returns
+    -------
+    adata: AnnData
+        Subset AnnData based on `lower_percentile`, `upper_percentile`, `min_txLength`.
+    """
     ### FILTER 1: EXPRESSION ###
     
     ## expr matrix

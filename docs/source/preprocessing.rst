@@ -8,3 +8,6 @@ Preprocessing
 .. autofunction:: preprocessing.get_medians
 
 .. autofunction:: preprocessing.prep_binary_scores
+
+.. autofunction:: preprocessing.spaceTx_genefilter
+    
