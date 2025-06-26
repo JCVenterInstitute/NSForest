@@ -59,7 +59,7 @@ def NSForest(adata, cluster_header, *, medians_header = "medians_", binary_score
     if medians_header == "medians_": medians_header = "medians_" + cluster_header
     if binary_scores_header == "binary_scores_": binary_scores_header = "binary_scores_" + cluster_header
     # Creating directory if does not exist
-    if not os.path.exists(output_folder):
+    if save and not os.path.exists(output_folder):
         os.makedirs(output_folder)
         print(f"Creating new directory...\n{output_folder}")
 
