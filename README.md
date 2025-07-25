@@ -4,7 +4,7 @@
 
 Documentation: https://nsforest.readthedocs.io/en/latest/
 
-BMC Methods Link: https://bmcmethods.biomedcentral.com/articles/10.1186/s44330-024-00015-2
+Citation: https://bmcmethods.biomedcentral.com/articles/10.1186/s44330-024-00015-2
 
 ## Download and installation
 
@@ -23,7 +23,7 @@ pip install .
 ```
 ## Tutorial
 
-Follow the on readthedocs: https://nsforest.readthedocs.io/en/latest/tutorial.html
+Follow the tutorial on: https://nsforest.readthedocs.io/en/latest/tutorial.html
 
 ## Pipeline
 
@@ -78,7 +78,7 @@ Aevermann BD, Novotny M, Bakken T, Miller JA, Diehl AD, Osumi-Sutherland D, Lask
 
 ## Authors
 
-* Yun (Renee) Zhang zhangy@jcvi.org
+* Yun (Renee) Zhang yun.zhang@nih.gov
 * Beverly Peng bpeng@jcvi.org
 * Angela Liu aliu@jcvi.org
 * Richard Scheuermann richard.scheuermann@nih.gov
