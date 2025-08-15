@@ -7,8 +7,8 @@ import matplotlib.pyplot as plt
 import scanpy as sc
 import logging
 
-def dendrogram(adata, cluster_header, *, plot = False, save = False, figsize = (12, 2), 
-               output_folder = "", outputfilename_suffix = "", **kwargs): 
+def dendrogram(adata, cluster_header, *, tl_kwargs = {}, pl_kwargs = {}, save = False, figsize = (12, 2), 
+               output_folder = "", outputfilename_suffix = ""): 
     """\
     Generating a dendrogram from the AnnData object. 
 
@@ -18,8 +18,6 @@ def dendrogram(adata, cluster_header, *, plot = False, save = False, figsize = (
             Annotated data matrix.
         cluster_header: str
             Column in `adata.obs` storing cell annotation. Passed into scanpy's dendrogram as `groupby`.
-        plot: bool (default: False)
-            Whether to use sc.pl.dendrogram instead of sc.tl.dendrogram. 
         save: bool | str (default: False)
             Whether to save plot in `output_folder`. If string, choose the type of file to save as ('png'(default), 'svg', 'pdf).
         figsize: tuple (default: (12, 2))
@@ -44,11 +42,9 @@ def dendrogram(adata, cluster_header, *, plot = False, save = False, figsize = (
             save = "png"
         sc.settings.figdir = output_folder
         save = f"_{outputfilename_suffix}.{save}"
-    if not plot: # default no plot, no save
-        sc.tl.dendrogram(adata, cluster_header, **kwargs)
-    else: 
-        with plt.rc_context({"figure.figsize": figsize}): 
-            sc.pl.dendrogram(adata, cluster_header, save = save, **kwargs)
+    sc.tl.dendrogram(adata, cluster_header, **tl_kwargs)
+    with plt.rc_context({"figure.figsize": figsize}): 
+        sc.pl.dendrogram(adata, cluster_header, save = save, **pl_kwargs)
     return
 
 def get_medians(adata, cluster_header, use_mean = False): 

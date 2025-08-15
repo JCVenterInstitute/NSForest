@@ -227,7 +227,7 @@ def NSForest(adata, cluster_header, *, medians_header = "medians_", binary_score
     
     if not df_results.empty:
         markers_dict = dict(zip(df_results["clusterName"], df_results["NSForest_markers"]))
-        on_target_ratio = calculate_fraction.markers_onTarget(adata, cluster_header, markers_dict, medians_header, save_supplementary = save_supplementary, output_folder = output_folder, outputfilename_prefix = outputfilename_prefix)
+        on_target_ratio = calculate_fraction.markers_onTarget(adata, cluster_header, markers_dict, save_supplementary = save_supplementary, output_folder = output_folder, outputfilename_prefix = outputfilename_prefix)
         df_results = df_results.merge(on_target_ratio, on = "clusterName", how = "left")
     
     if save: 

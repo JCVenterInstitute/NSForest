@@ -6,11 +6,11 @@ import pandas as pd
 from nsforest.nsforesting import mydecisiontreeevaluation
 from nsforest.nsforesting import calculate_fraction
 
-def DecisionTree(adata, cluster_header, markers_dict, *, medians_header = "medians_", test = 0, 
+def DecisionTree(adata, cluster_header, markers_dict, *, medians_header = "medians_", 
                  beta = 0.5, combinations = False, individual_markers = False, use_mean = False,
                  save = False, save_supplementary = False, output_folder = "", outputfilename_prefix = ""): 
     """\
-    Calculating sklearn.metrics's fbeta_score, precision_score, recall_score, and confusion_matrix for `genes_eval`. 
+    Calculating sklearn.metrics's fbeta_score, precision_score, recall_score, and confusion_matrix for each clusterName: markers in `markers_dict`. 
 
     Parameters
     ----------
@@ -25,7 +25,7 @@ def DecisionTree(adata, cluster_header, markers_dict, *, medians_header = "media
         beta: float (default: 0.5)
             `beta` parameter in sklearn.metrics's fbeta_score. 
         combinations: bool (default: False)
-            Whether to find the combination of `genes_eval` with the highest fbeta_score. 
+            Whether to find the combination of markers with the highest fbeta_score. 
         use_mean: bool (default: False)
             Whether to use the mean (vs median) for minimum gene expression threshold. 
         save: bool (default: False)
@@ -158,7 +158,7 @@ def DecisionTree(adata, cluster_header, markers_dict, *, medians_header = "media
 
 def add_fraction(adata, df_results, cluster_header, medians_header = "medians_", use_mean = False, save_supplementary = False, output_folder = "", outputfilename_prefix = ""): 
     """\
-    Calculating sklearn.metrics's fbeta_score, sklearn.metrics's prevision_score, sklearn.metrics's confusion_matrix for each `genes_eval` combination. 
+    Calculating sklearn.metrics's fbeta_score, sklearn.metrics's prevision_score, sklearn.metrics's confusion_matrix for each clusterName: markers in `markers_dict`. 
     Returning set of genes and scores with highest score sum. 
 
     Parameters
