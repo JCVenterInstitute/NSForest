@@ -153,7 +153,10 @@ def NSForest(adata, cluster_header, *, medians_header = "medians_", binary_score
         n_binary_genes_cl = n_binary_genes
         n_genes_eval_cl = n_genes_eval
 
-        top_rf_genes = myrandomforest.myRandomForest(adata, df_dummies, cl, n_trees, n_jobs, n_top_genes, binary_dummies)      
+        top_rf_genes = myrandomforest.myRandomForest(adata, df_dummies, cl, n_trees, n_jobs, n_top_genes, binary_dummies)    
+        if len(top_rf_genes) == 0: 
+            print("WARNING: 0 genes to feed into Random Forest. Skipping...")
+            continue
         ## filter out negative genes by thresholding median>0 ==> to prevent dividing by 0 in binary score calculation
         top_gene_medians = cluster_medians.loc[cl,top_rf_genes.index]
         top_rf_genes_positive = top_gene_medians[top_gene_medians>0]

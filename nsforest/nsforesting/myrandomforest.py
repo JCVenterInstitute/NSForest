@@ -39,6 +39,8 @@ def myRandomForest(adata, df_dummies, cl, n_trees, n_jobs, n_top_genes, binary_d
     x_train = x_train.loc[:,ind_genes_selected]   # subset x_train
     print(f"\tPre-selected {x_train.shape[1]} genes to feed into Random Forest.")
 
+    if x_train.shape[1] == 0: return pd.Series()
+
     rf_clf = RandomForestClassifier(n_estimators=n_trees, n_jobs=n_jobs, random_state=123456) #<===== criterion="gini", by default
     rf_clf.fit(x_train, y_train)
     ## get feature importance and rank/subset top genes
