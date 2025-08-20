@@ -9,6 +9,7 @@ Citation: https://bmcmethods.biomedcentral.com/articles/10.1186/s44330-024-00015
 ## Download and installation
 
 In terminal: 
+
 ```
 git clone https://github.com/JCVenterInstitute/NSForest.git
 
@@ -19,11 +20,15 @@ conda env create -f nsforest.yml
 conda activate nsforest
 
 pip install .
-
 ```
+
 ## Tutorial
 
 Follow the tutorial on: https://nsforest.readthedocs.io/en/latest/tutorial.html
+
+## Prerequisites
+* This is a python script written and tested in python 3.11, scanpy 1.9.6.
+* Other required libraries: numpy, pandas, sklearn, plotly, time, tqdm.
 
 ## Pipeline
 
@@ -55,34 +60,29 @@ The final module in the NS-Forest algorithm can also be used to assess the perfo
 
 4. Output: The NS-Forest marker gene evaluation outputs the classification metrics (F-beta, PPV (precision), recall) and On-Target Fraction for every cluster combination, which can be used to compare against other marker gene lists.
 
-
-## Prerequisites
-* This is a python script written and tested in python 3.11, scanpy 1.9.6.
-* Other required libraries: numpy, pandas, sklearn, plotly, time, tqdm.
-
 ## Versions and citations
 
 Earlier versions are managed in [Releases](https://github.com/JCVenterInstitute/NSForest/releases).  
 
 Version 4.0:
 
-Liu A, Peng B, Pankajam A, Duong TE, Pryhuber G, Scheuermann RH, Zhang Y. Discovery of optimal cell type classification marker genes from single cell RNA sequencing data. BMC Methods 1, 15 (2024). https://doi.org/10.1186/s44330-024-00015-2
+Liu A, Peng B, Pankajam A, Duong TE, Pryhuber G, Scheuermann RH, Zhang Y. (2024) Discovery of optimal cell type classification marker genes from single cell RNA sequencing data. __*BMC Methods.*__  https://doi.org/10.1186/s44330-024-00015-2
 
-Version 2:
+Version 2.0:
 
-Aevermann BD, Zhang Y, Novotny M, Keshk M, Bakken TE, Miller JA, Hodge RD, Lelieveldt B, Lein ES, Scheuermann RH. A machine learning method for the discovery of minimum marker gene combinations for cell-type identification from single-cell RNA sequencing. Genome Res. 2021 Jun 4:gr.275569.121. doi: 10.1101/gr.275569.121.
+Aevermann BD, Zhang Y, Novotny M, Keshk M, Bakken TE, Miller JA, Hodge RD, Lelieveldt B, Lein ES, Scheuermann RH. (2021) A machine learning method for the discovery of minimum marker gene combinations for cell-type identification from single-cell RNA sequencing. __*Genome Res.*__ https://pubmed.ncbi.nlm.nih.gov/34088715/
 
 Version 1.3/1.0:
 
-Aevermann BD, Novotny M, Bakken T, Miller JA, Diehl AD, Osumi-Sutherland D, Lasken RS, Lein ES, Scheuermann RH. Cell type discovery using single-cell transcriptomics: implications for ontological representation. Hum Mol Genet. 2018 May 1;27(R1):R40-R47. doi: 10.1093/hmg/ddy100.
+Aevermann BD, Novotny M, Bakken T, Miller JA, Diehl AD, Osumi-Sutherland D, Lasken RS, Lein ES, Scheuermann RH. (2018) Cell type discovery using single-cell transcriptomics: implications for ontological representation. __*Hum Mol Genet.*__ https://pubmed.ncbi.nlm.nih.gov/29590361/
 
 ## Authors
 
-* Yun (Renee) Zhang yun.zhang@nih.gov
-* Beverly Peng bpeng@jcvi.org
-* Angela Liu aliu@jcvi.org
-* Richard Scheuermann richard.scheuermann@nih.gov
-* Brian Aevermann baevermann@chanzuckerberg.com
+* Beverly Peng (bpeng@jcvi.org)
+* Angela Liu (aliu@jcvi.org)
+* Richard Scheuermann (richard.scheuermann@nih.gov)
+* Yun (Renee) Zhang (yun.zhang@nih.gov)
+* Brian Aevermann (baevermann@chanzuckerberg.com)
 
 ## License
 
@@ -94,3 +94,5 @@ This project is licensed under the [MIT License](https://github.com/JCVenterInst
 * Brain Initiative Cell Census Network
 * Chan Zuckerberg Initiative
 * California Institute for Regenerative Medicine
+* National Library of Medicine
+
