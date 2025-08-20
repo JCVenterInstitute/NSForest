@@ -18,6 +18,10 @@ def dendrogram(adata, cluster_header, *, tl_kwargs = {}, pl_kwargs = {}, save = 
             Annotated data matrix.
         cluster_header: str
             Column in `adata.obs` storing cell annotation. Passed into scanpy's dendrogram as `groupby`.
+        tl_kwargs: dict
+            Additional parameters to pass to sc.tl.dendrogram.
+        pl_kwargs: dict
+            Additional parameters to pass to sc.pl.dendrogram.
         save: bool | str (default: False)
             Whether to save plot in `output_folder`. If string, choose the type of file to save as ('png'(default), 'svg', 'pdf).
         figsize: tuple (default: (12, 2))
@@ -26,8 +30,6 @@ def dendrogram(adata, cluster_header, *, tl_kwargs = {}, pl_kwargs = {}, save = 
             Output folder. Created if doesn't exist. 
         outputfilename_suffix: str (default: "")
             Suffix for all output files. 
-        kwargs: dictionary (default: None)
-            Additional parameters to pass to sc.tl.dendrogram or sc.pl.dendrogram.
     
     Returns
     -------
