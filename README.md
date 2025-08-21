@@ -15,7 +15,7 @@ git clone https://github.com/JCVenterInstitute/NSForest.git
 
 cd NSForest
 
-conda env create -f nsforest.yml
+conda env create -f environment.yml
 
 conda activate nsforest
 

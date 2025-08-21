@@ -1,4 +1,4 @@
-name: nsforest
+name: environment
 channels: 
   - conda-forge
 dependencies: 
