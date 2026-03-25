@@ -1,0 +1,14 @@
+/* Expand main content width */
+.wy-nav-content {
+    max-width: 1200px;
+}
+
+/* Optional: reduce excessive padding */
+.wy-nav-content-wrap {
+    padding-left: 20px;
+    padding-right: 20px;
+}
+
+.wy-table-responsive table {
+    width: 100%;
+}
