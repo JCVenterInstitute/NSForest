@@ -26,10 +26,31 @@ def boxplot(df, col, save = False, output_folder = "", outputfilename_prefix = "
     fig: plotly.graph_objects.Figure
         Boxplot of `col` values. 
     """
-    fig = px.box(df, y=col, points='all', range_y=[-.05,1.05],
-                 title=f"{col} median = {round(df[col].median(),3)}",
-                 width=400, height=500, hover_name='clusterName')
+
+    annotations = []
+    if isinstance(col, list): 
+        fig = px.box(df, y=col, points='all', range_y=[-.05,1.05], title="",
+                     width=200*len(col), height=500, hover_name='clusterName')
+        medians = {c: round(df[c].median(), 3) for c in col}
+        for c in col:
+            annotations.append(
+                dict(x=c, y=1.13, xref='x', yref='paper', text=f"{c}<br>median={medians[c]}", 
+                     showarrow=False, xanchor='center', align='center', font=dict(size=14)))
+        fig.update_layout(annotations=annotations, 
+                          xaxis=dict(title=dict(text="")))
+        fig.update_xaxes(showticklabels=False)
+
+    else: 
+        fig = px.box(df, y=col, points='all', range_y=[-.05,1.05], title="",
+                     width=400, height=500, hover_name='clusterName')
+        annotations.append(dict(x=col, y=1.13, xref='x', yref='paper', text=f"{col}<br>median={round(df[col].median(), 3)}", 
+                                showarrow=False, xanchor='center', align='center', font=dict(size=14)))
+        fig.update_layout(annotations=annotations)
+        fig.update_xaxes(range=[-0.5, 0.5])
+
     if save: 
+        if isinstance(col, list): 
+            col = "_".join(col)
         if save in [True, "html"]: 
             filename = output_folder + outputfilename_prefix + f"_boxplot_{col}.html"
             fig.write_html(filename)
@@ -102,6 +123,7 @@ def dotplot(adata, markers, cluster_header, *, dendrogram = True, save = False,
             Additional parameters to pass to sc.pl.dotplot.
     """
     if save: 
+        sc.settings.verbosity = 0
         sc.settings.figdir = output_folder
         if save == True: 
             save = "png"
@@ -141,6 +163,7 @@ def stackedviolin(adata, markers, cluster_header, *, dendrogram = True, save = F
             Additional parameters to pass to sc.pl.stacked_violin.
     """
     if save: 
+        sc.settings.verbosity = 0
         sc.settings.figdir = output_folder
         if save in [True, "png"]: 
             save = outputfilename_suffix + ".png"
@@ -180,6 +203,7 @@ def matrixplot(adata, markers, cluster_header, *, dendrogram = True, save = Fals
             Additional parameters to pass to sc.pl.matrixplot.
     """
     if save: 
+        sc.settings.verbosity = 0
         sc.settings.figdir = output_folder
         if save in [True, "png"]: 
             save = outputfilename_suffix + ".png"

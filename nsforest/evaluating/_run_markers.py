@@ -42,6 +42,7 @@ def DecisionTree(adata, cluster_header, markers_dict, *, medians_header = "media
     df_results: pd.DataFrame 
         NS-Forest results. Includes classification metrics (f_score, precision, recall, onTarget). 
     """
+
     from nsforest import NSFOREST_VERSION
     print(f"Running NS-Forest version {NSFOREST_VERSION}")
     # default medians_header
@@ -54,7 +55,7 @@ def DecisionTree(adata, cluster_header, markers_dict, *, medians_header = "media
     ##-----
     ## prepare adata
     ##-----
-    print("Preparing data...")
+    print("\nPreparing data...")
     start_time = time.time()
     ## densify X from sparse matrix format
     adata.X = adata.to_df()
@@ -68,7 +69,7 @@ def DecisionTree(adata, cluster_header, markers_dict, *, medians_header = "media
     cluster_list = list(markers_dict.keys())
     n_clusters = len(cluster_list)
     
-    print("Number of clusters to evaluate: " + str(n_clusters))
+    print("\nNumber of clusters to evaluate: " + str(n_clusters))
     df_results = pd.DataFrame()
     start_time = time.time()
     
@@ -96,10 +97,10 @@ def DecisionTree(adata, cluster_header, markers_dict, *, medians_header = "media
         if not individual_markers: 
             markers, scores = mydecisiontreeevaluation.myDecisionTreeEvaluation(adata, df_dummies, cl, markers, beta, combinations = combinations)
             if combinations: 
-                print(f"\t  Best combination of markers: {markers}")
-            print(f"\t  fbeta: {round(scores[0], 3)}")
-            print(f"\t  precision: {round(scores[1], 3)}")
-            print(f"\t  recall: {round(scores[2], 3)}")
+                print(f"\tBest combination of markers: {markers}")
+            print(f"\tfbeta: {round(scores[0], 3)}")
+            print(f"\tprecision: {round(scores[1], 3)}")
+            print(f"\trecall: {round(scores[2], 3)}")
 
             ## return final results as dataframe
             dict_results_cl = {'software_version': NSFOREST_VERSION,
@@ -139,6 +140,9 @@ def DecisionTree(adata, cluster_header, markers_dict, *, medians_header = "media
         df_results = pd.concat([df_results,df_results_cl]).reset_index(drop=True)
         if save: 
             df_results.to_csv(output_folder + outputfilename_prefix + "_results.csv", index=False)
+    
+    print("--- %s seconds ---" % (time.time() - start_time))
+    ### END iterations ###
 
     markers_dict = dict(zip(df_results["clusterName"], df_results["markers"]))
     on_target_ratio = calculate_fraction.markers_onTarget(adata, cluster_header, markers_dict, use_mean = use_mean, save_supplementary = save_supplementary, output_folder = output_folder, outputfilename_prefix = outputfilename_prefix)
@@ -146,13 +150,9 @@ def DecisionTree(adata, cluster_header, markers_dict, *, medians_header = "media
     
     if save: 
         df_results.to_csv(f"{output_folder}{outputfilename_prefix}_results.csv", index=False)
-        print(f"Saving final results table as...\n{output_folder}{outputfilename_prefix}_results.csv")
+        print(f"\nSaving final results table as...\n{output_folder}{outputfilename_prefix}_results.csv")
         df_results.to_pickle(f"{output_folder}{outputfilename_prefix}_results.pkl")
         print(f"Saving final results table as...\n{output_folder}{outputfilename_prefix}_results.pkl")
-    
-    
-    print("--- %s seconds ---" % (time.time() - start_time))
-    ### END iterations ###
     
     return df_results
 

@@ -7,7 +7,8 @@ Contents
 .. toctree::
 
     installation
-    tutorial
+    tutorial_nsforesting
+    tutorial_evaluating
     preprocessing
     nsforesting
     evaluating

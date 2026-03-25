@@ -53,6 +53,7 @@ def NSForest(adata, cluster_header, *, medians_header = "medians_", binary_score
     df_results: pd.DataFrame
         NS-Forest results. Includes classification metrics (f_score, precision, recall, onTarget). 
     """
+
     from nsforest import NSFOREST_VERSION
     print(f"Running NS-Forest version {NSFOREST_VERSION}")
     # default medians_header and binary_scores_header
@@ -61,12 +62,12 @@ def NSForest(adata, cluster_header, *, medians_header = "medians_", binary_score
     # Creating directory if does not exist
     if save and not os.path.exists(output_folder):
         os.makedirs(output_folder)
-        print(f"Creating new directory...\n{output_folder}")
+        print(f"\nCreating new directory...\n{output_folder}")
 
     ##-----
     ## prepare adata
     ##-----
-    print("Preparing adata...")
+    print("\nPreparing adata...")
     start_time = time.time()
     ## densify X from sparse matrix format
     adata.X = adata.to_df()
@@ -76,7 +77,6 @@ def NSForest(adata, cluster_header, *, medians_header = "medians_", binary_score
     df_dummies = pd.get_dummies(adata.obs[cluster_header]) #cell-by-cluster
     ## get number of clusters
     n_total_clusters = len(df_dummies.columns)
-    print("--- %s seconds ---" % (time.time() - start_time))
 
     # Getting cluster_median matrix
     cluster_medians = adata.varm[medians_header].T
@@ -89,19 +89,19 @@ def NSForest(adata, cluster_header, *, medians_header = "medians_", binary_score
         # if this line below is too slow, could also convert binary_scores df to np array and use np statistics
         median = binary_scores.stack().median()
         threshold = median
-        print(f"\t{gene_selection} Threshold (median): {threshold}")
+        print(f"\t{gene_selection} Threshold (median): {round(threshold, 3)}")
         
     elif gene_selection == "BinaryFirst_moderate":
         mean = binary_scores.stack().mean()
         stddev = binary_scores.stack().std()
         threshold = mean + stddev
-        print(f"\t{gene_selection} Threshold (mean + 1 * std): {threshold}")
+        print(f"\t{gene_selection} Threshold (mean + 1 * std): {round(threshold, 3)}")
     
     elif gene_selection == "BinaryFirst_high":
         mean = binary_scores.stack().mean()
         stddev = binary_scores.stack().std()
         threshold = mean + 2 * stddev
-        print(f"\t{gene_selection} Threshold (mean + 2 * std): {threshold}")
+        print(f"\t{gene_selection} Threshold (mean + 2 * std): {round(threshold, 3)}")
     
     else: 
         if "BinaryFirst_" in str(gene_selection): 
@@ -110,7 +110,7 @@ def NSForest(adata, cluster_header, *, medians_header = "medians_", binary_score
                 mean = binary_scores.stack().mean()
                 stddev = binary_scores.stack().std()
                 threshold = mean + mult * stddev
-                print(f"\t{gene_selection} Threshold (mean + {mult} * std): {threshold}")
+                print(f"\t{gene_selection} Threshold (mean + {mult} * std): {round(threshold, 3)}")
 
             except ValueError: 
                 threshold = 0
@@ -132,12 +132,14 @@ def NSForest(adata, cluster_header, *, medians_header = "medians_", binary_score
         print(f"Saving number of genes selected per cluster as...\n{output_folder}{outputfilename_prefix}_gene_selection.csv")
         pd.DataFrame(binary_dummies.sum(axis=1)).to_csv(output_folder + outputfilename_prefix + "_gene_selection.csv") # , header=["n_genes_selected"]
     
+    print("--- %s seconds ---" % (time.time() - start_time))
+    
     ############################## START iterations ######################################
     if cluster_list == []:
         cluster_list = df_dummies.columns
     n_clusters = len(cluster_list)
     
-    print (f"Number of clusters to evaluate: {n_clusters}")
+    print (f"\nNumber of clusters to evaluate: {n_clusters}")
     df_supp = df_markers = df_results = pd.DataFrame()
     start_time = time.time()
     
@@ -179,10 +181,10 @@ def NSForest(adata, cluster_header, *, medians_header = "medians_", binary_score
         ## Evaluation step: calculate F-beta score for gene combinations
         genes_eval = top_binary_genes.index[:n_genes_eval_cl].to_list()
         markers, scores = mydecisiontreeevaluation.myDecisionTreeEvaluation(adata, df_dummies, cl, genes_eval, beta)
-        print(f"\t  NSForest-selected markers: {markers}")
-        print(f"\t  fbeta: {round(scores[0], 3)}")
-        print(f"\t  precision: {round(scores[1], 3)}")
-        print(f"\t  recall: {round(scores[2], 3)}")
+        print(f"\tNSForest-selected markers: {markers}")
+        print(f"\tfbeta: {round(scores[0], 3)}")
+        print(f"\tprecision: {round(scores[1], 3)}")
+        print(f"\trecall: {round(scores[2], 3)}")
 
         ## return supplementary table as csv
         binary_genes_list = top_binary_genes.index[:n_binary_genes_cl].to_list()
@@ -222,10 +224,11 @@ def NSForest(adata, cluster_header, *, medians_header = "medians_", binary_score
         if save: 
             df_results.to_csv(f"{output_folder}{outputfilename_prefix}_results.csv", index=False)
 
+    print("--- %s seconds ---" % (time.time() - start_time))
     ### END iterations ###
 
     if save_supplementary: # after iterations so not printed every time
-        print(f"Saving supplementary table as...\n{output_folder}{outputfilename_prefix}_supplementary.csv")
+        print(f"\nSaving supplementary table as...\n{output_folder}{outputfilename_prefix}_supplementary.csv")
         print(f"Saving markers table as...\n{output_folder}{outputfilename_prefix}_markers.csv")
     
     if not df_results.empty:
@@ -235,10 +238,8 @@ def NSForest(adata, cluster_header, *, medians_header = "medians_", binary_score
     
     if save: 
         df_results.to_csv(f"{output_folder}{outputfilename_prefix}_results.csv", index=False)
-        print(f"Saving final results table as...\n{output_folder}{outputfilename_prefix}_results.csv")
+        print(f"\nSaving final results table as...\n{output_folder}{outputfilename_prefix}_results.csv")
         df_results.to_pickle(f"{output_folder}{outputfilename_prefix}_results.pkl")
         print(f"Saving final results table as...\n{output_folder}{outputfilename_prefix}_results.pkl")
 
-    print("--- %s seconds ---" % (time.time() - start_time))
-    
     return df_results

@@ -42,9 +42,13 @@ def dendrogram(adata, cluster_header, *, tl_kwargs = {}, pl_kwargs = {}, save = 
             print("warning: `save` must be one of the following: 'pdf', 'png', 'svg'")
             print("saving as png")
             save = "png"
+        sc.settings.verbosity = 0
         sc.settings.figdir = output_folder
         save = f"_{outputfilename_suffix}.{save}"
-    sc.tl.dendrogram(adata, cluster_header, **tl_kwargs)
+        print(f"Saving dendrogram as...\n{output_folder}{save}")
+    if not adata.obsm and "X_pca" not in adata.obsm: 
+        sc.pp.pca(adata)
+    sc.tl.dendrogram(adata, cluster_header, use_rep="X_pca", **tl_kwargs)
     with plt.rc_context({"figure.figsize": figsize}): 
         sc.pl.dendrogram(adata, cluster_header, save = save, **pl_kwargs)
     return
@@ -68,7 +72,9 @@ def get_medians(adata, cluster_header, use_mean = False):
         Gene-by-cluster median (mean) expression dataframe. 
     """
     cluster_medians = pd.DataFrame()
-    for cl in tqdm(sorted(set(adata.obs[cluster_header])), desc="Calculating medians (means) per cluster"):
+    if use_mean: value = "mean"
+    else: value = "median"
+    for cl in tqdm(sorted(set(adata.obs[cluster_header])), desc=f"Calculating {value}s per cluster"):
         adata_cl = adata[adata.obs[cluster_header]==cl,]
         if use_mean: 
             medians_cl = adata_cl.to_df().mean()
@@ -97,19 +103,17 @@ def prep_medians(adata, cluster_header, use_mean = False, positive_genes_only = 
     adata: AnnData
         AnnData with median expression values stored in `adata.varm["medians_{cluster_header}"]`. 
     """
-    print("Calculating medians...")
     start_time = time.time()
+
     ## get medians
-    if use_mean: 
-        print("use_mean is True. Using the mean expression of each gene per cluster. ")
+    if use_mean: print("`use_mean` is True. Using the mean expression of each gene per cluster.")
     cluster_medians = get_medians(adata, cluster_header, use_mean) #gene-by-cluster
-    ## attach calculated medians to adata
+    adata.varm['medians_' + cluster_header] = cluster_medians
     print("Saving calculated medians as adata.varm.medians_" + cluster_header)
-    adata.varm['medians_' + cluster_header] = cluster_medians #gene-by-cluster
-    print("--- %s seconds ---" % (time.time() - start_time))
-    print("median:", cluster_medians.stack().median())
-    print("mean:", cluster_medians.stack().mean())
-    print("std:", cluster_medians.stack().std())
+
+    print("median:", round(cluster_medians.stack().median(), 3))
+    print("mean:", round(cluster_medians.stack().mean(), 3))
+    print("std:", round(cluster_medians.stack().std(), 3))
 
     if positive_genes_only:
         ## select only genes with median > 0
@@ -117,6 +121,9 @@ def prep_medians(adata, cluster_header, use_mean = False, positive_genes_only = 
         print(f"Only positive genes selected. {len(genes_selected)} positive genes out of {adata.n_vars} total genes")
         ## subset data with only positive genes
         adata = adata[:,genes_selected].copy()
+    
+    print("--- %s seconds ---" % (time.time() - start_time))
+
     return adata
 
 def prep_binary_scores(adata, cluster_header, medians_header = "medians_"):
@@ -137,12 +144,10 @@ def prep_binary_scores(adata, cluster_header, medians_header = "medians_"):
     adata: AnnData
         AnnData with binary scores stored in `adata.varm["binary_scores_{cluster_header}"]`. 
     """
-    # default medians_header
-    if medians_header == "medians_": medians_header = "medians_" + cluster_header
-
-    print("Calculating binary scores...")
     start_time = time.time()
+    
     ## get medians
+    if medians_header == "medians_": medians_header = "medians_" + cluster_header
     cluster_medians = adata.varm[medians_header].transpose() #cluster-by-gene
     n_total_clusters = cluster_medians.shape[0]
     
@@ -156,13 +161,13 @@ def prep_binary_scores(adata, cluster_header, medians_header = "medians_"):
     ## binary scores matrix and handle nan
     binary_scores = pd.DataFrame(binary_scores, index=cluster_medians.index, columns=cluster_medians.columns).fillna(0) #cluster-by-gene
     ## attach pre-calculated binary scores to adata
+    adata.varm['binary_scores_' + cluster_header] = binary_scores.transpose() 
     print("Saving calculated binary scores as adata.varm.binary_scores_" + cluster_header)
-    adata.varm['binary_scores_' + cluster_header] = binary_scores.transpose() #gene-by-cluster
+    print("median:", round(binary_scores.stack().median(), 3))
+    print("mean:", round(binary_scores.stack().mean(), 3))
+    print("std:", round(binary_scores.stack().std(), 3))
     print("--- %s seconds ---" % (time.time() - start_time))
-    print("median:", binary_scores.stack().median())
-    print("mean:", binary_scores.stack().mean())
-    print("std:", binary_scores.stack().std())
-    
+
     return adata
 
 def spaceTx_genefilter(adata, lower_percentile = 0.1, upper_percentile = 0.99, min_txLength = 700, species = "human", species_dict = None): 
