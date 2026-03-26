@@ -3,6 +3,8 @@ import pandas as pd
 import scanpy as sc
 import plotly.express as px
 import matplotlib.pyplot as plt
+import warnings
+warnings.filterwarnings("ignore", message="Argument `save` is deprecated", category=FutureWarning)
 
 def boxplot(df, col, save = False, output_folder = "", outputfilename_prefix = ""): 
     """\
@@ -135,7 +137,10 @@ def dotplot(adata, markers, cluster_header, *, dendrogram = True, save = False,
     if isinstance(dendrogram, bool): # gene_symbols = gene_symbols, use_raw = False, standard_scale = "var", 
         sc.pl.dotplot(adata, markers, cluster_header, dendrogram = dendrogram, save = save, **kwargs)
     elif isinstance(dendrogram, list): 
+        # temp reason for not using .figure.savefig(save)
+        # https://discourse.scverse.org/t/sc-pl-rank-genes-groups-heatmap-saving-figure-to-file/3925
         sc.pl.dotplot(adata, markers, cluster_header, categories_order = dendrogram, save = save, **kwargs)
+        # sc.pl.dotplot(adata, markers, cluster_header, categories_order = dendrogram, show = False, **kwargs).figure.savefig(save)
     return 
 
 def stackedviolin(adata, markers, cluster_header, *, dendrogram = True, save = False, 

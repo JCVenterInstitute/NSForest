@@ -50,7 +50,8 @@ def dendrogram(adata, cluster_header, *, tl_kwargs = {}, pl_kwargs = {}, save = 
         sc.pp.pca(adata)
     sc.tl.dendrogram(adata, cluster_header, use_rep="X_pca", **tl_kwargs)
     with plt.rc_context({"figure.figsize": figsize}): 
-        sc.pl.dendrogram(adata, cluster_header, save = save, **pl_kwargs)
+        # sc.pl.dendrogram(adata, cluster_header, save = save, **pl_kwargs)
+        sc.pl.dendrogram(adata, cluster_header, **pl_kwargs).figure.savefig(save)
     return
 
 def get_medians(adata, cluster_header, use_mean = False): 
