@@ -9,6 +9,7 @@ Contents
     installation
     tutorial_nsforesting
     tutorial_evaluating
+    tutorial_spatial
     preprocessing
     nsforesting
     evaluating

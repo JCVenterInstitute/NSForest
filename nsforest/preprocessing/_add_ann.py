@@ -170,10 +170,10 @@ def prep_binary_scores(adata, cluster_header, medians_header = "medians_"):
 
     return adata
 
-def spaceTx_genefilter(adata, lower_percentile = 0.1, upper_percentile = 0.99, min_txLength = 700, species = "human", species_dict = None): 
+def spaceTx_genefilter(adata, lower_percentile = 0.1, upper_percentile = 0.99, min_txLength = 700, species = "human", species_dict = None, gencode_folder = "gencode_annotation"): 
 
     """\
-    Calculating the binary scores of each gene per `cluster_header`. 
+    Filtering genes for spatial gene probes. 
 
     Parameters
     ----------
@@ -228,12 +228,12 @@ def spaceTx_genefilter(adata, lower_percentile = 0.1, upper_percentile = 0.99, m
 
     ## select genes that pass the expression filter
     ind_selected_expr = (expr_nonZeroMedian > limits.iloc[0]) & (expr_nonZeroMedian < limits.iloc[1])
-    print(f'FILTER 1: {sum(ind_selected_expr)} out of {adata.n_vars} total genes passed the expression filter.')
+    print(f'FILTER 1: {sum(ind_selected_expr)} out of {adata.n_vars} total genes passed the expression filter (lower_percentile = {lower_percentile}, upper_percentile = {upper_percentile}).\n')
     
     ### FILTER 2: TRANSCRIPT LENGTH ###
     if not species_dict: 
-        species_dict = {"human": f"gencode_annotation/gencode.v47.annotation_txLength.csv", 
-                        "mouse": f"gencode_annotation/gencode.vM36.annotation_txLength.csv"}
+        species_dict = {"human": f"{gencode_folder}/gencode.v47.annotation_txLength.csv", 
+                        "mouse": f"{gencode_folder}/gencode.vM36.annotation_txLength.csv"}
     
     if species=="other": 
         print('FILTER 2: Filter based on transcript length is omitted.')
@@ -241,7 +241,7 @@ def spaceTx_genefilter(adata, lower_percentile = 0.1, upper_percentile = 0.99, m
     elif species not in species_dict: 
         print("ERROR: attempting to filter transcript length. Add species in species_dict and gencode_annotation folder")
     else: 
-        annotation_txLength = pd.read_csv(species_dict[species])
+        annotation_txLength = pd.read_csv(species_dict[species], low_memory = False)
         # column check
         if "ENSEMBL_ID" not in list(annotation_txLength.columns) or "tx_length" not in list(annotation_txLength.columns): 
             print("ERROR: some required column names are missing: ENSEMBL_ID, tx_length")
@@ -258,11 +258,11 @@ def spaceTx_genefilter(adata, lower_percentile = 0.1, upper_percentile = 0.99, m
         tx_length.index = tx_length[col]
         ind_selected_txLength = tx_length["tx_length"] > min_txLength
         ## select genes that pass the txLength filter
-        print(f'FILTER 2: {sum(ind_selected_txLength)} out of {adata.n_vars} total genes passed the transcript length filter.')
+        print(f'FILTER 2: {sum(ind_selected_txLength)} out of {adata.n_vars} total genes passed the transcript length filter (min_txLength = {min_txLength}).')
         ind_selected_final = ind_selected_expr & ind_selected_txLength
 
     ## subset adata for final selected genes
-    print(f'FINAL: {sum(ind_selected_final)} out of {adata.n_vars} total genes passed both filters.')
+    print(f'\nFINAL SELECTION: {sum(ind_selected_final)} out of {adata.n_vars} total genes passed both filters.')
     adata_prep = adata[:,ind_selected_final].copy()
     
     return adata_prep
