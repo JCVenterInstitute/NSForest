@@ -1,9 +1,9 @@
-sphinx==9.0.4
-sphinx-rtd-theme==3.0.2
+sphinx>=7.2,<8
+sphinx-rtd-theme>=2.0,<3
+nbsphinx
 python-dateutil==2.8.2
 scanpy>=1.11.5
-numpy>=2.4.3
+numpy>=2.3
 pandas>=2.3.3
 plotly>=5.19.0
-nbsphinx
-ipython 
+ipython
