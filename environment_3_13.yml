@@ -1,0 +1,26 @@
+name: environment
+channels: 
+  - conda-forge
+dependencies: 
+  - python=3.13.12
+  - scanpy>=1.11.5
+  - anndata>=0.11.4
+  - numpy>=1.24.3
+  - pandas>=2.1.4
+  - matplotlib>=3.8.2
+  - tqdm>=4.66.1
+  - plotly>=5.19.0
+  - ipykernel
+  - pytest>=7.4.0
+  - sphinx>=7.2.6
+  - sphinx-rtd-theme
+  - nbsphinx
+  - notebook
+  - r-irkernel
+  - bash_kernel
+  - docutils
+  - pygments
+  - babel
+  - importlib_metadata
+  - jupyter_core>=5.1.3
+  

@@ -1,0 +1,66 @@
+name: environment
+channels: 
+  - conda-forge
+dependencies: 
+  - emacs
+  - python=3.11.7
+  - scanpy=1.9.6
+  - numpy=1.24.3
+  - pandas=2.1.4
+  - tqdm=4.66.1
+  - plotly=5.19.0
+  - ipykernel
+  - pytest>=7.4.0
+  - sphinx>=7.2.6
+  - sphinx-rtd-theme  # Optional, for "Read the Docs"-style documentation
+  - nbsphinx
+  - notebook
+  - r-irkernel
+  - bash_kernel
+  - docutils
+  - pygments
+  - babel
+  - importlib_metadata
+  - jupyter_core>=5.1.3
+
+import matplotlib
+print("python", sys.version)
+print("scanpy", sc.__version__)
+print("anndata", ad.__version__)
+print("numpy", np.__version__)
+print("pandas", pd.__version__)
+print("matplotlib", matplotlib.__version__)
+print("nsforest", ns.__version__)
+
+python 3.11.7 | packaged by conda-forge | (main, Dec 23 2023, 14:27:59) [MSC v.1937 64 bit (AMD64)]
+scanpy 1.9.6
+anndata 0.11.4
+numpy 1.24.3
+pandas 2.1.4
+matplotlib 3.8.2
+nsforest 4.1
+
+# >=
+python 3.11.7 | packaged by conda-forge | (main, Dec 23 2023, 14:27:59) [MSC v.1937 64 bit (AMD64)]
+scanpy 1.11.5
+anndata 0.12.10
+numpy 2.4.3
+pandas 2.3.3
+matplotlib 3.10.8
+nsforest 4.1
+
+python 3.13.12 | packaged by conda-forge | (main, Feb  5 2026, 05:41:12) [MSC v.1944 64 bit (AMD64)]
+scanpy 1.12
+anndata 0.12.10
+numpy 2.4.3
+pandas 2.3.3
+matplotlib 3.10.8
+nsforest 4.1
+
+python 3.14.3 | packaged by conda-forge | (main, Feb  9 2026, 21:56:48) [MSC v.1944 64 bit (AMD64)]
+scanpy 1.12
+anndata 0.12.10
+numpy 2.4.3
+pandas 2.3.3
+matplotlib 3.10.8
+nsforest 4.1
